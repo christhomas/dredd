@@ -177,10 +177,13 @@ Example:
 
       // Show version
     } else if (this.argv.version === true) {
-      console.log(`\
-${packageData.name} v${packageData.version} \
-(${os.type()} ${os.release()}; ${os.arch()})\
-`);
+      let buildTime = 'unknown';
+      try {
+        const exePath = process.argv[1];
+        const stats = fs.statSync(exePath);
+        buildTime = Math.floor(stats.mtimeMs / 1000);
+      } catch (err) {}
+      console.log(`${packageData.name} v${packageData.version} [${packageData.fork}] (${os.type()} ${os.release()}; ${os.arch()}) Build: ${buildTime}`);
       this._processExit(0);
     }
   }
@@ -212,6 +215,11 @@ ${packageData.name} v${packageData.version} \
   }
 
   runServerAndThenDredd() {
+    if (this.argv['dry-run']) {
+      logger.debug('Dry-run mode enabled, skipping backend server startup.');
+      this.runDredd(this.dreddInstance);
+      return;
+    }
     if (!this.argv.server) {
       logger.debug(
         'No backend server process specified, starting testing at once',

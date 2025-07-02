@@ -7,15 +7,13 @@
     "docs:test-extensions": "python -m unittest docs/_extensions/*.py --verbose",
     "docs:build": "sphinx-build -nW -b html ./docs ./docs/_build",
     "docs:serve": "sphinx-autobuild ./docs ./docs/_build",
-    "commit:lint": "./scripts/commitlint.sh",
     "lint": "lerna exec --scope=\"*\" --concurrency=1 --no-bail yarn lint",
     "test:smoke": "lerna exec --scope=\"*\" --concurrency=1 --no-bail yarn test:smoke",
     "test": "lerna exec --scope=\"*\" --concurrency=1 --no-bail yarn test"
   },
   "devDependencies": {
-    "@commitlint/cli": "11.0.0",
-    "@commitlint/config-conventional": "11.0.0",
-    "commitlint-circle": "1.0.0",
+    "@commitlint/cli": "19.8.1",
+    "@commitlint/config-conventional": "19.8.1",
     "lerna": "^3.22.1"
   },
   "workspaces": {

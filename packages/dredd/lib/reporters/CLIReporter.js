@@ -24,6 +24,15 @@ function CLIReporter(emitter, stats, inlineErrors, details) {
   logger.debug(`Using '${this.type}' reporter.`);
 }
 
+function setTitle(title) {
+  const width = 80;
+  console.log(""
+    + `${'='.repeat(width)}\n`
+    + `  Test:  ${title}\n`
+    + `${'='.repeat(width)}`
+  );
+}
+
 CLIReporter.prototype.configureEmitter = function configureEmitter(emitter) {
   emitter.on('start', (apiDescriptions, callback) => {
     logger.debug('Beginning Dredd testing...');
@@ -36,7 +45,9 @@ CLIReporter.prototype.configureEmitter = function configureEmitter(emitter) {
         reporterOutputLogger.info('Displaying failed tests...');
       }
       this.errors.forEach((test) => {
-        reporterOutputLogger.fail(`${test.title} duration: ${test.duration}ms`);
+        setTitle(test.title);
+        
+        reporterOutputLogger.fail(`Duration: ${test.duration}ms`);
         reporterOutputLogger.fail(test.message);
         if (test.request)
           reporterOutputLogger.request(`\n${prettifyResponse(test.request)}\n`);
@@ -64,7 +75,8 @@ CLIReporter.prototype.configureEmitter = function configureEmitter(emitter) {
   });
 
   emitter.on('test pass', (test) => {
-    reporterOutputLogger.pass(`${test.title} duration: ${test.duration}ms`);
+    setTitle(test.title);
+    reporterOutputLogger.pass(`Duration: ${test.duration}ms`);
     if (this.details) {
       reporterOutputLogger.request(`\n${prettifyResponse(test.request)}\n`);
       reporterOutputLogger.expected(`\n${prettifyResponse(test.expected)}\n`);
@@ -72,10 +84,15 @@ CLIReporter.prototype.configureEmitter = function configureEmitter(emitter) {
     }
   });
 
-  emitter.on('test skip', (test) => reporterOutputLogger.skip(test.title));
+  emitter.on('test skip', (test) => {
+    if (test.filteredOut) return;
+      
+    reporterOutputLogger.skip(test.title);
+  });
 
   emitter.on('test fail', (test) => {
-    reporterOutputLogger.fail(`${test.title} duration: ${test.duration}ms`);
+    setTitle(test.title);
+    reporterOutputLogger.fail(`Duration: ${test.duration}ms`);
     if (this.inlineErrors) {
       reporterOutputLogger.fail(test.message);
       if (test.request) {

@@ -254,7 +254,7 @@ export function printClosingMessage(config, print = console.log) {
 
 export function editYaml(file, update) {
   const contents = fs.existsSync(file)
-    ? yaml.safeLoad(fs.readFileSync(file))
+    ? yaml.load(fs.readFileSync(file))
     : {};
 
   update(contents);

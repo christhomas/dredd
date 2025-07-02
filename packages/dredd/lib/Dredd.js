@@ -1,6 +1,6 @@
 import async from 'async';
-import parse from 'dredd-transactions/parse';
-import compile from 'dredd-transactions/compile';
+import parse from '@antimatter-studios/dredd-transactions/parse';
+import compile from '@antimatter-studios/dredd-transactions/compile';
 
 import configureReporters from './configureReporters';
 import resolveLocations from './resolveLocations';

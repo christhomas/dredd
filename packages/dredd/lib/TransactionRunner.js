@@ -504,12 +504,14 @@ class TransactionRunner {
     }
 
     if (transaction.skip) {
-      logger.debug('Emitting to reporters: test skip');
-      this.configuration.emitter.emit(
-        'test skip',
-        transaction.test,
-        eventCallback,
-      );
+      if (!(transaction.test && transaction.test.filteredOut)) { // Suppress skip emission if filtered by --only
+        logger.debug('Emitting to reporters: test skip');
+        this.configuration.emitter.emit(
+          'test skip',
+          transaction.test,
+          eventCallback,
+        );
+      }
       return callback();
     }
 
@@ -579,6 +581,7 @@ class TransactionRunner {
       this.skipTransaction(transaction, 'Skipped in before hook');
       return callback();
     }
+
     if (transaction.fail) {
       logger.debug(
         'HTTP transaction was marked in hooks as to be failed. Reporting as failed',
@@ -590,18 +593,20 @@ class TransactionRunner {
       );
       return callback();
     }
-    if (this.configuration['dry-run']) {
-      reporterOutputLogger.info('Dry run. Not performing HTTP request');
-      transaction.test = test;
-      this.skipTransaction(transaction);
-      return callback();
-    }
+
     if (this.configuration.names) {
       reporterOutputLogger.info(transaction.name);
-      transaction.test = test;
-      this.skipTransaction(transaction);
       return callback();
     }
+    
+    if (this.configuration['dry-run']) {
+      reporterOutputLogger.info(`Dry Run: ${transaction.name}`);
+      transaction.test = test;
+      this.skipTransaction(transaction);  
+
+      return callback();
+    }
+    
     if (
       this.configuration.method.length > 0 &&
       !Array.from(this.configuration.method).includes(
@@ -619,6 +624,7 @@ Not performing HTTP ${transaction.request.method.toUpperCase()} request.\
       this.skipTransaction(transaction);
       return callback();
     }
+    
     if (
       this.configuration.only.length > 0 &&
       !Array.from(this.configuration.only).includes(transaction.name)
@@ -628,9 +634,11 @@ Only '${this.configuration.only}' transaction is set to be executed. \
 Not performing HTTP request for '${transaction.name}'.\
 `);
       transaction.test = test;
+      transaction.test.filteredOut = true;
       this.skipTransaction(transaction);
       return callback();
     }
+    
     this.performRequestAndValidate(test, transaction, hooks, callback);
   }
 

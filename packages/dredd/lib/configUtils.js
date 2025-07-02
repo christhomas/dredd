@@ -30,7 +30,7 @@ export function load(path) {
   }
 
   const yamlData = fs.readFileSync(path);
-  const data = yaml.safeLoad(yamlData);
+  const data = yaml.load(yamlData);
 
   data._ = [data.blueprint, data.endpoint];
 

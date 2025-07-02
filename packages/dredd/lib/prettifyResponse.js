@@ -37,7 +37,11 @@ export default function prettifyResponse(response) {
   for (const key of Object.keys(response || {})) {
     let value = response[key];
     if (key === 'body') {
-      value = `\n${prettifyBody(value, contentType)}`;
+      if (value === undefined || value === null || value === '' || (typeof value === 'object' && Object.keys(value).length === 0)) {
+        value = '\n(Dredd: body is empty)';
+      } else {
+        value = `\n${prettifyBody(value, contentType)}`;
+      }
     } else if (key === 'schema') {
       value = `\n${stringify(value)}`;
     } else if (key === 'headers') {

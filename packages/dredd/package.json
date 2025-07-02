@@ -1,8 +1,11 @@
 {
-  "name": "dredd",
-  "version": "14.1.0",
-  "description": "HTTP API Testing Framework",
+  "name": "@antimatter-studios/dredd",
+  "version": "14.1.1",
+  "description": "HTTP API Testing Framework (Chris Thomas Fork)",
   "main": "build/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "dredd": "bin/dredd"
   },
@@ -24,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/apiaryio/dredd"
+    "url": "https://github.com/christhomas/dredd"
   },
   "files": [
     "bin",
@@ -37,23 +40,23 @@
     "caseless": "0.12.0",
     "chai": "4.3.4",
     "clone": "2.1.2",
-    "cross-spawn": "7.0.3",
-    "dredd-transactions": "^10.1.0",
+    "cross-spawn": "^7.0.3",
+    "@antimatter-studios/dredd-transactions": "^10.1.0",
     "gavel": "^9.1.1",
-    "glob": "7.1.6",
+    "glob": "^7.1.6",
     "html": "1.0.0",
-    "htmlencode": "0.0.4",
-    "inquirer": "7.1.0",
-    "js-yaml": "3.14.0",
-    "make-dir": "3.1.0",
-    "markdown-it": "12.2.0",
+    "htmlencode": "^0.0.4",
+    "inquirer": "^7.3.3",
+    "js-yaml": "^4.1.0",
+    "make-dir": "^3.1.0",
+    "markdown-it": "^14.1.0",
     "optimist": "0.6.1",
     "proxyquire": "2.1.3",
     "ramda": "0.27.0",
     "request": "2.88.2",
     "spawn-args": "0.2.0",
     "untildify": "4.0.0",
-    "uuid": "7.0.3",
+    "uuid": "9.0.1",
     "which": "2.0.2",
     "winston": "2.4.0"
   },
@@ -62,23 +65,24 @@
     "@types/clone": "0.1.30",
     "@types/mocha": "7.0.2",
     "@types/proxyquire": "1.3.28",
-    "@types/ramda": "0.27.32",
+    "@types/ramda": "0.29.8",
     "@types/which": "1.3.2",
     "body-parser": "1.19.0",
     "coffeescript": "2.6.1",
     "cucumber": "6.0.5",
     "eslint": "6.8.0",
-    "eslint-config-airbnb-base": "13.2.0",
+    "eslint-config-airbnb-base": "14.2.1",
     "eslint-config-prettier": "6.11.0",
-    "eslint-plugin-import": "2.18.2",
-    "express": "4.17.1",
-    "mocha": "7.1.2",
-    "nock": "10.0.6",
-    "prettier": "1.18.2",
+    "eslint-plugin-import": "2.22.1",
+    "express": "4.19.2",
+    "mocha": "10.4.0",
+    "nock": "13.5.4",
+    "prettier": "3.2.5",
     "ps-node": "0.1.6",
-    "sinon": "9.2.1",
+    "sinon": "16.1.1",
     "ts-node": "8.10.2",
-    "typescript": "3.8.3"
+    "typescript": "5.4.5",
+    "@types/node": "20.11.30"
   },
   "keywords": [
     "api",
@@ -88,7 +92,9 @@
     "integration",
     "acceptance"
   ],
-  "author": "Apiary Czech Republic, s.r.o. <support@apiary.io>",
+  "original_author": "Apiary Czech Republic, s.r.o. <support@apiary.io>",
+  "author": "Chris Thomas <chris.thomas@antimatter-studios.com",
   "license": "MIT",
-  "homepage": "https://github.com/apiaryio/dredd/tree/master/packages/dredd"
+  "homepage": "https://github.com/christhomas/dredd/tree/master/packages/dredd",
+  "fork": "christhomas/dredd"
 }
