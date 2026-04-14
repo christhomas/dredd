@@ -35,18 +35,19 @@ export const recordLogging = (fn, callback) => {
   reporterOutputLogger.consoleTransport.silent = true;
 
   let logging = '';
-  const record = (transport, level, message) => {
-    logging += `${level}: ${message}\n`;
+  const stripAnsi = (str) => str.replace(/\u001b\[\d+m/g, '');
+  const record = (info) => {
+    logging += `${stripAnsi(info.level)}: ${info.message}\n`;
   };
 
-  logger.on('logging', record);
-  reporterOutputLogger.on('logging', record);
+  logger.on('data', record);
+  reporterOutputLogger.on('data', record);
 
   fn((...args) => {
-    logger.removeListener('logging', record);
+    logger.removeListener('data', record);
     logger.consoleTransport.silent = loggerSilent;
 
-    reporterOutputLogger.removeListener('logging', record);
+    reporterOutputLogger.removeListener('data', record);
     reporterOutputLogger.consoleTransport.silent = reporterOutputLoggerSilent;
 
     callback(null, args, logging);
