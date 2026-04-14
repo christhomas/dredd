@@ -12,7 +12,7 @@ import packageData from '../package.json';
 const INSTALL_DREDD = `npm install dredd@${packageData.version} --global`;
 const RUN_DREDD = 'dredd';
 
-function init(config, save, callback) {
+function init(config: any, save: (config: any) => void, callback: (err?: any) => void): void {
   if (!config) {
     config = {};
   }
@@ -26,12 +26,12 @@ function init(config, save, callback) {
   const files = fs.readdirSync('.');
   const detected = detect(files);
 
-  prompt(config, detected, (error, answers) => {
+  prompt(config, detected, (error: any, answers: any) => {
     if (error) {
       callback(error);
     }
 
-    let updatedConfig;
+    let updatedConfig: any;
     try {
       updatedConfig = applyAnswers(config, answers);
     } catch (err) {
@@ -44,7 +44,14 @@ function init(config, save, callback) {
   });
 }
 
-function detect(files) {
+interface DetectedConfig {
+  ci: string[];
+  apiDescription: string;
+  server: string;
+  language: string;
+}
+
+function detect(files: string[]): DetectedConfig {
   return {
     ci: detectCI(files),
     apiDescription: detectApiDescription(files),
@@ -53,7 +60,7 @@ function detect(files) {
   };
 }
 
-function prompt(config, detected, callback) {
+function prompt(config: any, detected: DetectedConfig, callback: (error: any, answers?: any) => void): void {
   inquirer
     .prompt([
       {
@@ -95,7 +102,7 @@ function prompt(config, detected, callback) {
           { name: 'Ruby', value: 'ruby' },
           { name: 'Rust', value: 'rust' },
         ],
-        when: (answers) => answers.hooks,
+        when: (answers: any) => answers.hooks,
       },
       {
         name: 'apiary',
@@ -110,7 +117,7 @@ function prompt(config, detected, callback) {
           'Enter Apiary API key (leave empty for anonymous, disposable test reports)',
         type: 'input',
         default: config.custom ? config.custom.apiaryApiKey : undefined,
-        when: (answers) =>
+        when: (answers: any) =>
           answers.apiary && (!config.custom || !config.custom.apiaryApiKey),
       },
       {
@@ -118,7 +125,7 @@ function prompt(config, detected, callback) {
         message: 'Enter Apiary API name',
         type: 'input',
         default: config.custom ? config.custom.apiaryApiName : undefined,
-        when: (answers) =>
+        when: (answers: any) =>
           answers.apiary &&
           answers.apiaryApiKey &&
           (!config.custom || !config.custom.apiaryApiName),
@@ -170,16 +177,20 @@ function prompt(config, detected, callback) {
           { name: 'Travis CI', value: 'travisci' },
           { name: 'Wercker (Oracle Container Pipelines)', value: 'wercker' },
         ],
-        when: (answers) => answers.ci,
+        when: (answers: any) => answers.ci,
       },
     ])
-    .then((answers) => {
+    .then((answers: any) => {
       callback(null, answers);
     });
 }
 
-export function applyAnswers(config, answers, options = {}) {
-  const ci = options.ci || {
+interface CIHandlers {
+  [key: string]: () => void;
+}
+
+export function applyAnswers(config: any, answers: any, options: any = {}): any {
+  const ci: CIHandlers = options.ci || {
     appveyor: updateAppVeyor,
     circleci: updateCircleCI,
     travisci: updateTravisCI,
@@ -205,7 +216,7 @@ export function applyAnswers(config, answers, options = {}) {
   if (answers.createCI) {
     ci[answers.createCI]();
   } else {
-    Object.keys(ci).forEach((name) => {
+    Object.keys(ci).forEach((name: string) => {
       if (answers[name]) {
         try {
           ci[name]();
@@ -220,7 +231,7 @@ export function applyAnswers(config, answers, options = {}) {
   return config;
 }
 
-export function printClosingMessage(config, print = console.log) {
+export function printClosingMessage(config: any, print: (...args: any[]) => void = console.log): void {
   print('\nConfiguration saved to dredd.yml\n');
   if (config.language === 'nodejs') {
     print('You can run tests now, with:\n');
@@ -252,9 +263,9 @@ export function printClosingMessage(config, print = console.log) {
   print('  $ dredd\n');
 }
 
-export function editYaml(file, update) {
+export function editYaml(file: string, update: (contents: any) => void): void {
   const contents = fs.existsSync(file)
-    ? yaml.load(fs.readFileSync(file))
+    ? yaml.load(fs.readFileSync(file) as any)
     : {};
 
   update(contents);
@@ -263,10 +274,10 @@ export function editYaml(file, update) {
   fs.writeFileSync(file, yaml.dump(contents));
 }
 
-export function updateAppVeyor(options = {}) {
-  const edit = options.editYaml || editYaml;
+export function updateAppVeyor(options: any = {}): void {
+  const edit: (file: string, update: (contents: any) => void) => void = options.editYaml || editYaml;
 
-  edit('appveyor.yml', (contents) => {
+  edit('appveyor.yml', (contents: any) => {
     if (!contents.install) {
       contents.install = [];
     }
@@ -286,10 +297,10 @@ export function updateAppVeyor(options = {}) {
   });
 }
 
-export function updateCircleCI(options = {}) {
-  const edit = options.editYaml || editYaml;
+export function updateCircleCI(options: any = {}): void {
+  const edit: (file: string, update: (contents: any) => void) => void = options.editYaml || editYaml;
 
-  edit('.circleci/config.yml', (contents) => {
+  edit('.circleci/config.yml', (contents: any) => {
     if (!contents.version) {
       contents.version = 2;
     }
@@ -304,10 +315,10 @@ export function updateCircleCI(options = {}) {
   });
 }
 
-export function updateTravisCI(options = {}) {
-  const edit = options.editYaml || editYaml;
+export function updateTravisCI(options: any = {}): void {
+  const edit: (file: string, update: (contents: any) => void) => void = options.editYaml || editYaml;
 
-  edit('.travis.yml', (contents) => {
+  edit('.travis.yml', (contents: any) => {
     if (!contents.language) {
       contents.language = 'node_js';
     }
@@ -324,10 +335,10 @@ export function updateTravisCI(options = {}) {
   });
 }
 
-export function updateWercker(options = {}) {
-  const edit = options.editYaml || editYaml;
+export function updateWercker(options: any = {}): void {
+  const edit: (file: string, update: (contents: any) => void) => void = options.editYaml || editYaml;
 
-  edit('wercker.yml', (contents) => {
+  edit('wercker.yml', (contents: any) => {
     if (!contents.box) {
       contents.box = 'node';
     }
@@ -343,13 +354,13 @@ export function updateWercker(options = {}) {
   });
 }
 
-export function detectLanguage(files) {
-  const lcFiles = files.map((f) => f.toLowerCase());
+export function detectLanguage(files: string[]): string {
+  const lcFiles = files.map((f: string) => f.toLowerCase());
 
   if (lcFiles.includes('cargo.toml')) {
     return 'rust';
   }
-  if (lcFiles.filter((f) => f.match(/\.go$/)).length) {
+  if (lcFiles.filter((f: string) => f.match(/\.go$/)).length) {
     return 'go';
   }
   if (lcFiles.includes('composer.json')) {
@@ -376,15 +387,15 @@ export function detectLanguage(files) {
   if (
     lcFiles.includes('gemfile') ||
     lcFiles.includes('gemfile.lock') ||
-    lcFiles.filter((f) => f.match(/\.gemspec$/)).length
+    lcFiles.filter((f: string) => f.match(/\.gemspec$/)).length
   ) {
     return 'ruby';
   }
   return 'nodejs';
 }
 
-export function detectServer(files) {
-  const commands = {
+export function detectServer(files: string[]): string {
+  const commands: { [key: string]: string } = {
     nodejs: 'npm start',
     ruby: 'bundle exec rails server',
     python: 'python manage.py runserver',
@@ -393,20 +404,20 @@ export function detectServer(files) {
   return commands[language] || commands.nodejs;
 }
 
-export function detectApiDescription(files) {
-  const apib = files.filter((f) => f.match(/\.apib$/i));
+export function detectApiDescription(files: string[]): string {
+  const apib = files.filter((f: string) => f.match(/\.apib$/i));
   if (apib.length) {
     return apib[0];
   }
 
   const openapi2 = files.filter(
-    (f) => f.match(/\.ya?ml$/i) && f.match(/swagger/),
+    (f: string) => f.match(/\.ya?ml$/i) && f.match(/swagger/),
   );
   if (openapi2.length) {
     return openapi2[0];
   }
 
-  const openapi = files.filter((f) => f.match(/\.ya?ml$/i) && f.match(/api/));
+  const openapi = files.filter((f: string) => f.match(/\.ya?ml$/i) && f.match(/api/));
   if (openapi.length) {
     return openapi[0];
   }
@@ -414,14 +425,14 @@ export function detectApiDescription(files) {
   return 'apiary.apib';
 }
 
-export function detectCI(files) {
-  const ci = {
+export function detectCI(files: string[]): string[] {
+  const ci: { [key: string]: string } = {
     'wercker.yml': 'wercker',
     'appveyor.yml': 'appveyor',
     '.travis.yml': 'travisci',
     '.circleci': 'circleci',
   };
-  return files.map((f) => ci[f]).filter((f) => !!f);
+  return files.map((f: string) => ci[f]).filter((f: string) => !!f);
 }
 
 export default init;

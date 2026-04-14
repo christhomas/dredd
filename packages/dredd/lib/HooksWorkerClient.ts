@@ -10,7 +10,26 @@ import which from './which';
 import { spawn } from './childProcess';
 
 class HooksWorkerClient {
-  constructor(runner) {
+  runner: any;
+  language: string;
+  timeout: number;
+  connectTimeout: number;
+  connectRetry: number;
+  afterConnectWait: number;
+  termTimeout: number;
+  termRetry: number;
+  handlerHost: string;
+  handlerPort: number;
+  handlerMessageDelimiter: string;
+  clientConnected: boolean;
+  connectError: any;
+  emitter: EventEmitter;
+  handler: any;
+  handlerClient: any;
+  handlerCommand!: string;
+  handlerCommandArgs!: string[];
+
+  constructor(runner: any) {
     this.runner = runner;
     const options = this.runner.hooks.configuration;
 
@@ -29,30 +48,30 @@ class HooksWorkerClient {
     this.emitter = new EventEmitter();
   }
 
-  start(callback) {
+  start(callback: (err?: Error) => void): void {
     logger.debug('Looking up hooks handler implementation:', this.language);
-    this.setCommandAndCheckForExecutables((executablesError) => {
+    this.setCommandAndCheckForExecutables((executablesError?: Error) => {
       if (executablesError) {
         return callback(executablesError);
       }
 
       logger.debug('Starting hooks handler.');
-      this.spawnHandler((spawnHandlerError) => {
+      this.spawnHandler((spawnHandlerError?: Error) => {
         if (spawnHandlerError) {
           return callback(spawnHandlerError);
         }
 
         logger.debug('Connecting to hooks handler.');
-        this.connectToHandler((connectHandlerError) => {
+        this.connectToHandler((connectHandlerError?: Error) => {
           if (connectHandlerError) {
-            this.terminateHandler((terminateError) =>
+            this.terminateHandler((terminateError?: Error) =>
               callback(connectHandlerError || terminateError),
             );
             return;
           }
 
           logger.debug('Registering hooks.');
-          this.registerHooks((registerHooksError) => {
+          this.registerHooks((registerHooksError?: Error) => {
             if (registerHooksError) {
               return callback(registerHooksError);
             }
@@ -63,12 +82,12 @@ class HooksWorkerClient {
     });
   }
 
-  stop(callback) {
+  stop(callback: (err?: Error) => void): void {
     this.disconnectFromHandler();
     this.terminateHandler(callback);
   }
 
-  terminateHandler(callback) {
+  terminateHandler(callback: (err?: Error) => void): void {
     logger.debug('Terminating hooks handler process, PID', this.handler.pid);
     if (this.handler.terminated) {
       logger.debug('The hooks handler process has already terminated');
@@ -83,13 +102,13 @@ class HooksWorkerClient {
     this.handler.on('close', () => callback());
   }
 
-  disconnectFromHandler() {
+  disconnectFromHandler(): void {
     this.handlerClient.destroy();
   }
 
-  setCommandAndCheckForExecutables(callback) {
+  setCommandAndCheckForExecutables(callback: (err?: Error) => void): void {
     // Select handler based on option, use option string as command if not match anything
-    let msg;
+    let msg: string;
     if (this.language === 'ruby') {
       this.handlerCommand = 'dredd-hooks-ruby';
       this.handlerCommandArgs = [];
@@ -162,7 +181,7 @@ Use Dredd's native Node.js hooks instead.
 `;
       callback(new Error(msg));
     } else if (this.language === 'go') {
-      getGoBinary((err, goBin) => {
+      getGoBinary((err: Error | null, goBin: string) => {
         if (err) {
           callback(
             new Error(`Go doesn't seem to be installed: ${err.message}`),
@@ -184,7 +203,7 @@ $ go get github.com/snikch/goodman/cmd/goodman
       });
     } else {
       const parsedArgs = spawnArgs(this.language);
-      this.handlerCommand = parsedArgs.shift();
+      this.handlerCommand = parsedArgs.shift()!;
       this.handlerCommandArgs = parsedArgs;
 
       logger.debug(
@@ -203,17 +222,17 @@ $ go get github.com/snikch/goodman/cmd/goodman
     }
   }
 
-  spawnHandler(callback) {
+  spawnHandler(callback: (err?: Error) => void): void {
     const pathGlobs = this.runner.hooks.configuration.hookfiles;
     const handlerCommandArgs = this.handlerCommandArgs.concat(pathGlobs);
 
     logger.debug(`Spawning '${this.language}' hooks handler process.`);
     this.handler = spawn(this.handlerCommand, handlerCommandArgs);
 
-    this.handler.stdout.on('data', (data) =>
+    this.handler.stdout.on('data', (data: any) =>
       logger.debug('Hooks handler stdout:', data.toString()),
     );
-    this.handler.stderr.on('data', (data) =>
+    this.handler.stderr.on('data', (data: any) =>
       logger.debug('Hooks handler stderr:', data.toString()),
     );
 
@@ -224,8 +243,8 @@ $ go get github.com/snikch/goodman/cmd/goodman
       logger.debug('Killing the hooks handler process'),
     );
 
-    this.handler.on('crash', (exitStatus, killed) => {
-      let msg;
+    this.handler.on('crash', (exitStatus: number | null, killed: boolean) => {
+      let msg: string;
       if (killed) {
         msg = `Hooks handler process '${
           this.handlerCommand
@@ -238,16 +257,16 @@ $ go get github.com/snikch/goodman/cmd/goodman
       logger.error(msg);
       this.runner.hookHandlerError = new Error(msg);
     });
-    this.handler.on('error', (err) => {
+    this.handler.on('error', (err: Error) => {
       this.runner.hookHandlerError = err;
     });
     callback();
   }
 
-  connectToHandler(callback) {
-    let timeout;
+  connectToHandler(callback: (err?: Error) => void): void {
+    let timeout: ReturnType<typeof setTimeout>;
     const start = Date.now();
-    const connectAndSetupClient = () => {
+    const connectAndSetupClient = (): void => {
       logger.debug('Starting TCP connection with hooks handler process.');
 
       if (this.runner.hookHandlerError) {
@@ -273,7 +292,7 @@ $ go get github.com/snikch/goodman/cmd/goodman
         logger.debug('TCP communication with hooks handler closed.'),
       );
 
-      this.handlerClient.on('error', (connectError) => {
+      this.handlerClient.on('error', (connectError: Error) => {
         logger.debug(
           'TCP communication with hooks handler errored.',
           connectError,
@@ -283,7 +302,7 @@ $ go get github.com/snikch/goodman/cmd/goodman
 
       let handlerBuffer = '';
 
-      this.handlerClient.on('data', (data) => {
+      this.handlerClient.on('data', (data: any) => {
         logger.debug('Dredd received some data from hooks handler.');
 
         handlerBuffer += data.toString();
@@ -293,14 +312,14 @@ $ go get github.com/snikch/goodman/cmd/goodman
           );
 
           // Add last chunk to the buffer
-          handlerBuffer = splittedData.pop();
+          handlerBuffer = splittedData.pop()!;
 
-          const messages = [];
+          const messages: any[] = [];
           for (const message of splittedData) {
             messages.push(JSON.parse(message));
           }
 
-          const result = [];
+          const result: any[] = [];
           for (const message of messages) {
             if (message.uuid) {
               logger.debug(
@@ -322,7 +341,7 @@ $ go get github.com/snikch/goodman/cmd/goodman
       });
     };
 
-    const waitForConnect = () => {
+    const waitForConnect = (): void => {
       if (Date.now() - start < this.connectTimeout) {
         clearTimeout(timeout);
 
@@ -355,8 +374,8 @@ $ go get github.com/snikch/goodman/cmd/goodman
     timeout = setTimeout(waitForConnect, this.connectRetry);
   }
 
-  registerHooks(callback) {
-    const eachHookNames = [
+  registerHooks(callback: (err?: Error) => void): void {
+    const eachHookNames: string[] = [
       'beforeEach',
       'beforeEachValidation',
       'afterEach',
@@ -365,7 +384,7 @@ $ go get github.com/snikch/goodman/cmd/goodman
     ];
 
     for (const eventName of eachHookNames) {
-      this.runner.hooks[eventName]((data, hookCallback) => {
+      this.runner.hooks[eventName]((data: any, hookCallback: () => void) => {
         const uuid = generateUuid();
 
         // Send transaction to the handler
@@ -380,11 +399,11 @@ $ go get github.com/snikch/goodman/cmd/goodman
         this.handlerClient.write(this.handlerMessageDelimiter);
 
         // Set timeout for the hook (declared here so messageHandler can reference it)
-        let timeout;
+        let timeout: ReturnType<typeof setTimeout>;
 
         // Register event for the sent transaction
-        function messageHandler(receivedMessage) {
-          let value;
+        function messageHandler(receivedMessage: any): void {
+          let value: any;
           logger.debug('Handling hook:', uuid);
           clearTimeout(timeout);
 
@@ -408,7 +427,7 @@ $ go get github.com/snikch/goodman/cmd/goodman
           hookCallback();
         }
 
-        const handleTimeout = () => {
+        const handleTimeout = (): void => {
           logger.warn('Hook handling timed out.');
 
           if (eventName.indexOf('All') === -1) {
@@ -426,7 +445,7 @@ $ go get github.com/snikch/goodman/cmd/goodman
       });
     }
 
-    this.runner.hooks.afterAll((transactions, hookCallback) => {
+    this.runner.hooks.afterAll((transactions: any[], hookCallback: () => void) => {
       // This is needed for transaction modification integration tests:
       // https://github.com/apiaryio/dredd-hooks-template/blob/master/features/execution_order.feature
       if (process.env.TEST_DREDD_HOOKS_HANDLER_ORDER === 'true') {

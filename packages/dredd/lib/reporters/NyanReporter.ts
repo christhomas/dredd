@@ -4,8 +4,8 @@ import logger from '../logger';
 import prettifyResponse from '../prettifyResponse';
 import reporterOutputLogger from './reporterOutputLogger';
 
-function NyanCatReporter(emitter, stats) {
-  let windowWidth;
+function NyanCatReporter(this: any, emitter: any, stats: any): void {
+  let windowWidth: number;
 
   this.type = 'nyan';
   this.stats = stats;
@@ -13,9 +13,9 @@ function NyanCatReporter(emitter, stats) {
 
   if (this.isatty) {
     if (process.stdout.getWindowSize) {
-      [windowWidth] = process.stdout.getWindowSize(1);
+      [windowWidth] = (process.stdout as any).getWindowSize(1);
     } else {
-      [, windowWidth] = tty.getWindowSize();
+      [, windowWidth] = (tty as any).getWindowSize();
     }
   } else {
     windowWidth = 75;
@@ -37,17 +37,17 @@ function NyanCatReporter(emitter, stats) {
 }
 
 NyanCatReporter.prototype.configureEmitter = function configureEmitter(
-  emitter,
-) {
-  emitter.on('start', (apiDescriptions, callback) => {
+  emitter: any,
+): void {
+  emitter.on('start', (apiDescriptions: any, callback: () => void) => {
     this.cursorHide();
     this.draw();
     callback();
   });
 
-  emitter.on('end', (callback) => {
+  emitter.on('end', (callback: () => void) => {
     this.cursorShow();
-    let i = 0;
+    let i: number = 0;
 
     while (i < this.numberOfLines) {
       this.write('\n');
@@ -81,19 +81,19 @@ NyanCatReporter.prototype.configureEmitter = function configureEmitter(
     this.draw();
   });
 
-  emitter.on('test fail', (test) => {
+  emitter.on('test fail', (test: any) => {
     this.errors.push(test);
     this.draw();
   });
 
-  emitter.on('test error', (error, test) => {
+  emitter.on('test error', (error: any, test: any) => {
     test.message = `\nError: \n${error}\nStacktrace: \n${error.stack}\n`;
     this.errors.push(test);
     this.draw();
   });
 };
 
-NyanCatReporter.prototype.draw = function draw() {
+NyanCatReporter.prototype.draw = function draw(): void {
   this.appendRainbow();
   this.drawScoreboard();
   this.drawRainbow();
@@ -101,15 +101,15 @@ NyanCatReporter.prototype.draw = function draw() {
   this.tick = !this.tick;
 };
 
-NyanCatReporter.prototype.drawScoreboard = function drawScoreboard() {
-  const colors = {
+NyanCatReporter.prototype.drawScoreboard = function drawScoreboard(): void {
+  const colors: Record<string, number> = {
     fail: 31,
     skipped: 36,
     pass: 32,
   };
 
   // Capture outer `this`
-  const draw = (color, n) => {
+  const draw = (color: number, n: number): void => {
     this.write(' ');
     this.write(`\u001b[${color}m${n}\u001b[0m`);
     this.write('\n');
@@ -124,14 +124,14 @@ NyanCatReporter.prototype.drawScoreboard = function drawScoreboard() {
   this.cursorUp(this.numberOfLines + 1);
 };
 
-NyanCatReporter.prototype.appendRainbow = function appendRainbow() {
-  const segment = this.tick ? '_' : '-';
-  const rainbowified = this.rainbowify(segment);
-  const result = [];
+NyanCatReporter.prototype.appendRainbow = function appendRainbow(): number[] {
+  const segment: string = this.tick ? '_' : '-';
+  const rainbowified: string = this.rainbowify(segment);
+  const result: number[] = [];
 
-  let index = 0;
+  let index: number = 0;
   while (index < this.numberOfLines) {
-    const trajectory = this.trajectories[index];
+    const trajectory: string[] = this.trajectories[index];
     if (trajectory.length >= this.trajectoryWidthMax) {
       trajectory.shift();
     }
@@ -141,8 +141,8 @@ NyanCatReporter.prototype.appendRainbow = function appendRainbow() {
   return result;
 };
 
-NyanCatReporter.prototype.drawRainbow = function drawRainbow() {
-  this.trajectories.forEach((line) => {
+NyanCatReporter.prototype.drawRainbow = function drawRainbow(): void {
+  this.trajectories.forEach((line: string[]) => {
     this.write(`\u001b[${this.scoreboardWidth}C`);
     this.write(line.join(''));
     this.write('\n');
@@ -151,10 +151,10 @@ NyanCatReporter.prototype.drawRainbow = function drawRainbow() {
   this.cursorUp(this.numberOfLines);
 };
 
-NyanCatReporter.prototype.drawNyanCat = function drawNyanCat() {
-  const startWidth = this.scoreboardWidth + this.trajectories[0].length;
-  const color = `\u001b[${startWidth}C`;
-  let padding = '';
+NyanCatReporter.prototype.drawNyanCat = function drawNyanCat(): void {
+  const startWidth: number = this.scoreboardWidth + this.trajectories[0].length;
+  const color: string = `\u001b[${startWidth}C`;
+  let padding: string = '';
   this.write(color);
   this.write('_,------,');
   this.write('\n');
@@ -164,7 +164,7 @@ NyanCatReporter.prototype.drawNyanCat = function drawNyanCat() {
   this.write('\n');
   this.write(color);
   padding = this.tick ? '_' : '__';
-  const tail = this.tick ? '~' : '^';
+  const tail: string = this.tick ? '~' : '^';
   this.write(`${tail}|${padding}${this.face()} `);
   this.write('\n');
   this.write(color);
@@ -174,7 +174,7 @@ NyanCatReporter.prototype.drawNyanCat = function drawNyanCat() {
   this.cursorUp(this.numberOfLines);
 };
 
-NyanCatReporter.prototype.face = function face() {
+NyanCatReporter.prototype.face = function face(): string {
   if (this.stats.failures) {
     return '( x .x)';
   }
@@ -187,49 +187,49 @@ NyanCatReporter.prototype.face = function face() {
   return '( - .-)';
 };
 
-NyanCatReporter.prototype.cursorUp = function cursorUp(n) {
+NyanCatReporter.prototype.cursorUp = function cursorUp(n: number): void {
   this.write(`\u001b[${n}A`);
 };
 
-NyanCatReporter.prototype.cursorDown = function cursorDown(n) {
+NyanCatReporter.prototype.cursorDown = function cursorDown(n: number): void {
   this.write(`\u001b[${n}B`);
 };
 
-NyanCatReporter.prototype.cursorShow = function cursorShow() {
+NyanCatReporter.prototype.cursorShow = function cursorShow(): void {
   if (this.isatty) {
     this.write('\u001b[?25h');
   }
 };
 
-NyanCatReporter.prototype.cursorHide = function cursorHide() {
+NyanCatReporter.prototype.cursorHide = function cursorHide(): void {
   if (this.isatty) {
     this.write('\u001b[?25l');
   }
 };
 
-NyanCatReporter.prototype.generateColors = function generateColors() {
-  const colors = [];
-  let i = 0;
+NyanCatReporter.prototype.generateColors = function generateColors(): number[] {
+  const colors: number[] = [];
+  let i: number = 0;
 
   while (i < 6 * 7) {
-    const pi3 = Math.floor(Math.PI / 3);
-    const n = i * (1.0 / 6);
-    const r = Math.floor(3 * Math.sin(n) + 3);
-    const g = Math.floor(3 * Math.sin(n + 2 * pi3) + 3);
-    const b = Math.floor(3 * Math.sin(n + 4 * pi3) + 3);
+    const pi3: number = Math.floor(Math.PI / 3);
+    const n: number = i * (1.0 / 6);
+    const r: number = Math.floor(3 * Math.sin(n) + 3);
+    const g: number = Math.floor(3 * Math.sin(n + 2 * pi3) + 3);
+    const b: number = Math.floor(3 * Math.sin(n + 4 * pi3) + 3);
     colors.push(36 * r + 6 * g + b + 16);
     i++;
   }
   return colors;
 };
 
-NyanCatReporter.prototype.rainbowify = function rainbowify(str) {
-  const color = this.rainbowColors[this.colorIndex % this.rainbowColors.length];
+NyanCatReporter.prototype.rainbowify = function rainbowify(str: string): string {
+  const color: number = this.rainbowColors[this.colorIndex % this.rainbowColors.length];
   this.colorIndex += 1;
   return `\u001b[38;5;${color}m${str}\u001b[0m`;
 };
 
-NyanCatReporter.prototype.write = function write(str) {
+NyanCatReporter.prototype.write = function write(str: string): void {
   process.stdout.write(str);
 };
 

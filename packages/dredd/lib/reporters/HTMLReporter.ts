@@ -11,9 +11,9 @@ import logger from '../logger';
 import reporterOutputLogger from './reporterOutputLogger';
 import prettifyResponse from '../prettifyResponse';
 
-const md = markdownIt();
+const md: any = markdownIt();
 
-function HTMLReporter(emitter, stats, path, details) {
+function HTMLReporter(this: any, emitter: any, stats: any, path: string, details: boolean): void {
   EventEmitter.call(this);
 
   this.type = 'html';
@@ -29,25 +29,25 @@ function HTMLReporter(emitter, stats, path, details) {
 }
 
 HTMLReporter.prototype.sanitizedPath = function sanitizedPath(
-  path = './report.html',
-) {
-  const filePath = pathmodule.resolve(untildify(path));
+  path: string = './report.html',
+): string {
+  const filePath: string = pathmodule.resolve(untildify(path));
   if (fs.existsSync(filePath)) {
     logger.warn(`File exists at ${filePath}, will be overwritten...`);
   }
   return filePath;
 };
 
-HTMLReporter.prototype.configureEmitter = function configureEmitter(emitter) {
-  const title = (str) => `${Array(this.level).join('#')} ${str}`;
+HTMLReporter.prototype.configureEmitter = function configureEmitter(emitter: any): void {
+  const title = (str: string): string => `${Array(this.level).join('#')} ${str}`;
 
-  emitter.on('start', (apiDescriptions, callback) => {
+  emitter.on('start', (apiDescriptions: any, callback: () => void) => {
     this.level++;
     this.buf += `${title('Dredd Tests')}\n`;
     callback();
   });
 
-  emitter.on('end', (callback) => {
+  emitter.on('end', (callback: () => void) => {
     this.buf += '\n---';
     this.buf += `\n${title('Summary')}`;
     this.buf += `\n**Tests completed:** ${this.stats.passes} passing,
@@ -58,17 +58,17 @@ HTMLReporter.prototype.configureEmitter = function configureEmitter(emitter) {
     `;
     this.buf += `\n\n**Tests took:** ${this.stats.duration}ms.`;
 
-    const html = md.render(this.buf);
+    const html: string = md.render(this.buf);
     makeDir(pathmodule.dirname(this.path))
       .then(() => {
-        fs.writeFile(this.path, html, (error) => {
+        fs.writeFile(this.path, html, (error: any) => {
           if (error) {
             reporterOutputLogger.error(error);
           }
           callback();
         });
       })
-      .catch((err) => {
+      .catch((err: any) => {
         reporterOutputLogger.error(err);
         callback();
       });
@@ -78,7 +78,7 @@ HTMLReporter.prototype.configureEmitter = function configureEmitter(emitter) {
     this.level++;
   });
 
-  emitter.on('test pass', (test) => {
+  emitter.on('test pass', (test: any) => {
     this.buf += `${title(`Pass: ${test.title}`)}\n`;
 
     if (this.details) {
@@ -98,12 +98,12 @@ HTMLReporter.prototype.configureEmitter = function configureEmitter(emitter) {
     this.level--;
   });
 
-  emitter.on('test skip', (test) => {
+  emitter.on('test skip', (test: any) => {
     this.buf += `${title(`Skip: ${test.title}`)}\n`;
     this.level--;
   });
 
-  emitter.on('test fail', (test) => {
+  emitter.on('test fail', (test: any) => {
     this.buf += title(`Fail: ${test.title}\n`);
 
     this.level++;
@@ -122,7 +122,7 @@ HTMLReporter.prototype.configureEmitter = function configureEmitter(emitter) {
     this.level--;
   });
 
-  emitter.on('test error', (error, test) => {
+  emitter.on('test error', (error: any, test: any) => {
     this.buf += title(`Error: ${test.title}\n`);
     this.buf += '\n```\n';
     this.buf += `\nError: \n${error}\nStacktrace: \n${error.stack}\n`;

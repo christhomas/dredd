@@ -2,7 +2,7 @@ import logger from '../logger';
 import reporterOutputLogger from './reporterOutputLogger';
 import prettifyResponse from '../prettifyResponse';
 
-const CONNECTION_ERRORS = [
+const CONNECTION_ERRORS: string[] = [
   'ECONNRESET',
   'ENOTFOUND',
   'ESOCKETTIMEDOUT',
@@ -12,7 +12,7 @@ const CONNECTION_ERRORS = [
   'EPIPE',
 ];
 
-function CLIReporter(emitter, stats, inlineErrors, details) {
+function CLIReporter(this: any, emitter: any, stats: any, inlineErrors: boolean, details: boolean): void {
   this.type = 'cli';
   this.stats = stats;
   this.inlineErrors = inlineErrors;
@@ -24,8 +24,8 @@ function CLIReporter(emitter, stats, inlineErrors, details) {
   logger.debug(`Using '${this.type}' reporter.`);
 }
 
-function setTitle(title) {
-  const width = 80;
+function setTitle(title: string): void {
+  const width: number = 80;
   reporterOutputLogger.test(
     `${'='.repeat(width)}\n`
     + `  Test:  ${title}\n`
@@ -33,20 +33,20 @@ function setTitle(title) {
   );
 }
 
-CLIReporter.prototype.configureEmitter = function configureEmitter(emitter) {
-  emitter.on('start', (apiDescriptions, callback) => {
+CLIReporter.prototype.configureEmitter = function configureEmitter(emitter: any): void {
+  emitter.on('start', (apiDescriptions: any, callback: () => void) => {
     logger.debug('Beginning Dredd testing...');
     callback();
   });
 
-  emitter.on('end', (callback) => {
+  emitter.on('end', (callback: () => void) => {
     if (!this.inlineErrors) {
       if (this.errors.length) {
         reporterOutputLogger.info('Displaying failed tests...');
       }
-      this.errors.forEach((test) => {
+      this.errors.forEach((test: any) => {
         setTitle(test.title);
-        
+
         reporterOutputLogger.fail(`Duration: ${test.duration}ms`);
         reporterOutputLogger.fail(test.message);
         if (test.request)
@@ -74,7 +74,7 @@ CLIReporter.prototype.configureEmitter = function configureEmitter(emitter) {
     callback();
   });
 
-  emitter.on('test pass', (test) => {
+  emitter.on('test pass', (test: any) => {
     setTitle(test.title);
     reporterOutputLogger.pass(`${test.title} Duration: ${test.duration}ms`);
     if (this.details) {
@@ -84,11 +84,11 @@ CLIReporter.prototype.configureEmitter = function configureEmitter(emitter) {
     }
   });
 
-  emitter.on('test skip', (test) => {
+  emitter.on('test skip', (test: any) => {
     reporterOutputLogger.skip(test.title);
   });
 
-  emitter.on('test fail', (test) => {
+  emitter.on('test fail', (test: any) => {
     setTitle(test.title);
     reporterOutputLogger.fail(`${test.title} Duration: ${test.duration}ms`);
     if (this.inlineErrors) {
@@ -107,7 +107,7 @@ CLIReporter.prototype.configureEmitter = function configureEmitter(emitter) {
     }
   });
 
-  emitter.on('test error', (error, test) => {
+  emitter.on('test error', (error: any, test: any) => {
     if (CONNECTION_ERRORS.includes(error.code)) {
       test.message = 'Error connecting to server under test!';
       reporterOutputLogger.error(test.message);

@@ -11,7 +11,7 @@ import logger from '../logger';
 import reporterOutputLogger from './reporterOutputLogger';
 import prettifyResponse from '../prettifyResponse';
 
-function XUnitReporter(emitter, stats, path, details) {
+function XUnitReporter(this: any, emitter: any, stats: any, path: string, details: boolean): void {
   EventEmitter.call(this);
 
   this.type = 'xunit';
@@ -25,17 +25,17 @@ function XUnitReporter(emitter, stats, path, details) {
 }
 
 XUnitReporter.prototype.updateSuiteStats = function updateSuiteStats(
-  path,
-  stats,
-  callback,
-) {
-  fs.readFile(path, (err, data) => {
+  path: string,
+  stats: any,
+  callback: () => void,
+): void {
+  fs.readFile(path, (err: any, data: any) => {
     if (!err) {
       data = data.toString();
-      const position = data.toString().indexOf('\n');
+      const position: number = data.toString().indexOf('\n');
       if (position !== -1) {
-        const restOfFile = data.substr(position + 1);
-        const newStats = this.toTag(
+        const restOfFile: string = data.substr(position + 1);
+        const newStats: string = this.toTag(
           'testsuite',
           {
             name: 'Dredd Tests',
@@ -48,11 +48,11 @@ XUnitReporter.prototype.updateSuiteStats = function updateSuiteStats(
           },
           false,
         );
-        const xmlHeader = '<?xml version="1.0" encoding="UTF-8"?>';
+        const xmlHeader: string = '<?xml version="1.0" encoding="UTF-8"?>';
         fs.writeFile(
           path,
           `${xmlHeader}\n${newStats}\n${restOfFile}</testsuite>`,
-          (error) => {
+          (error: any) => {
             if (error) {
               reporterOutputLogger.error(error);
             }
@@ -69,21 +69,26 @@ XUnitReporter.prototype.updateSuiteStats = function updateSuiteStats(
   });
 };
 
-XUnitReporter.prototype.cdata = function cdata(str) {
+XUnitReporter.prototype.cdata = function cdata(str: string): string {
   return `<![CDATA[${str}]]>`;
 };
 
-XUnitReporter.prototype.appendLine = function appendLine(path, line) {
+XUnitReporter.prototype.appendLine = function appendLine(path: string, line: string): void {
   fs.appendFileSync(path, `${line}\n`);
 };
 
-XUnitReporter.prototype.toTag = function toTag(name, attrs, close, content) {
-  const end = close ? '/>' : '>';
-  const pairs = [];
+XUnitReporter.prototype.toTag = function toTag(
+  name: string,
+  attrs: Record<string, any> | null,
+  close: boolean,
+  content?: string,
+): string {
+  const end: string = close ? '/>' : '>';
+  const pairs: string[] = [];
   if (attrs) {
-    Object.keys(attrs).forEach((key) => pairs.push(`${key}="${attrs[key]}"`));
+    Object.keys(attrs).forEach((key: string) => pairs.push(`${key}="${attrs[key]}"`));
   }
-  let tag = `<${name}${pairs.length ? ` ${pairs.join(' ')}` : ''}${end}`;
+  let tag: string = `<${name}${pairs.length ? ` ${pairs.join(' ')}` : ''}${end}`;
   if (content) {
     tag += `${content}</${name}${end}`;
   }
@@ -91,9 +96,9 @@ XUnitReporter.prototype.toTag = function toTag(name, attrs, close, content) {
 };
 
 XUnitReporter.prototype.sanitizedPath = function sanitizedPath(
-  path = './report.xml',
-) {
-  const filePath = pathmodule.resolve(untildify(path));
+  path: string = './report.xml',
+): string {
+  const filePath: string = pathmodule.resolve(untildify(path));
   if (fs.existsSync(filePath)) {
     logger.warn(`File exists at ${filePath}, will be overwritten...`);
     fs.unlinkSync(filePath);
@@ -101,8 +106,8 @@ XUnitReporter.prototype.sanitizedPath = function sanitizedPath(
   return filePath;
 };
 
-XUnitReporter.prototype.configureEmitter = function configureEmitter(emitter) {
-  emitter.on('start', (apiDescriptions, callback) => {
+XUnitReporter.prototype.configureEmitter = function configureEmitter(emitter: any): void {
+  emitter.on('start', (apiDescriptions: any, callback: () => void) => {
     makeDir(pathmodule.dirname(this.path))
       .then(() => {
         this.appendLine(
@@ -123,24 +128,24 @@ XUnitReporter.prototype.configureEmitter = function configureEmitter(emitter) {
         );
         callback();
       })
-      .catch((err) => {
+      .catch((err: any) => {
         reporterOutputLogger.error(err);
         callback();
       });
   });
 
-  emitter.on('end', (callback) => {
+  emitter.on('end', (callback: () => void) => {
     this.updateSuiteStats(this.path, this.stats, callback);
   });
 
-  emitter.on('test pass', (test) => {
-    const attrs = {
+  emitter.on('test pass', (test: any) => {
+    const attrs: Record<string, any> = {
       name: htmlencode.htmlEncode(test.title),
       time: test.duration / 1000,
     };
 
     if (this.details) {
-      const deets = `\
+      const deets: string = `\
 \nRequest:
 ${prettifyResponse(test.request)}
 Expected:
@@ -162,8 +167,8 @@ ${prettifyResponse(test.actual)}\
     }
   });
 
-  emitter.on('test skip', (test) => {
-    const attrs = {
+  emitter.on('test skip', (test: any) => {
+    const attrs: Record<string, any> = {
       name: htmlencode.htmlEncode(test.title),
       time: test.duration / 1000,
     };
@@ -173,12 +178,12 @@ ${prettifyResponse(test.actual)}\
     );
   });
 
-  emitter.on('test fail', (test) => {
-    const attrs = {
+  emitter.on('test fail', (test: any) => {
+    const attrs: Record<string, any> = {
       name: htmlencode.htmlEncode(test.title),
       time: test.duration / 1000,
     };
-    const diff = `\
+    const diff: string = `\
 Message:
 ${test.message}
 Request:
@@ -199,12 +204,12 @@ ${prettifyResponse(test.actual)}\
     );
   });
 
-  emitter.on('test error', (error, test) => {
-    const attrs = {
+  emitter.on('test error', (error: any, test: any) => {
+    const attrs: Record<string, any> = {
       name: htmlencode.htmlEncode(test.title),
       time: test.duration / 1000,
     };
-    const errorMessage = `\nError: \n${error}\nStacktrace: \n${error.stack}`;
+    const errorMessage: string = `\nError: \n${error}\nStacktrace: \n${error.stack}`;
     this.appendLine(
       this.path,
       this.toTag(

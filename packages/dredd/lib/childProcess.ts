@@ -9,11 +9,11 @@ const TERM_DEFAULT_TIMEOUT_MS = 1000;
 const TERM_DEFAULT_RETRY_MS = 300;
 
 // Signals the child process to forcefully terminate
-export function signalKill(childProcess, callback) {
+export function signalKill(childProcess: any, callback: (err?: Error) => void): void {
   childProcess.emit('signalKill');
   if (IS_WINDOWS) {
     const taskkill = spawn('taskkill', ['/F', '/T', '/PID', childProcess.pid]);
-    taskkill.on('exit', (exitStatus) => {
+    taskkill.on('exit', (exitStatus: number | null) => {
       if (exitStatus) {
         return callback(
           new Error(
@@ -30,7 +30,7 @@ export function signalKill(childProcess, callback) {
 }
 
 // Signals the child process to gracefully terminate
-export function signalTerm(childProcess, callback) {
+export function signalTerm(childProcess: any, callback: (err?: Error) => void): void {
   childProcess.emit('signalTerm');
   if (IS_WINDOWS) {
     // On Windows, there is no such way as SIGTERM or SIGINT. The closest
@@ -72,42 +72,42 @@ export function signalTerm(childProcess, callback) {
 //                      attempts will be done
 // - retryDelay (number) - Delay in ms between termination attempts
 // - force (boolean) - Kills the process forcefully after the timeout
-export function terminate(childProcess, options = {}, callback) {
+export function terminate(childProcess: any, options: any = {}, callback?: (err?: Error) => void): void {
   if (typeof options === 'function') {
     [callback, options] = Array.from([options, {}]);
   }
-  const force = options.force || false;
+  const force: boolean = options.force || false;
 
   // If the timeout is zero or less then the delay for waiting between
   // retries, there will be just one termination attempt
-  const timeout = options.timeout ? options.timeout : TERM_DEFAULT_TIMEOUT_MS;
-  const retryDelay = options.retryDelay
+  const timeout: number = options.timeout ? options.timeout : TERM_DEFAULT_TIMEOUT_MS;
+  const retryDelay: number = options.retryDelay
     ? options.retryDelay
     : TERM_DEFAULT_RETRY_MS;
 
   let terminated = false;
-  const onExit = () => {
+  const onExit = (): void => {
     terminated = true;
     childProcess.removeListener('exit', onExit);
   };
   childProcess.on('exit', onExit);
 
-  const start = Date.now();
-  let t;
+  const start: number = Date.now();
+  let t: ReturnType<typeof setTimeout>;
 
   // A function representing one check, whether the process already
   // ended or not. It is repeatedly called until the timeout has passed.
-  function check() {
+  function check(): void {
     if (terminated) {
       // Successfully terminated
       clearTimeout(t);
-      return callback();
+      return callback!();
     }
     if (Date.now() - start < timeout) {
       // Still not terminated, try again
-      signalTerm(childProcess, (err) => {
+      signalTerm(childProcess, (err?: Error) => {
         if (err) {
-          return callback(err);
+          return callback!(err);
         }
         t = setTimeout(check, retryDelay);
       });
@@ -116,9 +116,9 @@ export function terminate(childProcess, options = {}, callback) {
       // kill the process (force) or provide an error
       clearTimeout(t);
       if (force) {
-        signalKill(childProcess, callback);
+        signalKill(childProcess, callback!);
       } else {
-        callback(
+        callback!(
           new Error(
             `Unable to gracefully terminate process ${childProcess.pid}`,
           ),
@@ -128,15 +128,15 @@ export function terminate(childProcess, options = {}, callback) {
   }
 
   // Fire the first termination attempt and check the result
-  signalTerm(childProcess, (err) => {
+  signalTerm(childProcess, (err?: Error) => {
     if (err) {
-      return callback(err);
+      return callback!(err);
     }
     t = setTimeout(check, TERM_FIRST_CHECK_TIMEOUT_MS);
   });
 }
 
-export function spawn(...args) {
+export function spawn(...args: any[]): any {
   const childProcess = crossSpawn.spawn.apply(null, args);
 
   ignorePipeErrors(childProcess);
@@ -153,37 +153,37 @@ export function spawn(...args) {
     terminatedIntentionally = true;
   });
 
-  childProcess.signalKill = () => {
-    signalKill(childProcess, (err) => {
+  childProcess.signalKill = (): void => {
+    signalKill(childProcess, (err?: Error) => {
       if (err) {
         childProcess.emit('error', err);
       }
     });
   };
 
-  childProcess.signalTerm = () => {
-    signalTerm(childProcess, (err) => {
+  childProcess.signalTerm = (): void => {
+    signalTerm(childProcess, (err?: Error) => {
       if (err) {
         childProcess.emit('error', err);
       }
     });
   };
 
-  childProcess.terminate = (options) => {
-    terminate(childProcess, options, (err) => {
+  childProcess.terminate = (options: any): void => {
+    terminate(childProcess, options, (err?: Error) => {
       if (err) {
         childProcess.emit('error', err);
       }
     });
   };
 
-  childProcess.on('error', (err) => {
+  childProcess.on('error', (err: any) => {
     if (err.syscall && err.syscall.indexOf('spawn') >= 0) {
       childProcess.spawned = false;
     }
   });
 
-  childProcess.on('exit', (exitStatus, signal) => {
+  childProcess.on('exit', (exitStatus: number | null, signal: string | null) => {
     childProcess.terminated = true;
     childProcess.killedIntentionally = killedIntentionally;
     childProcess.terminatedIntentionally = terminatedIntentionally;

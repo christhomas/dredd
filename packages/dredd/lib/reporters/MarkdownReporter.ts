@@ -10,7 +10,7 @@ import logger from '../logger';
 import reporterOutputLogger from './reporterOutputLogger';
 import prettifyResponse from '../prettifyResponse';
 
-function MarkdownReporter(emitter, stats, path, details) {
+function MarkdownReporter(this: any, emitter: any, stats: any, path: string, details: boolean): void {
   EventEmitter.call(this);
 
   this.type = 'markdown';
@@ -26,9 +26,9 @@ function MarkdownReporter(emitter, stats, path, details) {
 }
 
 MarkdownReporter.prototype.sanitizedPath = function sanitizedPath(
-  path = './report.md',
-) {
-  const filePath = pathmodule.resolve(untildify(path));
+  path: string = './report.md',
+): string {
+  const filePath: string = pathmodule.resolve(untildify(path));
   if (fs.existsSync(filePath)) {
     logger.warn(`File exists at ${filePath}, will be overwritten...`);
   }
@@ -36,27 +36,27 @@ MarkdownReporter.prototype.sanitizedPath = function sanitizedPath(
 };
 
 MarkdownReporter.prototype.configureEmitter = function configureEmitter(
-  emitter,
-) {
-  const title = (str) => `${Array(this.level).join('#')} ${str}`;
+  emitter: any,
+): void {
+  const title = (str: string): string => `${Array(this.level).join('#')} ${str}`;
 
-  emitter.on('start', (apiDescriptions, callback) => {
+  emitter.on('start', (apiDescriptions: any, callback: () => void) => {
     this.level++;
     this.buf += `${title('Dredd Tests')}\n`;
     callback();
   });
 
-  emitter.on('end', (callback) => {
+  emitter.on('end', (callback: () => void) => {
     makeDir(pathmodule.dirname(this.path))
       .then(() => {
-        fs.writeFile(this.path, this.buf, (error) => {
+        fs.writeFile(this.path, this.buf, (error: any) => {
           if (error) {
             reporterOutputLogger.error(error);
           }
           callback();
         });
       })
-      .catch((err) => {
+      .catch((err: any) => {
         reporterOutputLogger.error(err);
         callback();
       });
@@ -66,7 +66,7 @@ MarkdownReporter.prototype.configureEmitter = function configureEmitter(
     this.level++;
   });
 
-  emitter.on('test pass', (test) => {
+  emitter.on('test pass', (test: any) => {
     this.buf += `${title(`Pass: ${test.title}`)}\n`;
 
     if (this.details) {
@@ -86,12 +86,12 @@ MarkdownReporter.prototype.configureEmitter = function configureEmitter(
     this.level--;
   });
 
-  emitter.on('test skip', (test) => {
+  emitter.on('test skip', (test: any) => {
     this.buf += `${title(`Skip: ${test.title}`)}\n`;
     this.level--;
   });
 
-  emitter.on('test fail', (test) => {
+  emitter.on('test fail', (test: any) => {
     this.buf += title(`Fail: ${test.title}\n`);
 
     this.level++;
@@ -110,7 +110,7 @@ MarkdownReporter.prototype.configureEmitter = function configureEmitter(
     this.level--;
   });
 
-  emitter.on('test error', (error, test) => {
+  emitter.on('test error', (error: any, test: any) => {
     this.buf += title(`Error: ${test.title}\n`);
     this.buf += '\n```\n';
     this.buf += `\nError: \n${error}\nStacktrace: \n${error.stack}\n`;
