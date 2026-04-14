@@ -33,8 +33,10 @@ function execCommand(options = {}, cb) {
   });
 }
 
-function record(transport, level, message) {
-  output += `\n${level}: ${message}`;
+const stripAnsi = (str) => str.replace(/\u001b\[\d+m/g, '');
+
+function record(info) {
+  output += `\n${stripAnsi(info.level)}: ${info.message}`;
 }
 
 // These tests were separated out from a larger file. They deserve a rewrite,
@@ -42,18 +44,18 @@ function record(transport, level, message) {
 describe('OpenAPI 2', () => {
   before(() => {
     logger.consoleTransport.silent = true;
-    logger.on('logging', record);
+    logger.on('data', record);
 
     reporterOutputLogger.consoleTransport.silent = true;
-    reporterOutputLogger.on('logging', record);
+    reporterOutputLogger.on('data', record);
   });
 
   after(() => {
     logger.consoleTransport.silent = false;
-    logger.removeListener('logging', record);
+    logger.removeListener('data', record);
 
     reporterOutputLogger.consoleTransport.silent = false;
-    reporterOutputLogger.removeListener('logging', record);
+    reporterOutputLogger.removeListener('data', record);
   });
 
   describe('when OpenAPI 2 document has multiple responses', () => {

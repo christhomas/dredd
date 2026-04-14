@@ -16,6 +16,7 @@ describe('CLI - Server Process', () => {
   describe('when specified by URL', () => {
     let server
     let serverRuntimeInfo
+    let serverPort
 
     before((done) => {
       const app = createServer()
@@ -30,6 +31,7 @@ describe('CLI - Server Process', () => {
 
       server = app.listen((err, info) => {
         serverRuntimeInfo = info
+        serverPort = server.address().port
         done(err)
       })
     })
@@ -38,17 +40,17 @@ describe('CLI - Server Process', () => {
 
     describe('when is running', () => {
       let cliInfo
-      const args = [
-        './test/fixtures/single-get.apib',
-        `http://127.0.0.1:${DEFAULT_SERVER_PORT}`
-      ]
 
-      before((done) =>
+      before((done) => {
+        const args = [
+          './test/fixtures/single-get.apib',
+          `http://127.0.0.1:${serverPort}`
+        ]
         runCLI(args, (err, info) => {
           cliInfo = info
           done(err)
         })
-      )
+      })
 
       it('should request /machines', () =>
         assert.deepEqual(serverRuntimeInfo.requestCounts, { '/machines': 1 }))
@@ -57,17 +59,17 @@ describe('CLI - Server Process', () => {
 
     describe('when is not running', () => {
       let cliInfo
-      const args = [
-        './test/fixtures/apiary.apib',
-        `http://127.0.0.1:${NON_EXISTENT_PORT}`
-      ]
 
-      before((done) =>
+      before((done) => {
+        const args = [
+          './test/fixtures/apiary.apib',
+          `http://127.0.0.1:${NON_EXISTENT_PORT}`
+        ]
         runCLI(args, (err, info) => {
           cliInfo = info
           done(err)
         })
-      )
+      })
 
       it('should return understandable message', () =>
         assert.include(cliInfo.stdout, 'Error connecting'))
