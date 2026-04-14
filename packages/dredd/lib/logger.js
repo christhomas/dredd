@@ -7,7 +7,7 @@ winston.addColors({
 });
 
 const consoleTransport = new winston.transports.Console({
-  stderrLevels: ['error'],
+  stderrLevels: ['error', 'warn', 'debug'],
   format: winston.format.combine(
     winston.format.colorize(),
     winston.format.simple(),
