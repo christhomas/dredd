@@ -1,4 +1,4 @@
-import defaultRequest from 'request';
+import defaultRequest from './httpRequest';
 import caseless from 'caseless';
 
 import defaultLogger from './logger';

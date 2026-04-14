@@ -1,7 +1,7 @@
 import clone from 'clone';
 import { v4 as generateUuid } from 'uuid';
 import os from 'os';
-import request from 'request';
+import request from '../httpRequest';
 
 import logger from '../logger';
 import reporterOutputLogger from './reporterOutputLogger';

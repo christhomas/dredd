@@ -1,5 +1,5 @@
 import fs from 'fs';
-import defaultRequest from 'request';
+import defaultRequest from './httpRequest';
 
 import isURL from './isURL';
 
