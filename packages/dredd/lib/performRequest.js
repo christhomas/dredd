@@ -42,9 +42,11 @@ function performRequest(uri, transactionReq, options, callback) {
     );
 
     const protocol = httpOptions.uri.split(':')[0].toUpperCase();
+    // Strip query parameters from logged URI to avoid exposing sensitive data
+    const logUri = httpOptions.uri.split('?')[0];
     logger.debug(
       `Performing ${protocol} request to the server under test: ` +
-        `${httpOptions.method} ${httpOptions.uri}`,
+        `${httpOptions.method} ${logUri}`,
     );
 
     request(httpOptions, (error, response, responseBody) => {

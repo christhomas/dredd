@@ -1,19 +1,20 @@
 import R from 'ramda';
+import express from 'express';
 import { assert } from 'chai';
 
 import logger from '../../lib/logger';
 import reporterOutputLogger from '../../lib/reporters/reporterOutputLogger';
 import Dredd from '../../lib/Dredd';
 
-const PORT = 19876; // Avoid conflicts with other test suites
-
 let output = '';
+let server;
+let serverPort;
 
 function execCommand(options = {}, cb) {
   output = '';
   let finished = false;
   const defaultConfig = {
-    server: `http://127.0.0.1:${PORT}`,
+    server: `http://127.0.0.1:${serverPort}`,
   };
 
   const dreddOptions = R.mergeDeepRight(defaultConfig, options);
@@ -42,24 +43,38 @@ function record(info) {
 // These tests were separated out from a larger file. They deserve a rewrite,
 // see https://github.com/apiaryio/dredd/issues/1288
 describe('OpenAPI 2', () => {
-  before(() => {
+  before((done) => {
     logger.consoleTransport.silent = true;
     logger.on('data', record);
 
     reporterOutputLogger.consoleTransport.silent = true;
     reporterOutputLogger.on('data', record);
+
+    // Start a server that responds to GET /honey with a valid Bee response
+    const app = express();
+    app.use(express.json());
+    app.get('/honey', (req, res) => {
+      res.json({ id: 1, name: 'Buzzy', tag: 'worker' });
+    });
+
+    server = app.listen(0, () => {
+      serverPort = server.address().port;
+      done();
+    });
   });
 
-  after(() => {
+  after((done) => {
     logger.consoleTransport.silent = false;
     logger.removeListener('data', record);
 
     reporterOutputLogger.consoleTransport.silent = false;
     reporterOutputLogger.removeListener('data', record);
+
+    server.close(done);
   });
 
   describe('when OpenAPI 2 document has multiple responses', () => {
-    const reTransaction = /(skip|fail): (\w+) \((\d+)\) \/honey/g;
+    const reTransaction = /(skip|fail|error): (\w+) \((\d+)\) \/honey/g;
     let actual;
 
     before((done) =>
@@ -97,23 +112,23 @@ describe('OpenAPI 2', () => {
 
     it('recognizes all 3 transactions', () => assert.equal(actual.length, 3));
     [
+      { action: 'error', statusCode: '200' },
       { action: 'skip', statusCode: '400' },
       { action: 'skip', statusCode: '500' },
-      { action: 'fail', statusCode: '200' },
     ].forEach((expected, i) =>
       context(`the transaction #${i + 1}`, () => {
         it(`has status code ${expected.statusCode}`, () =>
           assert.equal(expected.statusCode, actual[i].statusCode));
         it(`is ${
-          expected.action === 'skip' ? '' : 'not '
-        }skipped by default`, () =>
+          expected.action === 'skip' ? 'skipped' : 'executed'
+        } by default`, () =>
           assert.equal(expected.action, actual[i].action));
       }),
     );
   });
 
   describe('when OpenAPI 2 document has multiple responses and hooks unskip some of them', () => {
-    const reTransaction = /(skip|fail): (\w+) \((\d+)\) \/honey/g;
+    const reTransaction = /(skip|fail|error): (\w+) \((\d+)\) \/honey/g;
     let actual;
 
     before((done) => {
@@ -155,8 +170,8 @@ describe('OpenAPI 2', () => {
 
     it('recognizes all 3 transactions', () => assert.equal(actual.length, 3));
     [
+      { action: 'error', statusCode: '200' },
       { action: 'skip', statusCode: '400' },
-      { action: 'fail', statusCode: '200' },
       { action: 'fail', statusCode: '500' }, // Unskipped in hooks
     ].forEach((expected, i) =>
       context(`the transaction #${i + 1}`, () => {
@@ -164,8 +179,8 @@ describe('OpenAPI 2', () => {
           assert.equal(expected.statusCode, actual[i].statusCode));
 
         const defaultMessage = `is ${
-          expected.action === 'skip' ? '' : 'not '
-        }skipped by default`;
+          expected.action === 'skip' ? 'skipped' : 'executed'
+        } by default`;
         const unskippedMessage = 'is unskipped in hooks';
         it(`${
           expected.statusCode === '500' ? unskippedMessage : defaultMessage

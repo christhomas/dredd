@@ -85,8 +85,6 @@ CLIReporter.prototype.configureEmitter = function configureEmitter(emitter) {
   });
 
   emitter.on('test skip', (test) => {
-    if (test.filteredOut) return;
-      
     reporterOutputLogger.skip(test.title);
   });
 
