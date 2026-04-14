@@ -4,51 +4,67 @@ import defaultRequest from './httpRequest';
 import defaultLogger from './logger';
 
 /**
- * Performs the HTTP request as described in the 'transaction.request' object
+ * Performs the HTTP request as described in the 'transaction.request' object.
+ * Supports both async and callback patterns.
  */
-function performRequest(uri: string, transactionReq: any, options: any, callback?: (err: any, res?: any) => void): void {
-  if (typeof options === 'function') {
-    [options, callback] = [{}, options];
-  }
+export async function performRequestAsync(
+  uri: string,
+  transactionReq: any,
+  options: any = {},
+): Promise<any> {
   const logger = options.logger || defaultLogger;
   const request = options.request || defaultRequest;
 
-  const httpOptions: any = { ...options.http || {}};
+  const httpOptions: any = { ...options.http || {} };
   httpOptions.proxy = false;
   httpOptions.followRedirect = false;
   httpOptions.encoding = null;
   httpOptions.method = transactionReq.method;
   httpOptions.uri = uri;
 
-  try {
-    httpOptions.body = getBodyAsBuffer(
-      transactionReq.body,
-      transactionReq.bodyEncoding,
-    );
-    httpOptions.headers = normalizeContentLengthHeader(
-      transactionReq.headers,
-      httpOptions.body,
-    );
+  httpOptions.body = getBodyAsBuffer(
+    transactionReq.body,
+    transactionReq.bodyEncoding,
+  );
+  httpOptions.headers = normalizeContentLengthHeader(
+    transactionReq.headers,
+    httpOptions.body,
+  );
 
-    const protocol = httpOptions.uri.split(':')[0].toUpperCase();
-    // Strip query parameters from logged URI to avoid exposing sensitive data
-    const logUri = httpOptions.uri.split('?')[0];
-    logger.debug(
-      `Performing ${protocol} request to the server under test: ` +
-        `${httpOptions.method} ${logUri}`,
-    );
+  const protocol = httpOptions.uri.split(':')[0].toUpperCase();
+  const logUri = httpOptions.uri.split('?')[0];
+  logger.debug(
+    `Performing ${protocol} request to the server under test: ` +
+      `${httpOptions.method} ${logUri}`,
+  );
 
+  return new Promise((resolve, reject) => {
     request(httpOptions, (error: any, response: any, responseBody: any) => {
       logger.debug(`Handling ${protocol} response from the server under test`);
       if (error) {
-        callback!(error);
+        reject(error);
       } else {
-        callback!(null, createTransactionResponse(response, responseBody));
+        resolve(createTransactionResponse(response, responseBody));
       }
     });
-  } catch (error) {
-    process.nextTick(() => callback!(error));
+  });
+}
+
+/**
+ * Legacy callback interface for backward compatibility.
+ */
+function performRequest(
+  uri: string,
+  transactionReq: any,
+  options: any,
+  callback?: (err: any, res?: any) => void,
+): void {
+  if (typeof options === 'function') {
+    [options, callback] = [{}, options];
   }
+  performRequestAsync(uri, transactionReq, options)
+    .then((result) => callback!(null, result))
+    .catch((error) => callback!(error));
 }
 
 /**
@@ -61,8 +77,7 @@ export function getBodyAsBuffer(body: string | Buffer, encoding: string | undefi
 }
 
 /**
- * Returns the encoding as either 'utf-8' or 'base64'. Throws
- * an error in case any other encoding is provided.
+ * Returns the encoding as either 'utf-8' or 'base64'.
  */
 export function normalizeBodyEncoding(encoding: string | undefined): string {
   if (!encoding) {
@@ -90,7 +105,7 @@ export function normalizeBodyEncoding(encoding: string | undefined): string {
 export function normalizeContentLengthHeader(headers: any, body: Buffer, options: any = {}): any {
   const logger = options.logger || defaultLogger;
 
-  const modifiedHeaders = { ...headers};
+  const modifiedHeaders = { ...headers };
   const calculatedValue = Buffer.byteLength(body);
   const name = caseless(modifiedHeaders).has('Content-Length');
   if (name) {
@@ -109,13 +124,12 @@ export function normalizeContentLengthHeader(headers: any, body: Buffer, options
 }
 
 /**
- * Real transaction response object factory. Serializes binary responses
- * to string using Base64 encoding.
+ * Real transaction response object factory.
  */
 export function createTransactionResponse(response: any, body: Buffer): any {
   const transactionRes: any = {
     statusCode: response.statusCode,
-    headers: { ...response.headers},
+    headers: { ...response.headers },
   };
   if (Buffer.byteLength(body || '')) {
     transactionRes.bodyEncoding = detectBodyEncoding(body);
@@ -128,11 +142,6 @@ export function createTransactionResponse(response: any, body: Buffer): any {
  * Detects body encoding
  */
 export function detectBodyEncoding(body: Buffer): string {
-  // U+FFFD is a replacement character in UTF-8 and indicates there
-  // are some bytes which could not been translated as UTF-8. Therefore
-  // let's assume the body is in binary format. Dredd encodes binary as
-  // Base64 to be able to transfer it wrapped in JSON over the TCP to non-JS
-  // hooks implementations.
   return body.toString().includes('\ufffd') ? 'base64' : 'utf-8';
 }
 
