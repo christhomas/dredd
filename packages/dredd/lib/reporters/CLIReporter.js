@@ -26,8 +26,8 @@ function CLIReporter(emitter, stats, inlineErrors, details) {
 
 function setTitle(title) {
   const width = 80;
-  console.log(""
-    + `${'='.repeat(width)}\n`
+  reporterOutputLogger.test(
+    `${'='.repeat(width)}\n`
     + `  Test:  ${title}\n`
     + `${'='.repeat(width)}`
   );
@@ -76,7 +76,7 @@ CLIReporter.prototype.configureEmitter = function configureEmitter(emitter) {
 
   emitter.on('test pass', (test) => {
     setTitle(test.title);
-    reporterOutputLogger.pass(`Duration: ${test.duration}ms`);
+    reporterOutputLogger.pass(`${test.title} Duration: ${test.duration}ms`);
     if (this.details) {
       reporterOutputLogger.request(`\n${prettifyResponse(test.request)}\n`);
       reporterOutputLogger.expected(`\n${prettifyResponse(test.expected)}\n`);
@@ -92,7 +92,7 @@ CLIReporter.prototype.configureEmitter = function configureEmitter(emitter) {
 
   emitter.on('test fail', (test) => {
     setTitle(test.title);
-    reporterOutputLogger.fail(`Duration: ${test.duration}ms`);
+    reporterOutputLogger.fail(`${test.title} Duration: ${test.duration}ms`);
     if (this.inlineErrors) {
       reporterOutputLogger.fail(test.message);
       if (test.request) {

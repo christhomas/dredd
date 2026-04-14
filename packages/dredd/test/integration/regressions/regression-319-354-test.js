@@ -29,7 +29,7 @@ function parseDreddStdout(stdout) {
         entries.push(entry)
       }
       entry = { label: match[1], body: match[2] || '' }
-    } else {
+    } else if (entry) {
       entry.body += `\n${line.trim()}`
     }
   }
