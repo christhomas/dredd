@@ -18,11 +18,11 @@ aliases:
   - &install
     - run: yarn install --frozen-lockfile
 
-  - &node12
-    image: circleci/node:12
+  - &node20
+    image: cimg/node:20.20
 
-  - &python-docs # using Python 3.6 as that's the version ReadTheDocs is running
-    image: circleci/python:3.6-node
+  - &python-docs
+    image: cimg/python:3.11-node
 
   - &test-steps
     steps:
@@ -32,20 +32,16 @@ aliases:
       - run: yarn test
 
 jobs:
-  test-node14:
-    docker: [image: circleci/node:14]
+  test-node20:
+    docker: [<<: *node20]
     <<: *test-steps
 
-  test-node12:
-    docker: [<<: *node12]
-    <<: *test-steps
-
-  test-node10:
-    docker: [image: circleci/node:10]
+  test-node18:
+    docker: [image: cimg/node:18.20]
     <<: *test-steps
 
   test-e2e-apib:
-    docker: [<<: *node12]
+    docker: [<<: *node20]
     steps:
       - checkout
       - <<: *install
@@ -53,7 +49,7 @@ jobs:
       - run: npx lerna exec --scope="dredd" yarn e2e:apib
 
   test-e2e-openapi2:
-    docker: [<<: *node12]
+    docker: [<<: *node20]
     steps:
       - checkout
       - <<: *install
@@ -72,7 +68,7 @@ jobs:
       - run: yarn docs:test-extensions
 
   format-check:
-    docker: [<<: *node12]
+    docker: [<<: *node20]
     steps:
       - checkout
       - <<: *install
@@ -90,8 +86,8 @@ jobs:
 
   smoke-tests:
     docker:
-      - <<: *node12
-      - image: circleci/mongo:latest
+      - <<: *node20
+      - image: cimg/mongo:7.0
     steps:
       - checkout
       - <<: *install
@@ -103,9 +99,8 @@ workflows:
     jobs:
       - format-check
       - quality-checks
-      - test-node14
-      - test-node12
-      - test-node10
+      - test-node20
+      - test-node18
       - test-e2e-apib
       - test-e2e-openapi2
       - smoke-tests
