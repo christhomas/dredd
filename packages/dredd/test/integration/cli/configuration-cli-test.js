@@ -8,7 +8,7 @@ import loggerStub from '../../../lib/logger';
 import * as configUtils from '../../../lib/configUtils';
 
 const proxyquire = noCallThru();
-const PORT = 9876;
+const PORT = 19876;
 
 let exitStatus;
 

@@ -260,7 +260,7 @@ export function editYaml(file, update) {
   update(contents);
 
   makeDir.sync(path.dirname(file));
-  fs.writeFileSync(file, yaml.safeDump(contents));
+  fs.writeFileSync(file, yaml.dump(contents));
 }
 
 export function updateAppVeyor(options = {}) {

@@ -82,43 +82,43 @@ describe('configUtils', () => {
       configUtils.save(argv);
       const call = fsStub.writeFileSync.getCall(0);
       const { args } = call;
-      assert.property(yamlStub.safeLoad(args[1]), 'endpoint');
+      assert.property(yamlStub.load(args[1]), 'endpoint');
     });
 
     it('should add blueprint key', () => {
       configUtils.save(argv);
       const call = fsStub.writeFileSync.getCall(0);
       const { args } = call;
-      assert.property(yamlStub.safeLoad(args[1]), 'blueprint');
+      assert.property(yamlStub.load(args[1]), 'blueprint');
     });
 
     it('should remove aliases', () => {
       configUtils.save(argv);
       const call = fsStub.writeFileSync.getCall(0);
       const { args } = call;
-      assert.notProperty(yamlStub.safeLoad(args[1]), 'p');
-      assert.notProperty(yamlStub.safeLoad(args[1]), 'q');
+      assert.notProperty(yamlStub.load(args[1]), 'p');
+      assert.notProperty(yamlStub.load(args[1]), 'q');
     });
 
     it('should remove _', () => {
       configUtils.save(argv);
       const call = fsStub.writeFileSync.getCall(0);
       const { args } = call;
-      assert.notProperty(yamlStub.safeLoad(args[1]), '_');
+      assert.notProperty(yamlStub.load(args[1]), '_');
     });
 
     it('should remove $0', () => {
       configUtils.save(argv);
       const call = fsStub.writeFileSync.getCall(0);
       const { args } = call;
-      assert.notProperty(yamlStub.safeLoad(args[1]), '_');
+      assert.notProperty(yamlStub.load(args[1]), '_');
     });
 
     it('should save an object', () => {
       configUtils.save(argv);
       const call = fsStub.writeFileSync.getCall(0);
       const { args } = call;
-      assert.notProperty(yamlStub.safeLoad(args[1]), '_');
+      assert.notProperty(yamlStub.load(args[1]), '_');
     });
 
     it('should call YAML.dump', () => {
