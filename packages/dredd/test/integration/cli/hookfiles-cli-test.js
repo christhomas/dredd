@@ -11,7 +11,7 @@ import {
   DEFAULT_SERVER_PORT
 } from '../helpers'
 
-const COFFEE_BIN = 'node_modules/.bin/coffee'
+const COFFEE_BIN = require.resolve('coffeescript/bin/coffee')
 const DEFAULT_HOOK_HANDLER_PORT = 61321
 
 describe('CLI', () => {

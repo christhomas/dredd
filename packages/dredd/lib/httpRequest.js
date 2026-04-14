@@ -12,6 +12,7 @@ import { URL } from 'url';
  * @param {Object} [options.headers] - Request headers
  * @param {string|Buffer} [options.body] - Request body
  * @param {boolean} [options.followRedirect=true] - Whether to follow redirects
+ * @param {null} [options.encoding] - Set to null for binary (Buffer) response
  * @param {number} [options.timeout] - Request timeout in ms
  * @param {Function} callback - (error, response, body)
  */
@@ -48,7 +49,9 @@ export default function httpRequest(options, callback) {
     const chunks = [];
     res.on('data', (chunk) => chunks.push(chunk));
     res.on('end', () => {
-      const body = Buffer.concat(chunks);
+      const raw = Buffer.concat(chunks);
+      // Return Buffer when encoding is null (binary mode), string otherwise
+      const body = options.encoding === null ? raw : raw.toString('utf-8');
       callback(null, res, body);
     });
   });
