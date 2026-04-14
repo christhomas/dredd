@@ -126,7 +126,8 @@ Example:
   moveBlueprintArgToPath() {
     // Transform path and p argument to array if it's not
     if (!Array.isArray(this.argv.path)) {
-      this.argv.path = this.argv.p = [this.argv.path];
+      this.argv.path = [this.argv.path];
+      this.argv.p = this.argv.path;
     }
   }
 
@@ -183,7 +184,7 @@ Example:
         const exePath = process.argv[1];
         const stats = fs.statSync(exePath);
         buildTime = Math.floor(stats.mtimeMs / 1000);
-      } catch (err) {}
+      } catch (err) { /* Intentionally ignored */ }
       console.log(`${packageData.name} v${packageData.version} [${packageData.fork}] (${os.type()} ${os.release()}; ${os.arch()}) Build: ${buildTime}`);
       this._processExit(0);
     }
@@ -375,7 +376,8 @@ Example:
 
   takeRestOfParamsAsPath() {
     // And rest of arguments concating to 'path' and 'p' opts, duplicates are filtered out later
-    this.argv.p = this.argv.path = this.argv.path.concat(this.argv._);
+    this.argv.path = this.argv.path.concat(this.argv._);
+    this.argv.p = this.argv.path;
     return this;
   }
 

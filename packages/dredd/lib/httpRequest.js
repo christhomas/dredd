@@ -40,9 +40,7 @@ export default function httpRequest(options, callback) {
       res.statusCode < 400 &&
       res.headers.location
     ) {
-      const redirectOptions = Object.assign({}, options, {
-        uri: res.headers.location,
-      });
+      const redirectOptions = { ...options, uri: res.headers.location,};
       return httpRequest(redirectOptions, callback);
     }
 

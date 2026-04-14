@@ -1,5 +1,5 @@
-import defaultRequest from './httpRequest';
 import caseless from 'caseless';
+import defaultRequest from './httpRequest';
 
 import defaultLogger from './logger';
 
@@ -24,7 +24,7 @@ function performRequest(uri, transactionReq, options, callback) {
   const logger = options.logger || defaultLogger;
   const request = options.request || defaultRequest;
 
-  const httpOptions = Object.assign({}, options.http || {});
+  const httpOptions = { ...options.http || {}};
   httpOptions.proxy = false;
   httpOptions.followRedirect = false;
   httpOptions.encoding = null;
@@ -111,7 +111,7 @@ export function normalizeBodyEncoding(encoding) {
 export function normalizeContentLengthHeader(headers, body, options = {}) {
   const logger = options.logger || defaultLogger;
 
-  const modifiedHeaders = Object.assign({}, headers);
+  const modifiedHeaders = { ...headers};
   const calculatedValue = Buffer.byteLength(body);
   const name = caseless(modifiedHeaders).has('Content-Length');
   if (name) {
@@ -139,7 +139,7 @@ export function normalizeContentLengthHeader(headers, body, options = {}) {
 export function createTransactionResponse(response, body) {
   const transactionRes = {
     statusCode: response.statusCode,
-    headers: Object.assign({}, response.headers),
+    headers: { ...response.headers},
   };
   if (Buffer.byteLength(body || '')) {
     transactionRes.bodyEncoding = detectBodyEncoding(body);

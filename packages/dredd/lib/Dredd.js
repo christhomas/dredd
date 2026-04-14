@@ -71,7 +71,7 @@ function parseContent(apiDescriptions, callback) {
       }
 
       const parsedAPIdescriptions = apiDescriptions.map((apiDescription, i) =>
-        Object.assign({}, parseResults[i], apiDescription),
+        ({ ...parseResults[i], ...apiDescription}),
       );
       callback(null, parsedAPIdescriptions);
     },
@@ -92,7 +92,7 @@ function compileTransactions(apiDescriptions) {
       }
     })
     .map((compileResult, i) =>
-      Object.assign({}, compileResult, apiDescriptions[i]),
+      ({ ...compileResult, ...apiDescriptions[i]}),
     );
 }
 
@@ -104,15 +104,13 @@ function toTransactions(apiDescriptions) {
       // property with details about the API description it comes from
       .map((apiDescription) =>
         apiDescription.transactions.map((transaction) =>
-          Object.assign(
-            {
-              apiDescription: {
+          ({
+            apiDescription: {
                 location: apiDescription.location,
                 mediaType: apiDescription.mediaType,
               },
-            },
-            transaction,
-          ),
+            ...transaction,
+          }),
         ),
       )
       // flatten array of arrays

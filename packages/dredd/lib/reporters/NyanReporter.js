@@ -13,9 +13,9 @@ function NyanCatReporter(emitter, stats) {
 
   if (this.isatty) {
     if (process.stdout.getWindowSize) {
-      windowWidth = process.stdout.getWindowSize(1)[0];
+      [windowWidth] = process.stdout.getWindowSize(1);
     } else {
-      windowWidth = tty.getWindowSize()[1];
+      [, windowWidth] = tty.getWindowSize();
     }
   } else {
     windowWidth = 75;

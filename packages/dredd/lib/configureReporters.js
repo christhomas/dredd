@@ -19,7 +19,7 @@ function intersection(a, b) {
   return Array.from(a).filter((value) => Array.from(b).includes(value));
 }
 
-function configureReporters(config, stats, runner) {
+function configureReporters(config, stats) {
   addReporter('base', config.emitter, stats);
 
   const reporters = config.reporter;
@@ -60,10 +60,11 @@ function configureReporters(config, stats, runner) {
         return new HTMLReporter(emitter, statistics, path, config.details);
       case 'markdown':
         return new MarkdownReporter(emitter, statistics, path, config.details);
-      default:
-        // I don't even know where to begin...
-        // TODO: DESIGN / REFACTOR WHOLE REPORTER(S) API FROM SCRATCH, THIS IS MADNESS!!1
+      default: {
+        // eslint-disable-next-line no-new
         new BaseReporter(emitter, statistics);
+        break;
+      }
     }
   }
 
@@ -74,7 +75,7 @@ function configureReporters(config, stats, runner) {
   stats.fileBasedReporters = usedFileReporters.length;
 
   if (usedFileReporters.length > 0) {
-    let usedFileReportersLength = usedFileReporters.length;
+    const usedFileReportersLength = usedFileReporters.length;
     if (usedFileReportersLength > outputs.length) {
       logger.warn(`
 There are more reporters requiring output paths than there are output paths

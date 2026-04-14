@@ -4,31 +4,27 @@ module.exports = {
     node: true,
   },
   rules: {
-    // Using 'console' is perfectly okay for a Node.js CLI tool and avoiding
-    // it only brings unnecessary complexity
+    // Using 'console' is perfectly okay for a Node.js CLI tool
     'no-console': 'off',
 
-    // This is to allow a convention for exporting functions solely for
-    // the purpose of the unit tests, see
-    // https://github.com/apiaryio/dredd-transactions/pull/179#discussion_r206852270
+    // Allow underscore-prefixed exports for test-only functions
     'no-underscore-dangle': 'off',
 
-    // Following rules were introduced to make the decaffeination
-    // of the codebase possible and are to be removed in the future
-    'class-methods-use-this': 'off',
-    'consistent-return': 'off',
+    // These are intentionally kept off as they conflict with common
+    // Node.js patterns used throughout the codebase
+    'no-param-reassign': 'off', // Common in Express middleware, hooks, and callbacks
+    'consistent-return': 'off', // Early returns in callbacks
+    'no-plusplus': 'off', // i++ is standard
+    'no-restricted-syntax': 'off', // for...of is fine in Node
     'import/no-extraneous-dependencies': 'off',
     'import/no-unresolved': 'off',
-    'import/prefer-default-export': 'off',
-    'max-len': 'off',
-    'no-continue': 'off',
-    'no-empty': 'off',
-    'no-multi-assign': 'off',
-    'no-new': 'off',
-    'no-param-reassign': 'off',
-    'no-plusplus': 'off',
-    'no-restricted-syntax': 'off',
-    'no-use-before-define': 'off',
-    'prefer-destructuring': 'off',
+    'import/extensions': 'off', // Mixed .js/.ts codebase
+    'max-len': 'off', // Handled by prettier
+
+    // Allow function hoisting (common JS pattern)
+    'no-use-before-define': ['error', { functions: false }],
+
+    // Methods that don't use this are common in event handler classes
+    'class-methods-use-this': 'off',
   },
 };

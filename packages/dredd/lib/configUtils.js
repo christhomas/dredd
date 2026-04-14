@@ -9,8 +9,7 @@ export function save(argsOrigin, path) {
 
   const args = clone(argsOrigin);
 
-  args.blueprint = args._[0];
-  args.endpoint = args._[1];
+  [args.blueprint, args.endpoint] = args._;
 
   Object.keys(args).forEach((key) => {
     if (key.length === 1) {
@@ -45,7 +44,8 @@ export function parseCustom(customArray) {
   if (Array.isArray(customArray)) {
     for (const string of customArray) {
       const splitted = string.split(/:(.+)?/);
-      output[splitted[0]] = splitted[1];
+      const [key, value] = splitted;
+      output[key] = value;
     }
   }
   return output;

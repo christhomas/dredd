@@ -247,36 +247,6 @@ $ go get github.com/snikch/goodman/cmd/goodman
   connectToHandler(callback) {
     let timeout;
     const start = Date.now();
-    const waitForConnect = () => {
-      if (Date.now() - start < this.connectTimeout) {
-        clearTimeout(timeout);
-
-        if (this.connectError !== false) {
-          logger.warn(
-            'Error connecting to the hooks handler process. Is the handler running? Retrying.',
-          );
-          this.connectError = false;
-        }
-
-        if (this.clientConnected !== true) {
-          connectAndSetupClient();
-          timeout = setTimeout(waitForConnect, this.connectRetry);
-        }
-      } else {
-        clearTimeout(timeout);
-        if (!this.clientConnected) {
-          if (this.handlerClient) {
-            this.handlerClient.destroy();
-          }
-          const msg =
-            `Connection timeout ${this.connectTimeout /
-              1000}s to hooks handler ` +
-            `on ${this.handlerHost}:${this.handlerPort} exceeded. Try increasing the limit.`;
-          callback(new Error(msg));
-        }
-      }
-    };
-
     const connectAndSetupClient = () => {
       logger.debug('Starting TCP connection with hooks handler process.');
 
@@ -352,6 +322,36 @@ $ go get github.com/snikch/goodman/cmd/goodman
       });
     };
 
+    const waitForConnect = () => {
+      if (Date.now() - start < this.connectTimeout) {
+        clearTimeout(timeout);
+
+        if (this.connectError !== false) {
+          logger.warn(
+            'Error connecting to the hooks handler process. Is the handler running? Retrying.',
+          );
+          this.connectError = false;
+        }
+
+        if (this.clientConnected !== true) {
+          connectAndSetupClient();
+          timeout = setTimeout(waitForConnect, this.connectRetry);
+        }
+      } else {
+        clearTimeout(timeout);
+        if (!this.clientConnected) {
+          if (this.handlerClient) {
+            this.handlerClient.destroy();
+          }
+          const msg =
+            `Connection timeout ${this.connectTimeout /
+              1000}s to hooks handler ` +
+            `on ${this.handlerHost}:${this.handlerPort} exceeded. Try increasing the limit.`;
+          callback(new Error(msg));
+        }
+      }
+    };
+
     timeout = setTimeout(waitForConnect, this.connectRetry);
   }
 
@@ -378,6 +378,9 @@ $ go get github.com/snikch/goodman/cmd/goodman
         logger.debug('Sending HTTP transaction data to hooks handler:', uuid);
         this.handlerClient.write(JSON.stringify(message));
         this.handlerClient.write(this.handlerMessageDelimiter);
+
+        // Set timeout for the hook (declared here so messageHandler can reference it)
+        let timeout;
 
         // Register event for the sent transaction
         function messageHandler(receivedMessage) {
@@ -417,8 +420,7 @@ $ go get github.com/snikch/goodman/cmd/goodman
           hookCallback();
         };
 
-        // Set timeout for the hook
-        let timeout = setTimeout(handleTimeout, this.timeout);
+        timeout = setTimeout(handleTimeout, this.timeout);
 
         this.emitter.on(uuid, messageHandler);
       });
