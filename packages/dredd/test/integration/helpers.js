@@ -8,6 +8,8 @@ import path from 'path';
 import ps from 'ps-node';
 import spawn from 'cross-spawn';
 
+import net from 'net';
+
 import logger from '../../lib/logger';
 import reporterOutputLogger from '../../lib/reporters/reporterOutputLogger';
 
@@ -15,6 +17,16 @@ import reporterOutputLogger from '../../lib/reporters/reporterOutputLogger';
 // conflicts between test suites. The actual port is read back from
 // server.address().port after listen.
 export const DEFAULT_SERVER_PORT = 0;
+
+// Get a free port by briefly binding to port 0, reading the assigned port,
+// and closing. Useful for CLI tests that need to know the port before starting.
+export function getFreePort(callback) {
+  const srv = net.createServer();
+  srv.listen(0, () => {
+    const { port } = srv.address();
+    srv.close(() => callback(null, port));
+  });
+}
 const DREDD_BIN = require.resolve('../../bin/dredd');
 
 // Records logging during runtime of a given function. Given function

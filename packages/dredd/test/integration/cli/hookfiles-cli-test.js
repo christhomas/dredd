@@ -11,7 +11,7 @@ import {
   DEFAULT_SERVER_PORT
 } from '../helpers'
 
-const DEFAULT_HOOK_HANDLER_PORT = 61321
+const DEFAULT_HOOK_HANDLER_PORT = 0
 
 describe('CLI', () => {
   describe('Arguments with existing API description document and responding server', () => {
@@ -249,21 +249,23 @@ describe('CLI', () => {
             socket.on('error', (err) => console.error(err))
           })
 
-          const args = [
-            './test/fixtures/single-get.apib',
-            `http://127.0.0.1:${DEFAULT_SERVER_PORT}`,
-            `--server=node ./test/fixtures/scripts/endless-ignore-term.js`,
-            '--server-wait=0',
-            `--language=node ./test/fixtures/scripts/endless-ignore-term.js`,
-            '--hookfiles=test/fixtures/hooks.js'
-          ]
-          hookHandler.listen(DEFAULT_HOOK_HANDLER_PORT, () =>
+          hookHandler.listen(DEFAULT_HOOK_HANDLER_PORT, () => {
+            const hookPort = hookHandler.address().port
+            const args = [
+              './test/fixtures/single-get.apib',
+              `http://127.0.0.1:${DEFAULT_SERVER_PORT}`,
+              `--server=node ./test/fixtures/scripts/endless-ignore-term.js`,
+              '--server-wait=0',
+              `--language=node ./test/fixtures/scripts/endless-ignore-term.js`,
+              '--hookfiles=test/fixtures/hooks.js',
+              `--hooks-worker-handler-port=${hookPort}`
+            ]
             runCLIWithServer(args, app, (err, info) => {
               hookHandler.close()
               runtimeInfo = info
               done(err)
             })
-          )
+          })
         })
 
         after((done) => killAll('test/fixtures/scripts/', done))
@@ -309,21 +311,23 @@ describe('CLI', () => {
             socket.on('error', (err) => console.error(err))
           })
 
-          const args = [
-            './test/fixtures/single-get.apib',
-            `http://127.0.0.1:${DEFAULT_SERVER_PORT}`,
-            `--server=node ./test/fixtures/scripts/endless-ignore-term.js`,
-            '--server-wait=0',
-            `--language=node ./test/fixtures/scripts/endless-ignore-term.js`,
-            '--hookfiles=./test/fixtures/scripts/emptyfile'
-          ]
-          hookHandler.listen(DEFAULT_HOOK_HANDLER_PORT, () =>
+          hookHandler.listen(DEFAULT_HOOK_HANDLER_PORT, () => {
+            const hookPort = hookHandler.address().port
+            const args = [
+              './test/fixtures/single-get.apib',
+              `http://127.0.0.1:${DEFAULT_SERVER_PORT}`,
+              `--server=node ./test/fixtures/scripts/endless-ignore-term.js`,
+              '--server-wait=0',
+              `--language=node ./test/fixtures/scripts/endless-ignore-term.js`,
+              '--hookfiles=./test/fixtures/scripts/emptyfile',
+              `--hooks-worker-handler-port=${hookPort}`
+            ]
             runCLIWithServer(args, app, (err, info) => {
               hookHandler.close()
               runtimeInfo = info
               done(err)
             })
-          )
+          })
         })
 
         after((done) => killAll('test/fixtures/scripts/', done))
