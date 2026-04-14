@@ -63,9 +63,9 @@ describe('configureReporters()', () => {
     'inline-errors': false,
   };
 
-  before(() => (loggerStub.transports.console.silent = true));
+  before(() => (loggerStub.consoleTransport.silent = true));
 
-  after(() => (loggerStub.transports.console.silent = false));
+  after(() => (loggerStub.consoleTransport.silent = false));
 
   describe('when there are no reporters', () => {
     beforeEach(() => resetStubs());

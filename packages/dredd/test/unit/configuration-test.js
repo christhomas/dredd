@@ -1,4 +1,3 @@
-import clone from 'clone';
 import { assert } from 'chai';
 
 import { applyLoggingOptions } from '../../lib/configuration';
@@ -7,14 +6,24 @@ import validateConfig from '../../lib/configuration/validateConfig';
 import logger from '../../lib/logger';
 import reporterOutputLogger from '../../lib/reporters/reporterOutputLogger';
 
-const defaultLoggerConsole = clone(logger.transports.console);
-const defaultReporterOutputLoggerConsole = clone(
-  reporterOutputLogger.transports.console,
-);
+const defaultLoggerState = {
+  level: logger.consoleTransport.level,
+  silent: logger.consoleTransport.silent || false,
+  colorize: logger.consoleTransport.colorize,
+  timestamp: logger.consoleTransport.timestamp,
+  format: logger.consoleTransport.format,
+};
+const defaultReporterState = {
+  level: reporterOutputLogger.consoleTransport.level,
+  silent: reporterOutputLogger.consoleTransport.silent || false,
+  colorize: reporterOutputLogger.consoleTransport.colorize,
+  timestamp: reporterOutputLogger.consoleTransport.timestamp,
+  format: reporterOutputLogger.consoleTransport.format,
+};
 
 function resetLoggerConsoles() {
-  logger.transports.console = defaultLoggerConsole;
-  reporterOutputLogger.transports.console = defaultReporterOutputLoggerConsole;
+  Object.assign(logger.consoleTransport, defaultLoggerState);
+  Object.assign(reporterOutputLogger.consoleTransport, defaultReporterState);
 }
 
 describe('applyLoggingOptions()', () => {
@@ -27,10 +36,10 @@ describe('applyLoggingOptions()', () => {
     });
 
     it('the application logger should be set to colorize', () => {
-      assert.isTrue(logger.transports.console.colorize);
+      assert.isTrue(logger.consoleTransport.colorize);
     });
     it('the application output should be set to colorize', () => {
-      assert.isTrue(reporterOutputLogger.transports.console.colorize);
+      assert.isTrue(reporterOutputLogger.consoleTransport.colorize);
     });
   });
 
@@ -40,10 +49,10 @@ describe('applyLoggingOptions()', () => {
     });
 
     it('the application logger should be set to colorize', () => {
-      assert.isTrue(logger.transports.console.colorize);
+      assert.isTrue(logger.consoleTransport.colorize);
     });
     it('the application output should be set to colorize', () => {
-      assert.isTrue(reporterOutputLogger.transports.console.colorize);
+      assert.isTrue(reporterOutputLogger.consoleTransport.colorize);
     });
   });
 
@@ -53,10 +62,10 @@ describe('applyLoggingOptions()', () => {
     });
 
     it('the application logger should be set not to colorize', () => {
-      assert.isFalse(logger.transports.console.colorize);
+      assert.isFalse(logger.consoleTransport.colorize);
     });
     it('the application output should be set not to colorize', () => {
-      assert.isFalse(reporterOutputLogger.transports.console.colorize);
+      assert.isFalse(reporterOutputLogger.consoleTransport.colorize);
     });
   });
 
@@ -66,11 +75,11 @@ describe('applyLoggingOptions()', () => {
     });
 
     it('the application logger level is set to warn', () => {
-      assert.equal(logger.transports.console.level, 'warn');
+      assert.equal(logger.consoleTransport.level, 'warn');
     });
     it('the application output logger is not influenced', () => {
-      assert.isFalse(reporterOutputLogger.transports.console.silent);
-      assert.equal(reporterOutputLogger.transports.console.level, 'info');
+      assert.isFalse(reporterOutputLogger.consoleTransport.silent);
+      assert.equal(reporterOutputLogger.consoleTransport.level, 'info');
     });
   });
 
@@ -80,11 +89,11 @@ describe('applyLoggingOptions()', () => {
     });
 
     it('the application logger level is set', () => {
-      assert.equal(logger.transports.console.level, 'error');
+      assert.equal(logger.consoleTransport.level, 'error');
     });
     it('the application output logger is not influenced', () => {
-      assert.isFalse(reporterOutputLogger.transports.console.silent);
-      assert.equal(reporterOutputLogger.transports.console.level, 'info');
+      assert.isFalse(reporterOutputLogger.consoleTransport.silent);
+      assert.equal(reporterOutputLogger.consoleTransport.level, 'info');
     });
   });
 
@@ -94,7 +103,7 @@ describe('applyLoggingOptions()', () => {
     });
 
     it('the value is understood', () => {
-      assert.equal(logger.transports.console.level, 'error');
+      assert.equal(logger.consoleTransport.level, 'error');
     });
   });
 
@@ -112,11 +121,11 @@ describe('applyLoggingOptions()', () => {
     });
 
     it('the application logger gets silenced', () => {
-      assert.isTrue(logger.transports.console.silent);
+      assert.isTrue(logger.consoleTransport.silent);
     });
     it('the application output logger is not influenced', () => {
-      assert.isFalse(reporterOutputLogger.transports.console.silent);
-      assert.equal(reporterOutputLogger.transports.console.level, 'info');
+      assert.isFalse(reporterOutputLogger.consoleTransport.silent);
+      assert.equal(reporterOutputLogger.consoleTransport.level, 'info');
     });
   });
 
@@ -126,7 +135,7 @@ describe('applyLoggingOptions()', () => {
     });
 
     it('the value is understood as warn', () => {
-      assert.equal(logger.transports.console.level, 'warn');
+      assert.equal(logger.consoleTransport.level, 'warn');
     });
   });
 
@@ -136,10 +145,10 @@ describe('applyLoggingOptions()', () => {
     });
 
     it('the application logger level is set to warn', () => {
-      assert.equal(logger.transports.console.level, 'warn');
+      assert.equal(logger.consoleTransport.level, 'warn');
     });
     it('the application logger is not set to add timestamps', () => {
-      assert.isFalse(logger.transports.console.timestamp);
+      assert.isFalse(logger.consoleTransport.timestamp);
     });
   });
 
@@ -149,10 +158,10 @@ describe('applyLoggingOptions()', () => {
     });
 
     it('the application logger level is set to error', () => {
-      assert.equal(logger.transports.console.level, 'error');
+      assert.equal(logger.consoleTransport.level, 'error');
     });
     it('the application logger is not set to add timestamps', () => {
-      assert.isFalse(logger.transports.console.timestamp);
+      assert.isFalse(logger.consoleTransport.timestamp);
     });
   });
 
@@ -162,10 +171,10 @@ describe('applyLoggingOptions()', () => {
     });
 
     it('the application logger level is set to debug', () => {
-      assert.equal(logger.transports.console.level, 'debug');
+      assert.equal(logger.consoleTransport.level, 'debug');
     });
     it('the application logger is set to add timestamps', () => {
-      assert.isTrue(logger.transports.console.timestamp);
+      assert.isTrue(logger.consoleTransport.timestamp);
     });
   });
 });

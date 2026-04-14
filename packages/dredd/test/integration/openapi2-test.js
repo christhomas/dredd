@@ -41,18 +41,18 @@ function record(transport, level, message) {
 // see https://github.com/apiaryio/dredd/issues/1288
 describe('OpenAPI 2', () => {
   before(() => {
-    logger.transports.console.silent = true;
+    logger.consoleTransport.silent = true;
     logger.on('logging', record);
 
-    reporterOutputLogger.transports.console.silent = true;
+    reporterOutputLogger.consoleTransport.silent = true;
     reporterOutputLogger.on('logging', record);
   });
 
   after(() => {
-    logger.transports.console.silent = false;
+    logger.consoleTransport.silent = false;
     logger.removeListener('logging', record);
 
-    reporterOutputLogger.transports.console.silent = false;
+    reporterOutputLogger.consoleTransport.silent = false;
     reporterOutputLogger.removeListener('logging', record);
   });
 

@@ -1,9 +1,6 @@
 import winston from 'winston';
 
-const logger = new winston.Logger({
-  transports: [
-    new winston.transports.Console({ colorize: true, level: 'info' }),
-  ],
+const customLevels = {
   levels: {
     info: 10,
     test: 9,
@@ -30,6 +27,28 @@ const logger = new winston.Logger({
     skip: 'yellow',
     error: 'red',
   },
+};
+
+winston.addColors(customLevels.colors);
+
+const consoleTransport = new winston.transports.Console({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.colorize(),
+    winston.format.simple(),
+  ),
 });
+
+// Track state for runtime config and test observability
+consoleTransport.colorize = true;
+consoleTransport.timestamp = false;
+
+const logger = winston.createLogger({
+  levels: customLevels.levels,
+  transports: [consoleTransport],
+});
+
+// Expose console transport directly on logger
+logger.consoleTransport = consoleTransport;
 
 export default logger;

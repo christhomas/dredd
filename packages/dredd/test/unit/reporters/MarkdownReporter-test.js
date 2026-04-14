@@ -28,13 +28,13 @@ describe('MarkdownReporter', () => {
   let test = {}
 
   before(() => {
-    loggerStub.transports.console.silent = true
-    reporterOutputLoggerStub.transports.console.silent = true
+    loggerStub.consoleTransport.silent = true
+    reporterOutputLoggerStub.consoleTransport.silent = true
   })
 
   after(() => {
-    loggerStub.transports.console.silent = false
-    reporterOutputLoggerStub.transports.console.silent = false
+    loggerStub.consoleTransport.silent = false
+    reporterOutputLoggerStub.consoleTransport.silent = false
   })
 
   beforeEach(() => {

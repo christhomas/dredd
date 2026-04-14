@@ -19,11 +19,11 @@ describe('DotReporter', () => {
   let dotReporter
 
   before(() => {
-    loggerStub.transports.console.silent = true
+    loggerStub.consoleTransport.silent = true
   })
 
   after(() => {
-    loggerStub.transports.console.silent = false
+    loggerStub.consoleTransport.silent = false
   })
 
   beforeEach(() => {

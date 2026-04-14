@@ -17,11 +17,11 @@ describe('NyanCatReporter', () => {
   let nyanReporter
 
   before(() => {
-    reporterOutputLoggerStub.transports.console.silent = true
+    reporterOutputLoggerStub.consoleTransport.silent = true
   })
 
   after(() => {
-    reporterOutputLoggerStub.transports.console.silent = false
+    reporterOutputLoggerStub.consoleTransport.silent = false
   })
 
   beforeEach(() => {

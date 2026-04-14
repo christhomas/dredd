@@ -37,12 +37,12 @@ describe('TransactionRunner', () => {
   let runner;
 
   before(() => {
-    loggerStub.transports.console.silent = true;
+    loggerStub.consoleTransport.silent = true;
     nock.disableNetConnect();
   });
 
   after(() => {
-    loggerStub.transports.console.silent = false;
+    loggerStub.consoleTransport.silent = false;
     nock.enableNetConnect();
   });
 
