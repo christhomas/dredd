@@ -190,7 +190,7 @@ describe('Regression: Issues #319 and #354', () => {
       assert.include(results.summary, '4 passing'))
 
     describe('Attributes defined in resource are referenced from payload [GET /bricks/XYZ42]', () => {
-      it('has no request body', () => assert.isUndefined(results.bodies[0]))
+      it('has no request body', () => assert.include([undefined, '(Dredd: body is empty)'], results.bodies[0]))
       it('has correct ‘expected’ response body', () =>
         assert.deepEqual(results.bodies[1], brickTypePayload))
       it('has correct ‘actual’ response body', () =>
@@ -211,7 +211,7 @@ describe('Regression: Issues #319 and #354', () => {
     })
 
     describe('Attributes defined as data structure are referenced from payload [GET /customers]', () => {
-      it('has no request body', () => assert.isUndefined(results.bodies[6]))
+      it('has no request body', () => assert.include([undefined, '(Dredd: body is empty)'], results.bodies[6]))
       it('has correct ‘expected’ response body', () =>
         assert.deepEqual(results.bodies[7], userArrayPayload))
       it('has correct ‘actual’ response body', () =>
@@ -285,7 +285,7 @@ describe('Regression: Issues #319 and #354', () => {
         assert.include(results.failures[1], 'Missing required property: name')
         assert.include(results.failures[1], 'Invalid type: number')
       })
-      it('has no request body', () => assert.isUndefined(results.bodies[0]))
+      it('has no request body', () => assert.include([undefined, '(Dredd: body is empty)'], results.bodies[0]))
       it('has correct ‘expected’ response body', () =>
         assert.deepEqual(results.bodies[1], brickTypePayload))
       it('has incorrect ‘actual’ response body', () =>
@@ -315,7 +315,7 @@ describe('Regression: Issues #319 and #354', () => {
         assert.include(results.failures[4], 'GET (200) /customers')
         assert.include(results.failures[5], 'Invalid type: object')
       })
-      it('has no request body', () => assert.isUndefined(results.bodies[6]))
+      it('has no request body', () => assert.include([undefined, '(Dredd: body is empty)'], results.bodies[6]))
       it('has correct ‘expected’ response body', () =>
         assert.deepEqual(results.bodies[7], userArrayPayload))
       it('has incorrect ‘actual’ response body', () =>

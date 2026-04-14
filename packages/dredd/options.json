@@ -30,6 +30,7 @@
   "init": {
     "alias": "i",
     "description": "Run interactive configuration. Creates dredd.yml configuration file.",
+    "boolean": true,
     "default": false
   },
   "custom": {
@@ -40,6 +41,7 @@
   "names": {
     "alias": "n",
     "description": "Only list names of requests (for use in a hookfile). No requests are made.",
+    "boolean": true,
     "default": false
   },
   "only": {
@@ -65,6 +67,7 @@
   "sorted": {
     "alias": "s",
     "description": "Sorts requests in a sensible way so that objects are not modified before they are created. Order: CONNECT, OPTIONS, POST, GET, HEAD, PUT, PATCH, LINK, UNLINK, DELETE, TRACE.",
+    "boolean": true,
     "default": false
   },
   "user": {
@@ -75,11 +78,13 @@
   "inline-errors": {
     "alias": "e",
     "description": "Determines whether failures and errors are displayed as they occur (true) or aggregated and displayed at the end (false).",
+    "boolean": true,
     "default": false
   },
   "details": {
     "alias": "d",
     "description": "Determines whether request/response details are included in passing tests.",
+    "boolean": true,
     "default": false
   },
   "method": {
