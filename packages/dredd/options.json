@@ -102,12 +102,6 @@
     "description": "Additional API description paths or URLs. Can be used multiple times with glob pattern for paths.",
     "default": []
   },
-  "help": {
-    "description": "Show usage information."
-  },
-  "version": {
-    "description": "Show version number."
-  },
   "hooks-worker-timeout": {
     "description": "How long to wait for hooks handler to start. [ms]",
     "default": 5000

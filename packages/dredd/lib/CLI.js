@@ -1,7 +1,7 @@
 import R from 'ramda';
 import console from 'console'; // Stubbed in tests by proxyquire
 import fs from 'fs';
-import optimist from 'optimist';
+import yargs from 'yargs/yargs';
 import os from 'os';
 import spawnArgs from 'spawn-args';
 import { spawn as spawnSync } from 'cross-spawn';
@@ -36,10 +36,7 @@ class CLI {
   }
 
   setOptimistArgv() {
-    this.optimist = optimist(this.custom.argv, this.custom.cwd);
-    this.cliArgv = this.optimist.argv;
-
-    this.optimist
+    this.optimist = yargs(this.custom.argv)
       .usage(
         `\
 Usage:
@@ -53,9 +50,13 @@ Example:
 `,
       )
       .options(dreddOptions)
+      .version(false)
+      .help(false)
+      .exitProcess(false)
       .wrap(80);
 
     this.argv = this.optimist.argv;
+    this.cliArgv = this.argv;
     applyLoggingOptions(this.argv);
   }
 
