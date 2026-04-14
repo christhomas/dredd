@@ -9,17 +9,6 @@ import resolvePaths from './resolvePaths';
 
 const proxyquire = noCallThru();
 
-// The 'addHooks()' function is a strange glue code responsible for various
-// side effects needed as a preparation for loading Node.js hooks. It is
-// asynchronous only because as the last thing, it spawns the hooks handler
-// process if it figures out the hooks are not JavaScript hooks.
-//
-// In the future we should get rid of this code. Hooks should get a nice,
-// separate logical component, which takes care of their loading and running
-// regardless the language used, and either delegates to the hooks handler
-// or not. Side effects should get eliminated as much as possible in favor
-// of decoupling.
-
 function loadHookFile(hookfile: string, hooks: any): void {
   try {
     proxyquire(hookfile, { hooks });
@@ -33,7 +22,7 @@ function loadHookFile(hookfile: string, hooks: any): void {
   }
 }
 
-export default function addHooks(runner: any, transactions: any[], callback: (err?: any) => void): void {
+export async function addHooksAsync(runner: any, transactions: any[]): Promise<void> {
   if (!runner.logs) {
     runner.logs = [];
   }
@@ -48,43 +37,40 @@ export default function addHooks(runner: any, transactions: any[], callback: (er
   });
 
   // No hooks
-  if (
-    !runner.configuration.hookfiles ||
-    !runner.configuration.hookfiles.length
-  ) {
-    return callback();
+  if (!runner.configuration.hookfiles || !runner.configuration.hookfiles.length) {
+    return;
   }
 
   // Loading hookfiles from fs
-  let hookfiles: string[];
-  try {
-    hookfiles = resolvePaths(
-      runner.configuration.custom.cwd,
-      runner.configuration.hookfiles,
-    );
-  } catch (err) {
-    return callback(err);
-  }
+  const hookfiles = resolvePaths(
+    runner.configuration.custom.cwd,
+    runner.configuration.hookfiles,
+  );
   logger.debug('Found Hookfiles:', hookfiles);
 
-  // Override hookfiles option in configuration object with
-  // sorted and resolved files
   runner.configuration.hookfiles = hookfiles;
-
-  // Clone the configuration object to hooks.configuration to make it
-  // accessible in the node.js hooks API
   runner.hooks.configuration = clone(runner.configuration);
 
-  // If the language is empty or it is nodejs
-  if (
-    !runner.configuration.language ||
-    runner.configuration.language === 'nodejs'
-  ) {
+  // If the language is nodejs or empty
+  if (!runner.configuration.language || runner.configuration.language === 'nodejs') {
     hookfiles.forEach((hookfile: string) => loadHookFile(hookfile, runner.hooks));
-    return callback();
+    return;
   }
 
-  // If other language than nodejs, run hooks worker client
-  // Worker client will start the worker server and pass the "hookfiles" options as CLI arguments to it
-  return new HooksWorkerClient(runner).start(callback);
+  // If other language, start hooks worker client
+  return new Promise((resolve, reject) => {
+    new HooksWorkerClient(runner).start((err?: any) => {
+      if (err) return reject(err);
+      resolve();
+    });
+  });
+}
+
+/**
+ * Legacy callback interface for backward compatibility.
+ */
+export default function addHooks(runner: any, transactions: any[], callback: (err?: any) => void): void {
+  addHooksAsync(runner, transactions)
+    .then(() => callback())
+    .catch((err) => callback(err));
 }

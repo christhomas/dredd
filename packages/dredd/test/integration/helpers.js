@@ -1,4 +1,3 @@
-import async from 'async';
 import bodyParser from 'body-parser';
 import clone from 'clone';
 import express from 'express';
@@ -325,10 +324,12 @@ export const killAll = (pattern, callback) => {
       return callback(err);
     }
 
-    async.each(
-      processList,
-      (processListItem, next) => kill(processListItem.pid, next),
-      callback,
+    let remaining = processList.length;
+    processList.forEach((processListItem) =>
+      kill(processListItem.pid, () => {
+        remaining--;
+        if (remaining === 0) callback();
+      }),
     );
   });
 };
