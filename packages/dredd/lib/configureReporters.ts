@@ -8,26 +8,26 @@ import XUnitReporter from './reporters/XUnitReporter';
 
 import logger from './logger';
 
-const fileReporters = ['xunit', 'html', 'markdown'];
+const fileReporters: string[] = ['xunit', 'html', 'markdown'];
 
-const cliReporters = ['dot', 'nyan'];
+const cliReporters: string[] = ['dot', 'nyan'];
 
-function intersection(a, b) {
+function intersection(a: string[], b: string[]): string[] {
   if (a.length > b.length) {
-    [a, b] = Array.from([b, a]);
+    [a, b] = Array.from([b, a]) as [string[], string[]];
   }
-  return Array.from(a).filter((value) => Array.from(b).includes(value));
+  return Array.from(a).filter((value: string) => Array.from(b).includes(value));
 }
 
-function configureReporters(config, stats) {
+function configureReporters(config: any, stats: any): any {
   addReporter('base', config.emitter, stats);
 
-  const reporters = config.reporter;
-  const outputs = config.output;
+  const reporters: string[] = config.reporter;
+  const outputs: string[] = config.output;
 
   logger.debug('Configuring reporters:', reporters, outputs);
 
-  function addCli(reportersArr) {
+  function addCli(reportersArr: string[]): any {
     if (reportersArr.length > 0) {
       const usedCliReporters = intersection(reportersArr, cliReporters);
       if (usedCliReporters.length === 0) {
@@ -48,7 +48,7 @@ function configureReporters(config, stats) {
     );
   }
 
-  function addReporter(reporter, emitter, statistics, path) {
+  function addReporter(reporter: string, emitter: any, statistics: any, path?: string): any {
     switch (reporter) {
       case 'xunit':
         return new XUnitReporter(emitter, statistics, path, config.details);
@@ -83,7 +83,7 @@ provided. Using default paths for additional file-based reporters.
 `);
     }
 
-    return usedFileReporters.map((usedFileReporter, index) => {
+    return usedFileReporters.map((usedFileReporter: string, index: number) => {
       const path = outputs[index] ? outputs[index] : undefined;
       return addReporter(usedFileReporter, config.emitter, stats, path);
     });

@@ -2,10 +2,10 @@ import html from 'html';
 
 import logger from './logger';
 
-export default function prettifyResponse(response) {
-  let contentType;
+export default function prettifyResponse(response: any): string {
+  let contentType: string | undefined;
 
-  function stringify(obj) {
+  function stringify(obj: any): any {
     try {
       if (typeof obj === 'string') {
         obj = JSON.parse(obj);
@@ -17,7 +17,7 @@ export default function prettifyResponse(response) {
     return obj;
   }
 
-  function prettifyBody(body, contentKind) {
+  function prettifyBody(body: any, contentKind: string | undefined): any {
     switch (contentKind) {
       case 'text/html':
         body = html.prettyPrint(body, { indent_size: 2 });

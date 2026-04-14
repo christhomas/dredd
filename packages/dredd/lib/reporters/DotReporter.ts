@@ -2,7 +2,7 @@ import logger from '../logger';
 import reporterOutputLogger from './reporterOutputLogger';
 import prettifyResponse from '../prettifyResponse';
 
-function DotReporter(emitter, stats) {
+function DotReporter(this: any, emitter: any, stats: any): void {
   this.type = 'dot';
   this.stats = stats;
   this.errors = [];
@@ -12,13 +12,13 @@ function DotReporter(emitter, stats) {
   logger.debug(`Using '${this.type}' reporter.`);
 }
 
-DotReporter.prototype.configureEmitter = function configureEmitter(emitter) {
-  emitter.on('start', (apiDescriptions, callback) => {
+DotReporter.prototype.configureEmitter = function configureEmitter(emitter: any): void {
+  emitter.on('start', (apiDescriptions: any, callback: () => void) => {
     logger.debug('Beginning Dredd testing...');
     callback();
   });
 
-  emitter.on('end', (callback) => {
+  emitter.on('end', (callback: () => void) => {
     if (this.stats.tests > 0) {
       if (this.errors.length > 0) {
         this.write('\n');
@@ -55,19 +55,19 @@ ${this.stats.errors} errors, ${this.stats.skipped} skipped\
     this.write('-');
   });
 
-  emitter.on('test fail', (test) => {
+  emitter.on('test fail', (test: any) => {
     this.write('F');
     this.errors.push(test);
   });
 
-  emitter.on('test error', (error, test) => {
+  emitter.on('test error', (error: any, test: any) => {
     this.write('E');
     test.message = `\nError: \n${error}\nStacktrace: \n${error.stack}\n`;
     this.errors.push(test);
   });
 };
 
-DotReporter.prototype.write = function write(str) {
+DotReporter.prototype.write = function write(str: string): void {
   process.stdout.write(str);
 };
 

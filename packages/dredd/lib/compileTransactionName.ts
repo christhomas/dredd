@@ -1,8 +1,8 @@
 // This file is copy-pasted "as is" from the Dredd Transactions library, where
 // it's also tested. This is a temporary solution,
 // see https://github.com/apiaryio/dredd-transactions/issues/276
-export default function compileTransactionName(origin) {
-  const segments = [];
+export default function compileTransactionName(origin: any): string {
+  const segments: string[] = [];
   if (origin.apiName) {
     segments.push(origin.apiName);
   }

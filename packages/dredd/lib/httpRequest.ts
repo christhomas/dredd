@@ -5,22 +5,12 @@ import { URL } from 'url';
 /**
  * Minimal HTTP request function that replaces the deprecated 'request' library.
  * Provides the same callback signature: (error, response, body).
- *
- * @param {Object} options
- * @param {string} options.uri - Full URL to request
- * @param {string} [options.method='GET'] - HTTP method
- * @param {Object} [options.headers] - Request headers
- * @param {string|Buffer} [options.body] - Request body
- * @param {boolean} [options.followRedirect=true] - Whether to follow redirects
- * @param {null} [options.encoding] - Set to null for binary (Buffer) response
- * @param {number} [options.timeout] - Request timeout in ms
- * @param {Function} callback - (error, response, body)
  */
-export default function httpRequest(options, callback) {
+export default function httpRequest(options: any, callback: (error: any, response?: any, body?: any) => void): void {
   const url = new URL(options.uri);
   const transport = url.protocol === 'https:' ? https : http;
 
-  const reqOptions = {
+  const reqOptions: any = {
     hostname: url.hostname,
     port: url.port || (url.protocol === 'https:' ? 443 : 80),
     path: url.pathname + url.search,
@@ -32,7 +22,7 @@ export default function httpRequest(options, callback) {
     reqOptions.timeout = options.timeout;
   }
 
-  const req = transport.request(reqOptions, (res) => {
+  const req = transport.request(reqOptions, (res: any) => {
     // Handle redirects if followRedirect is not explicitly false
     if (
       options.followRedirect !== false &&
@@ -44,8 +34,8 @@ export default function httpRequest(options, callback) {
       return httpRequest(redirectOptions, callback);
     }
 
-    const chunks = [];
-    res.on('data', (chunk) => chunks.push(chunk));
+    const chunks: Buffer[] = [];
+    res.on('data', (chunk: Buffer) => chunks.push(chunk));
     res.on('end', () => {
       const raw = Buffer.concat(chunks);
       // Return Buffer when encoding is null (binary mode), string otherwise
@@ -54,7 +44,7 @@ export default function httpRequest(options, callback) {
     });
   });
 
-  req.on('error', (error) => callback(error));
+  req.on('error', (error: Error) => callback(error));
 
   req.on('timeout', () => {
     req.destroy(new Error('ESOCKETTIMEDOUT'));

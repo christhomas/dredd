@@ -1,30 +1,30 @@
 import logger from '../logger';
 
-function BaseReporter(emitter, stats) {
+function BaseReporter(this: any, emitter: any, stats: any): void {
   this.type = 'base';
   this.stats = stats;
   this.configureEmitter(emitter);
   logger.debug(`Using '${this.type}' reporter.`);
 }
 
-BaseReporter.prototype.configureEmitter = function configureEmitter(emitter) {
-  emitter.on('start', (apiDescriptions, callback) => {
+BaseReporter.prototype.configureEmitter = function configureEmitter(emitter: any): void {
+  emitter.on('start', (apiDescriptions: any, callback: () => void) => {
     this.stats.start = new Date();
     callback();
   });
 
-  emitter.on('end', (callback) => {
+  emitter.on('end', (callback: () => void) => {
     this.stats.end = new Date();
     this.stats.duration = this.stats.end - this.stats.start;
     callback();
   });
 
-  emitter.on('test start', (test) => {
+  emitter.on('test start', (test: any) => {
     this.stats.tests += 1;
     test.start = new Date();
   });
 
-  emitter.on('test pass', (test) => {
+  emitter.on('test pass', (test: any) => {
     this.stats.passes += 1;
     test.end = new Date();
     if (typeof test.start === 'string') {
@@ -37,7 +37,7 @@ BaseReporter.prototype.configureEmitter = function configureEmitter(emitter) {
     this.stats.skipped += 1;
   });
 
-  emitter.on('test fail', (test) => {
+  emitter.on('test fail', (test: any) => {
     this.stats.failures += 1;
     test.end = new Date();
     if (typeof test.start === 'string') {
@@ -46,7 +46,7 @@ BaseReporter.prototype.configureEmitter = function configureEmitter(emitter) {
     test.duration = test.end - test.start;
   });
 
-  emitter.on('test error', (error, test) => {
+  emitter.on('test error', (error: any, test: any) => {
     this.stats.errors += 1;
     test.end = new Date();
     if (typeof test.start === 'string') {

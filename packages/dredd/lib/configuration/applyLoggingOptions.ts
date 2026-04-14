@@ -3,14 +3,14 @@ import winston from 'winston';
 import logger from '../logger';
 import reporterOutputLogger from '../reporters/reporterOutputLogger';
 
-function buildFormat(colorize, timestamp) {
-  const formats = [];
+function buildFormat(colorize: boolean, timestamp: boolean): any {
+  const formats: any[] = [];
   if (colorize) {
     formats.push(winston.format.colorize());
   }
   if (timestamp) {
     formats.push(
-      winston.format.printf(({ level, message }) => {
+      winston.format.printf(({ level, message }: { level: string; message: string }) => {
         const ts = new Date().toISOString();
         return `${level}: ${ts} - ${message}`;
       }),
@@ -25,7 +25,7 @@ function buildFormat(colorize, timestamp) {
  * Applies logging options from the given configuration.
  * Operates on the validated normalized config.
  */
-function applyLoggingOptions(config) {
+function applyLoggingOptions(config: any): void {
   const colorize = config.color !== false;
 
   // Track colorize state on transport for test observability

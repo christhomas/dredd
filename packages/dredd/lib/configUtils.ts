@@ -2,7 +2,7 @@ import clone from 'clone';
 import fs from 'fs';
 import yaml from 'js-yaml';
 
-export function save(argsOrigin, path) {
+export function save(argsOrigin: any, path?: string): void {
   if (!path) {
     path = './dredd.yml';
   }
@@ -11,7 +11,7 @@ export function save(argsOrigin, path) {
 
   [args.blueprint, args.endpoint] = args._;
 
-  Object.keys(args).forEach((key) => {
+  Object.keys(args).forEach((key: string) => {
     if (key.length === 1) {
       delete args[key];
     }
@@ -23,13 +23,13 @@ export function save(argsOrigin, path) {
   fs.writeFileSync(path, yaml.dump(args));
 }
 
-export function load(path) {
+export function load(path?: string): any {
   if (!path) {
     path = './dredd.yml';
   }
 
   const yamlData = fs.readFileSync(path);
-  const data = yaml.load(yamlData);
+  const data: any = yaml.load(yamlData as any);
 
   data._ = [data.blueprint, data.endpoint];
 
@@ -39,8 +39,8 @@ export function load(path) {
   return data;
 }
 
-export function parseCustom(customArray) {
-  const output = {};
+export function parseCustom(customArray: any): Record<string, string> {
+  const output: Record<string, string> = {};
   if (Array.isArray(customArray)) {
     for (const string of customArray) {
       const splitted = string.split(/:(.+)?/);

@@ -5,26 +5,15 @@ import defaultLogger from './logger';
 
 /**
  * Performs the HTTP request as described in the 'transaction.request' object
- *
- * In future we should introduce a 'real' request object as well so user has
- * access to the modifications made on the way.
- *
- * @param {string} uri
- * @param {Object} transactionReq
- * @param {Object} [options]
- * @param {Object} [options.logger] Custom logger
- * @param {Object} [options.request] Custom 'request' library implementation
- * @param {Object} [options.http] Custom default 'request' library options
- * @param {Function} callback
  */
-function performRequest(uri, transactionReq, options, callback) {
+function performRequest(uri: string, transactionReq: any, options: any, callback?: (err: any, res?: any) => void): void {
   if (typeof options === 'function') {
     [options, callback] = [{}, options];
   }
   const logger = options.logger || defaultLogger;
   const request = options.request || defaultRequest;
 
-  const httpOptions = { ...options.http || {}};
+  const httpOptions: any = { ...options.http || {}};
   httpOptions.proxy = false;
   httpOptions.followRedirect = false;
   httpOptions.encoding = null;
@@ -49,38 +38,33 @@ function performRequest(uri, transactionReq, options, callback) {
         `${httpOptions.method} ${logUri}`,
     );
 
-    request(httpOptions, (error, response, responseBody) => {
+    request(httpOptions, (error: any, response: any, responseBody: any) => {
       logger.debug(`Handling ${protocol} response from the server under test`);
       if (error) {
-        callback(error);
+        callback!(error);
       } else {
-        callback(null, createTransactionResponse(response, responseBody));
+        callback!(null, createTransactionResponse(response, responseBody));
       }
     });
   } catch (error) {
-    process.nextTick(() => callback(error));
+    process.nextTick(() => callback!(error));
   }
 }
 
 /**
  * Coerces the HTTP request body to a Buffer
- *
- * @param {string|Buffer} body
- * @param {*} encoding
  */
-export function getBodyAsBuffer(body, encoding) {
+export function getBodyAsBuffer(body: string | Buffer, encoding: string | undefined): Buffer {
   return body instanceof Buffer
     ? body
-    : Buffer.from(`${body || ''}`, normalizeBodyEncoding(encoding));
+    : Buffer.from(`${body || ''}`, normalizeBodyEncoding(encoding) as BufferEncoding);
 }
 
 /**
  * Returns the encoding as either 'utf-8' or 'base64'. Throws
  * an error in case any other encoding is provided.
- *
- * @param {string} encoding
  */
-export function normalizeBodyEncoding(encoding) {
+export function normalizeBodyEncoding(encoding: string | undefined): string {
   if (!encoding) {
     return 'utf-8';
   }
@@ -102,13 +86,8 @@ export function normalizeBodyEncoding(encoding) {
 /**
  * Detects an existing Content-Length header and overrides the user-provided
  * header value in case it's out of sync with the real length of the body.
- *
- * @param {Object} headers HTTP request headers
- * @param {Buffer} body HTTP request body
- * @param {Object} [options]
- * @param {Object} [options.logger] Custom logger
  */
-export function normalizeContentLengthHeader(headers, body, options = {}) {
+export function normalizeContentLengthHeader(headers: any, body: Buffer, options: any = {}): any {
   const logger = options.logger || defaultLogger;
 
   const modifiedHeaders = { ...headers};
@@ -132,12 +111,9 @@ export function normalizeContentLengthHeader(headers, body, options = {}) {
 /**
  * Real transaction response object factory. Serializes binary responses
  * to string using Base64 encoding.
- *
- * @param {Object} response Node.js HTTP response
- * @param {Buffer} body HTTP response body as Buffer
  */
-export function createTransactionResponse(response, body) {
-  const transactionRes = {
+export function createTransactionResponse(response: any, body: Buffer): any {
+  const transactionRes: any = {
     statusCode: response.statusCode,
     headers: { ...response.headers},
   };
@@ -149,9 +125,9 @@ export function createTransactionResponse(response, body) {
 }
 
 /**
- * @param {Buffer} body
+ * Detects body encoding
  */
-export function detectBodyEncoding(body) {
+export function detectBodyEncoding(body: Buffer): string {
   // U+FFFD is a replacement character in UTF-8 and indicates there
   // are some bytes which could not been translated as UTF-8. Therefore
   // let's assume the body is in binary format. Dredd encodes binary as

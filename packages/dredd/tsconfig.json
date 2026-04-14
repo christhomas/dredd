@@ -2,15 +2,19 @@
   "compileOnSave": true,
   "compilerOptions": {
     "module": "commonjs",
-    "target": "es2017",
-    "lib": ["es2017"],
+    "target": "es2020",
+    "lib": ["es2020"],
     "typeRoots": ["node_modules/@types"],
     "rootDir": "./lib",
     "outDir": "./build",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowJs": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "noImplicitReturns": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
   "include": ["./lib/**/*.ts", "./lib/**/*.js"],
   "exclude": ["node_modules", "build"]

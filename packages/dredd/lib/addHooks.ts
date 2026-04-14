@@ -20,10 +20,10 @@ const proxyquire = noCallThru();
 // or not. Side effects should get eliminated as much as possible in favor
 // of decoupling.
 
-function loadHookFile(hookfile, hooks) {
+function loadHookFile(hookfile: string, hooks: any): void {
   try {
     proxyquire(hookfile, { hooks });
-  } catch (error) {
+  } catch (error: any) {
     logger.warn(
       `Skipping hook loading. Error reading hook file '${hookfile}'. ` +
         'This probably means one or more of your hook files are invalid.\n' +
@@ -33,7 +33,7 @@ function loadHookFile(hookfile, hooks) {
   }
 }
 
-export default function addHooks(runner, transactions, callback) {
+export default function addHooks(runner: any, transactions: any[], callback: (err?: any) => void): void {
   if (!runner.logs) {
     runner.logs = [];
   }
@@ -43,7 +43,7 @@ export default function addHooks(runner, transactions, callback) {
     runner.hooks.transactions = {};
   }
 
-  Array.from(transactions).forEach((transaction) => {
+  Array.from(transactions).forEach((transaction: any) => {
     runner.hooks.transactions[transaction.name] = transaction;
   });
 
@@ -56,7 +56,7 @@ export default function addHooks(runner, transactions, callback) {
   }
 
   // Loading hookfiles from fs
-  let hookfiles;
+  let hookfiles: string[];
   try {
     hookfiles = resolvePaths(
       runner.configuration.custom.cwd,
@@ -80,7 +80,7 @@ export default function addHooks(runner, transactions, callback) {
     !runner.configuration.language ||
     runner.configuration.language === 'nodejs'
   ) {
-    hookfiles.forEach((hookfile) => loadHookFile(hookfile, runner.hooks));
+    hookfiles.forEach((hookfile: string) => loadHookFile(hookfile, runner.hooks));
     return callback();
   }
 

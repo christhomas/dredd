@@ -1,6 +1,6 @@
 import util from 'util';
 
-export default function hooksLog(logs = [], logger, content) {
+export default function hooksLog(logs: any[] = [], logger: any, content: any): any[] {
   // Log to logger
   if (logger && typeof logger.hook === 'function') {
     logger.hook(content);

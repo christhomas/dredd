@@ -1,4 +1,9 @@
-const deprecatedOptions = [
+interface ConfigRule {
+  options: string[];
+  message: string;
+}
+
+const deprecatedOptions: ConfigRule[] = [
   {
     options: ['c'],
     message:
@@ -23,7 +28,7 @@ const deprecatedOptions = [
   },
 ];
 
-const unsupportedOptions = [
+const unsupportedOptions: ConfigRule[] = [
   {
     options: ['timestamp', 't'],
     message:
@@ -46,8 +51,8 @@ const unsupportedOptions = [
   },
 ];
 
-function flushMessages(rules, config) {
-  return Object.keys(config).reduce((messages, configKey) => {
+function flushMessages(rules: ConfigRule[], config: any): string[] {
+  return Object.keys(config).reduce((messages: string[], configKey: string) => {
     const warning = rules.find((rule) => rule.options.includes(configKey));
     return warning ? messages.concat(warning.message) : messages;
   }, []);
@@ -56,7 +61,7 @@ function flushMessages(rules, config) {
 /**
  * Returns the errors and warnings relative to the given config.
  */
-const validateConfig = (config) => ({
+const validateConfig = (config: any): { warnings: string[]; errors: string[] } => ({
   warnings: flushMessages(deprecatedOptions, config),
   errors: flushMessages(unsupportedOptions, config),
 });

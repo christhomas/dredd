@@ -3,8 +3,8 @@ import compileTransactionName from './compileTransactionName';
 /**
  * Turns annotation type into a log level
  */
-function typeToLogLevel(annotationType) {
-  const level = { error: 'error', warning: 'warn' }[annotationType];
+function typeToLogLevel(annotationType: string): string {
+  const level = ({ error: 'error', warning: 'warn' } as Record<string, string>)[annotationType];
   if (!level) {
     throw new Error(`Invalid annotation type: '${annotationType}'`);
   }
@@ -13,10 +13,8 @@ function typeToLogLevel(annotationType) {
 
 /**
  * Takes a component identifier and turns it into something user can understand
- *
- * @param {string} component
  */
-function formatComponent(component) {
+function formatComponent(component: string): string {
   switch (component) {
     case 'apiDescriptionParser':
       return 'API description parser';
@@ -31,11 +29,8 @@ function formatComponent(component) {
 
 /**
  * Formats given location data as something user can understand
- *
- * @param {string} apiDescriptionLocation API description location name
- * @param {array} annotationLocation See 'dredd-transactions' docs
  */
-function formatLocation(apiDescriptionLocation, annotationLocation) {
+function formatLocation(apiDescriptionLocation: string, annotationLocation: any): string {
   if (!annotationLocation) {
     return apiDescriptionLocation;
   }
@@ -56,24 +51,14 @@ function formatLocation(apiDescriptionLocation, annotationLocation) {
 }
 
 /**
- * @typedef {Object} LoggerInfo A plain object winston.log() accepts as input
- * @property {string} level
- * @property {string} message
- */
-
-/**
  * Takes API description parser or compiler annotation returned from
  * the 'dredd-transactions' library and transforms it into a message
  * Dredd can show to the user. Returns an object logger accepts as input.
- *
- * @param {string} apiDescriptionLocation API description location name
- * @param {Object} annotation the annotation object from Dredd Transactions
- * @return {LoggerInfo}
  */
 export default function annotationToLoggerInfo(
-  apiDescriptionLocation,
-  annotation,
-) {
+  apiDescriptionLocation: string,
+  annotation: any,
+): { level: string; message: string } {
   const level = typeToLogLevel(annotation.type);
 
   if (annotation.component === 'apiDescriptionParser') {

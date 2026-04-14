@@ -5,7 +5,20 @@ import hooksLog from './hooksLog';
 // This class is only an interface for users of Dredd hooks.
 
 class Hooks {
-  constructor(options = {}) {
+  logs: any;
+  logger: any;
+  beforeHooks: Record<string, Function[]>;
+  beforeValidationHooks: Record<string, Function[]>;
+  afterHooks: Record<string, Function[]>;
+  beforeAllHooks: Function[];
+  afterAllHooks: Function[];
+  beforeEachHooks: Function[];
+  beforeEachValidationHooks: Function[];
+  afterEachHooks: Function[];
+  transactions: any;
+  configuration: any;
+
+  constructor(options: any = {}) {
     this.before = this.before.bind(this);
     this.beforeValidation = this.beforeValidation.bind(this);
     this.after = this.after.bind(this);
@@ -27,39 +40,39 @@ class Hooks {
     this.afterEachHooks = [];
   }
 
-  before(name, hook) {
+  before(name: string, hook: Function): void {
     this.addHook(this.beforeHooks, name, hook);
   }
 
-  beforeValidation(name, hook) {
+  beforeValidation(name: string, hook: Function): void {
     this.addHook(this.beforeValidationHooks, name, hook);
   }
 
-  after(name, hook) {
+  after(name: string, hook: Function): void {
     this.addHook(this.afterHooks, name, hook);
   }
 
-  beforeAll(hook) {
+  beforeAll(hook: Function): void {
     this.beforeAllHooks.push(hook);
   }
 
-  afterAll(hook) {
+  afterAll(hook: Function): void {
     this.afterAllHooks.push(hook);
   }
 
-  beforeEach(hook) {
+  beforeEach(hook: Function): void {
     this.beforeEachHooks.push(hook);
   }
 
-  beforeEachValidation(hook) {
+  beforeEachValidation(hook: Function): void {
     this.beforeEachValidationHooks.push(hook);
   }
 
-  afterEach(hook) {
+  afterEach(hook: Function): void {
     this.afterEachHooks.push(hook);
   }
 
-  addHook(hooks, name, hook) {
+  addHook(hooks: Record<string, Function[]>, name: string, hook: Function): void {
     if (hooks[name]) {
       hooks[name].push(hook);
     } else {
@@ -69,8 +82,8 @@ class Hooks {
 
   // log(logVariant, content)
   // log(content)
-  log(...args) {
-    this.logs = hooksLog(this.logs, this.logger, ...Array.from(args));
+  log(...args: any[]): void {
+    this.logs = (hooksLog as any)(this.logs, this.logger, ...args);
   }
 }
 

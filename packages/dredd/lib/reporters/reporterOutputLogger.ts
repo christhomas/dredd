@@ -31,7 +31,7 @@ const customLevels = {
 
 winston.addColors(customLevels.colors);
 
-const consoleTransport = new winston.transports.Console({
+const consoleTransport: any = new winston.transports.Console({
   level: 'info',
   stderrLevels: ['error'],
   format: winston.format.combine(
@@ -44,7 +44,7 @@ const consoleTransport = new winston.transports.Console({
 consoleTransport.colorize = true;
 consoleTransport.timestamp = false;
 
-const logger = winston.createLogger({
+const logger: any = winston.createLogger({
   levels: customLevels.levels,
   transports: [consoleTransport],
 });

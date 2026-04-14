@@ -6,7 +6,7 @@ import applyLoggingOptions from './applyLoggingOptions';
 import validateConfig from './validateConfig';
 import normalizeConfig from './normalizeConfig';
 
-export const DEFAULT_CONFIG = {
+export const DEFAULT_CONFIG: any = {
   http: {},
   endpoint: null,
   custom: {
@@ -43,7 +43,7 @@ export const DEFAULT_CONFIG = {
  * Deep merge two objects. Arrays and primitives from source override target.
  * Objects are merged recursively.
  */
-function deepMerge(target, source) {
+function deepMerge(target: any, source: any): any {
   const result = { ...target };
   for (const key of Object.keys(source)) {
     if (
@@ -65,7 +65,7 @@ function deepMerge(target, source) {
 // Flattens given configuration Object, removing nested "options" key.
 // This makes it possible to use nested "options" key without introducing
 // a breaking change to the library's public API.
-function flattenConfig(config) {
+function flattenConfig(config: any): any {
   // Rename "root.server" key to "root.endpoint".
   const aliasedConfig = { ...config };
   if ('server' in aliasedConfig) {
@@ -83,7 +83,7 @@ function flattenConfig(config) {
   return deepMerge(rootOptions, nestedOptions || {});
 }
 
-export function resolveConfig(config) {
+export function resolveConfig(config: any): { config: any; warnings: string[]; errors: string[] } {
   const flattened = flattenConfig(config);
   const merged = deepMerge(DEFAULT_CONFIG, flattened);
 
@@ -93,8 +93,8 @@ export function resolveConfig(config) {
 
   // Validate Dredd configuration
   const { warnings, errors } = validateConfig(merged);
-  warnings.forEach((message) => logger.warn(message));
-  errors.forEach((message) => logger.error(message));
+  warnings.forEach((message: string) => logger.warn(message));
+  errors.forEach((message: string) => logger.error(message));
 
   // Fail fast upon any Dredd configuration errors
   if (errors.length > 0) {
@@ -108,7 +108,7 @@ export function resolveConfig(config) {
   };
 }
 
-function applyConfiguration(config) {
+function applyConfiguration(config: any): any {
   const { config: resolvedConfig } = resolveConfig(config);
 
   applyLoggingOptions(resolvedConfig);

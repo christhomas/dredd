@@ -6,7 +6,7 @@ winston.addColors({
   error: 'red',
 });
 
-const consoleTransport = new winston.transports.Console({
+const consoleTransport: any = new winston.transports.Console({
   stderrLevels: ['error', 'warn', 'debug'],
   format: winston.format.combine(
     winston.format.colorize(),
@@ -18,7 +18,7 @@ const consoleTransport = new winston.transports.Console({
 consoleTransport.colorize = true;
 consoleTransport.timestamp = false;
 
-const logger = winston.createLogger({
+const logger: any = winston.createLogger({
   transports: [consoleTransport],
   levels: {
     debug: 2,

@@ -1,7 +1,7 @@
 import which from 'which';
 
 export default {
-  which(command) {
+  which(command: string): boolean {
     try {
       which.sync(command);
       return true;
