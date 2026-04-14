@@ -1,8 +1,6 @@
 # Release process
 
-## Prerequisites
-
-### npm trusted publishing (one-time setup)
+## Prerequisites (one-time setup)
 
 For each package (`@antimatter-studios/dredd` and `@antimatter-studios/dredd-transactions`):
 
@@ -17,9 +15,7 @@ For each package (`@antimatter-studios/dredd` and `@antimatter-studios/dredd-tra
 
 Also create a GitHub environment called `npm-publish` in **repo Settings → Environments**.
 
-## Creating a release
-
-### 1. Add a changeset
+## Day-to-day: adding changesets
 
 When you make changes that should be released, run:
 
@@ -27,18 +23,21 @@ When you make changes that should be released, run:
 npx changeset
 ```
 
-This will prompt you to select which packages changed and the semver bump type (patch/minor/major). Commit the generated changeset file with your PR.
+This prompts you to select which packages changed and the semver bump type. Commit the generated changeset file with your PR.
 
-### 2. Publish
+## Releasing
 
-Once your PR is merged to master, go to **Actions → publish → Run workflow** on the master branch.
+```bash
+# Apply pending changesets — bumps versions in package.json, updates changelogs
+npx changeset version
 
-The workflow will:
-- Install, build, and test
-- Apply version bumps from pending changesets
-- Publish to npm via OIDC trusted publishing (no tokens needed)
-- Push version commits and git tags back to master
+# Commit and tag
+git add -A
+git commit -m "chore: release"
+git tag v<version>
+git push && git push --tags
+```
 
-### Dry run
-
-You can select **dry-run: true** when triggering the workflow to verify what would be published without actually publishing.
+Pushing the `v*` tag triggers the publish workflow which automatically:
+- Installs, builds, and tests
+- Publishes to npm via OIDC trusted publishing (no tokens needed)
