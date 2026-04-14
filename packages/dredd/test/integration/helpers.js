@@ -224,9 +224,14 @@ export const runDreddWithServer = (dredd, app, serverPort, callback) => {
   });
 };
 
+// Strip ANSI escape codes from a string
+function stripAnsiCodes(str) {
+  return str.replace(/\u001b\[\d+m/g, '');
+}
+
 // Runs CLI command with given arguments. Records and provides stdout, stderr
 // and also 'output', which is the two combined. Also provides 'exitStatus'
-// of the process.
+// of the process. ANSI escape codes are stripped from captured output.
 function runCommand(command, args, spawnOptions = {}, callback) {
   if (typeof spawnOptions === 'function') {
     [callback, spawnOptions] = Array.from([spawnOptions, undefined]);
@@ -249,9 +254,9 @@ function runCommand(command, args, spawnOptions = {}, callback) {
 
   cli.on('exit', (exitStatus) =>
     callback(null, {
-      stdout,
-      stderr,
-      output,
+      stdout: stripAnsiCodes(stdout),
+      stderr: stripAnsiCodes(stderr),
+      output: stripAnsiCodes(output),
       exitStatus,
     }),
   );

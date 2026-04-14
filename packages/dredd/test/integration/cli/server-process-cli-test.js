@@ -4,9 +4,12 @@ import {
   killAll,
   runCLI,
   createServer,
-  DEFAULT_SERVER_PORT
 } from '../helpers'
 
+// Use a unique fixed port for this test file to avoid conflicts
+// with other test suites. Cannot use port 0 because CLI args and
+// dummy server scripts need to know the port before the server starts.
+const DEFAULT_SERVER_PORT = 29876
 const NON_EXISTENT_PORT = DEFAULT_SERVER_PORT + 1
 
 describe('CLI - Server Process', () => {

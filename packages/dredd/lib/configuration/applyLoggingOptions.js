@@ -5,13 +5,19 @@ import reporterOutputLogger from '../reporters/reporterOutputLogger';
 
 function buildFormat(colorize, timestamp) {
   const formats = [];
-  if (timestamp) {
-    formats.push(winston.format.timestamp());
-  }
   if (colorize) {
     formats.push(winston.format.colorize());
   }
-  formats.push(winston.format.simple());
+  if (timestamp) {
+    formats.push(
+      winston.format.printf(({ level, message }) => {
+        const ts = new Date().toISOString();
+        return `${level}: ${ts} - ${message}`;
+      }),
+    );
+  } else {
+    formats.push(winston.format.simple());
+  }
   return winston.format.combine(...formats);
 }
 
