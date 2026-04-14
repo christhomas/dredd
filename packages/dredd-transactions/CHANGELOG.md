@@ -1,5 +1,11 @@
 # @antimatter-studios/dredd-transactions
 
+## 11.0.1
+
+### Patch Changes
+
+- Fix malformed author field and publish workflow
+
 ## 11.0.0
 
 ### Major Changes
