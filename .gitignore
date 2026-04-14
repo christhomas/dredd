@@ -11,8 +11,11 @@ cov.*
 __pycache__
 /docs/_build
 coverage
+.nyc_output
+.history
 smoke
 build
+.claude
 
 # Regardless the rules above, never ignore following
 !.vscode/launch.json

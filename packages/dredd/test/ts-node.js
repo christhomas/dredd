@@ -3,4 +3,7 @@ require('ts-node').register({
   // which is, usually, the root directory of the repo.
   project: './test/tsconfig.json',
   transpileOnly: true,
+  compilerOptions: {
+    module: 'commonjs',
+  },
 });

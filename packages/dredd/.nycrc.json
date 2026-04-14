@@ -1,0 +1,10 @@
+{
+  "all": true,
+  "include": ["lib/**/*.js", "lib/**/*.ts"],
+  "exclude": ["test/**", "build/**", "node_modules/**"],
+  "reporter": ["text", "text-summary", "html", "lcov"],
+  "report-dir": "coverage",
+  "extension": [".js", ".ts"],
+  "sourceMap": true,
+  "instrument": true
+}

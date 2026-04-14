@@ -1,0 +1,9 @@
+{
+  "all": true,
+  "include": ["compile/**/*.js", "parse/**/*.js"],
+  "exclude": ["test/**", "node_modules/**"],
+  "reporter": ["text", "text-summary", "html", "lcov"],
+  "report-dir": "coverage",
+  "sourceMap": true,
+  "instrument": true
+}

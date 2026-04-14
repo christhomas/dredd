@@ -547,7 +547,7 @@ describe('TransactionRunner', () => {
       beforeEach(() => {
         server = nock('http://127.0.0.1:3000')
           .post('/machines', { type: 'bulldozer', name: 'willy' })
-          .reply(transaction.expected.status, transaction.expected.body, {
+          .reply(parseInt(transaction.expected.status, 10), transaction.expected.body, {
             'Content-Type': 'application/json',
           });
 
@@ -701,7 +701,7 @@ describe('TransactionRunner', () => {
       beforeEach(() => {
         server = nock('https://127.0.0.1:3000')
           .post('/machines', { type: 'bulldozer', name: 'willy' })
-          .reply(transaction.expected.status, transaction.expected.body, {
+          .reply(parseInt(transaction.expected.status, 10), transaction.expected.body, {
             'Content-Type': 'application/json',
           });
         configuration.endpoint = 'https://127.0.0.1:3000';
@@ -722,7 +722,7 @@ describe('TransactionRunner', () => {
       beforeEach(() => {
         server = nock('http://127.0.0.1:3000')
           .post('/machines', { type: 'bulldozer', name: 'willy' })
-          .reply(transaction.expected.status, transaction.expected.body, {
+          .reply(parseInt(transaction.expected.status, 10), transaction.expected.body, {
             'Content-Type': 'application/json',
           });
         configuration.endpoint = 'http://127.0.0.1:3000';
@@ -743,7 +743,7 @@ describe('TransactionRunner', () => {
       beforeEach(() => {
         server = nock('http://127.0.0.1:3000')
           .post('/machines', { type: 'bulldozer', name: 'willy' })
-          .reply(transaction.expected.status, transaction.expected.body, {
+          .reply(parseInt(transaction.expected.status, 10), transaction.expected.body, {
             'Content-Type': 'application/json',
           });
         runner = new Runner(configuration);
@@ -790,7 +790,7 @@ describe('TransactionRunner', () => {
           .get('/machines/latest')
           .reply(303, '', { Location: '/machines/123' })
           .get('/machines/123')
-          .reply(transaction.expected.status, transaction.expected.body, {
+          .reply(parseInt(transaction.expected.status, 10), transaction.expected.body, {
             'Content-Type': 'application/json',
           });
         runner = new Runner(configuration);
@@ -813,7 +813,7 @@ describe('TransactionRunner', () => {
           .post('/machines')
           .reply(303, '', { Location: '/machines/123' })
           .get('/machines/123')
-          .reply(transaction.expected.status, transaction.expected.body, {
+          .reply(parseInt(transaction.expected.status, 10), transaction.expected.body, {
             'Content-Type': 'application/json',
           });
         runner = new Runner(configuration);
@@ -935,13 +935,13 @@ describe('TransactionRunner', () => {
 
       serverNock1 = nock('http://127.0.0.1:3000')
         .post('/machines1', { type: 'bulldozer', name: 'willy' })
-        .reply(transaction.expected.statusCode, transaction.expected.body, {
+        .reply(parseInt(transaction.expected.statusCode, 10), transaction.expected.body, {
           'Content-Type': 'application/json',
         });
 
       serverNock2 = nock('http://127.0.0.1:3000')
         .post('/machines2', { type: 'bulldozer', name: 'willy' })
-        .reply(transaction.expected.statusCode, transaction.expected.body, {
+        .reply(parseInt(transaction.expected.statusCode, 10), transaction.expected.body, {
           'Content-Type': 'application/json',
         });
     });
@@ -1534,7 +1534,7 @@ describe('TransactionRunner', () => {
 
       server = nock('http://127.0.0.1:3000')
         .post('/machines', { type: 'bulldozer', name: 'willy' })
-        .reply(transaction.expected.statusCode, transaction.expected.body, {
+        .reply(parseInt(transaction.expected.statusCode, 10), transaction.expected.body, {
           'Content-Type': 'application/json',
         });
 
@@ -1761,7 +1761,7 @@ describe('TransactionRunner', () => {
           server = nock('http://127.0.0.1:3000')
             .post('/machines', { type: 'bulldozer', name: 'willy' })
             .reply(
-              transactionsForExecution[0].expected.statusCode,
+              parseInt(transactionsForExecution[0].expected.statusCode, 10),
               transactionsForExecution[0].expected.body,
               { 'Content-Type': 'application/json' },
             );
@@ -1810,7 +1810,7 @@ describe('TransactionRunner', () => {
           server = nock('http://127.0.0.1:3000')
             .post('/machines', { type: 'bulldozer', name: 'willy' })
             .reply(
-              transactionsForExecution[0].expected.statusCode,
+              parseInt(transactionsForExecution[0].expected.statusCode, 10),
               transactionsForExecution[0].expected.body,
               { 'Content-Type': 'application/json' },
             );
@@ -1864,7 +1864,7 @@ describe('TransactionRunner', () => {
           server = nock('http://127.0.0.1:3000')
             .post('/machines', { type: 'bulldozer', name: 'willy' })
             .reply(
-              transactionsForExecution[0].expected.statusCode,
+              parseInt(transactionsForExecution[0].expected.statusCode, 10),
               transactionsForExecution[0].expected.body,
               { 'Content-Type': 'application/json' },
             );
