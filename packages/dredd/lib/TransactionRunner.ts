@@ -1,4 +1,3 @@
-import async from 'async';
 import chai from 'chai';
 import gavel from 'gavel';
 import os from 'os';
@@ -52,42 +51,51 @@ class TransactionRunner {
   }
 
   run(transactions: any[], callback: (err?: any) => void): void {
+    this._runAsync(transactions).then(() => callback()).catch(callback);
+  }
+
+  private async _runAsync(transactions: any[]): Promise<void> {
     logger.debug('Starting reporters and waiting until all of them are ready');
-    this.emitStart((emitStartErr?: any) => {
-      if (emitStartErr) {
-        return callback(emitStartErr);
-      }
-
-      logger.debug('Sorting HTTP transactions');
-      transactions = this.configuration.sorted
-        ? sortTransactions(transactions)
-        : transactions;
-
-      logger.debug('Configuring HTTP transactions');
-      transactions = transactions.map(this.configureTransaction.bind(this));
-
-      logger.debug('Reading hook files and registering hooks');
-      addHooks(this, transactions, (addHooksError: any) => {
-        if (addHooksError) {
-          return callback(addHooksError);
-        }
-
-        logger.debug('Executing HTTP transactions');
-        this.executeAllTransactions(
-          transactions,
-          this.hooks,
-          (execAllTransErr: any) => {
-            if (execAllTransErr) {
-              return callback(execAllTransErr);
-            }
-
-            logger.debug(
-              'Wrapping up testing and waiting until all reporters are done',
-            );
-            this.emitEnd(callback);
-          },
-        );
+    await new Promise<void>((resolve, reject) => {
+      this.emitStart((emitStartErr?: any) => {
+        if (emitStartErr) return reject(emitStartErr);
+        resolve();
       });
+    });
+
+    logger.debug('Sorting HTTP transactions');
+    transactions = this.configuration.sorted
+      ? sortTransactions(transactions)
+      : transactions;
+
+    logger.debug('Configuring HTTP transactions');
+    transactions = transactions.map(this.configureTransaction.bind(this));
+
+    logger.debug('Reading hook files and registering hooks');
+    await new Promise<void>((resolve, reject) => {
+      addHooks(this, transactions, (addHooksError: any) => {
+        if (addHooksError) return reject(addHooksError);
+        resolve();
+      });
+    });
+
+    logger.debug('Executing HTTP transactions');
+    await new Promise<void>((resolve, reject) => {
+      this.executeAllTransactions(
+        transactions,
+        this.hooks,
+        (execAllTransErr: any) => {
+          if (execAllTransErr) return reject(execAllTransErr);
+          resolve();
+        },
+      );
+    });
+
+    logger.debug(
+      'Wrapping up testing and waiting until all reporters are done',
+    );
+    await new Promise<void>((resolve) => {
+      this.emitEnd(() => resolve());
     });
   }
 
@@ -115,6 +123,10 @@ class TransactionRunner {
   }
 
   executeAllTransactions(transactions: any[], hooks: any, callback: (err?: any) => void): void {
+    this._executeAllTransactionsAsync(transactions, hooks).then(() => callback()).catch(callback);
+  }
+
+  private async _executeAllTransactionsAsync(transactions: any[], hooks: any): Promise<void> {
     // Warning: Following lines is "differently" performed by 'addHooks'
     // in TransactionRunner.run call. Because addHooks creates hooks.transactions
     // as an object `{}` with transaction.name keys and value is every
@@ -130,103 +142,110 @@ class TransactionRunner {
     // End of warning
 
     if (this.hookHandlerError) {
-      return callback(this.hookHandlerError);
+      throw this.hookHandlerError;
     }
 
     logger.debug("Running 'beforeAll' hooks");
 
-    this.runHooksForData(hooks.beforeAllHooks, transactions, () => {
+    await new Promise<void>((resolve) => {
+      this.runHooksForData(hooks.beforeAllHooks, transactions, () => resolve());
+    });
+
+    if (this.hookHandlerError) {
+      throw this.hookHandlerError;
+    }
+
+    // Iterate over transactions' transaction
+    for (let transactionIndex = 0; transactionIndex < transactions.length; transactionIndex++) {
+      transaction = transactions[transactionIndex];
+      logger.debug(
+        `Processing transaction #${transactionIndex + 1}:`,
+        transaction.name,
+      );
+
+      logger.debug("Running 'beforeEach' hooks");
+      await new Promise<void>((resolve) => {
+        this.runHooksForData(hooks.beforeEachHooks, transaction, () => resolve());
+      });
+
       if (this.hookHandlerError) {
-        return callback(this.hookHandlerError);
+        throw this.hookHandlerError;
       }
 
-      // Iterate over transactions' transaction
-      // Because async changes the way referencing of properties work,
-      // we need to work with indexes (keys) here, no other way of access.
-      return async.timesSeries(
-        transactions.length,
-        (transactionIndex: number, iterationCallback: (err?: any) => void) => {
-          transaction = transactions[transactionIndex];
-          logger.debug(
-            `Processing transaction #${transactionIndex + 1}:`,
-            transaction.name,
-          );
+      logger.debug("Running 'before' hooks");
+      await new Promise<void>((resolve) => {
+        this.runHooksForData(
+          hooks.beforeHooks[transaction.name],
+          transaction,
+          () => resolve(),
+        );
+      });
 
-          logger.debug("Running 'beforeEach' hooks");
-          this.runHooksForData(hooks.beforeEachHooks, transaction, () => {
-            if (this.hookHandlerError) {
-              return iterationCallback(this.hookHandlerError);
-            }
+      if (this.hookHandlerError) {
+        throw this.hookHandlerError;
+      }
 
-            logger.debug("Running 'before' hooks");
-            this.runHooksForData(
-              hooks.beforeHooks[transaction.name],
-              transaction,
-              () => {
-                if (this.hookHandlerError) {
-                  return iterationCallback(this.hookHandlerError);
-                }
+      // This method:
+      // - skips and fails based on hooks or options
+      // - executes a request
+      // - recieves a response
+      // - runs beforeEachValidation hooks
+      // - runs beforeValidation hooks
+      // - runs Gavel validation
+      await new Promise<void>((resolve, reject) => {
+        this.executeTransaction(transaction, hooks, (...args: any[]) => {
+          if (args[0]) return reject(args[0]);
+          resolve();
+        });
+      });
 
-                // This method:
-                // - skips and fails based on hooks or options
-                // - executes a request
-                // - recieves a response
-                // - runs beforeEachValidation hooks
-                // - runs beforeValidation hooks
-                // - runs Gavel validation
-                this.executeTransaction(transaction, hooks, () => {
-                  if (this.hookHandlerError) {
-                    return iterationCallback(this.hookHandlerError);
-                  }
+      if (this.hookHandlerError) {
+        throw this.hookHandlerError;
+      }
 
-                  logger.debug("Running 'afterEach' hooks");
-                  this.runHooksForData(
-                    hooks.afterEachHooks,
-                    transaction,
-                    () => {
-                      if (this.hookHandlerError) {
-                        return iterationCallback(this.hookHandlerError);
-                      }
+      logger.debug("Running 'afterEach' hooks");
+      await new Promise<void>((resolve) => {
+        this.runHooksForData(
+          hooks.afterEachHooks,
+          transaction,
+          () => resolve(),
+        );
+      });
 
-                      logger.debug("Running 'after' hooks");
-                      this.runHooksForData(
-                        hooks.afterHooks[transaction.name],
-                        transaction,
-                        () => {
-                          if (this.hookHandlerError) {
-                            return iterationCallback(this.hookHandlerError);
-                          }
+      if (this.hookHandlerError) {
+        throw this.hookHandlerError;
+      }
 
-                          logger.debug(
-                            `Evaluating results of transaction execution #${transactionIndex +
-                              1}:`,
-                            transaction.name,
-                          );
-                          this.emitResult(transaction, iterationCallback);
-                        },
-                      );
-                    },
-                  );
-                });
-              },
-            );
-          });
-        },
-        (iterationError: any) => {
-          if (iterationError) {
-            return callback(iterationError);
-          }
+      logger.debug("Running 'after' hooks");
+      await new Promise<void>((resolve) => {
+        this.runHooksForData(
+          hooks.afterHooks[transaction.name],
+          transaction,
+          () => resolve(),
+        );
+      });
 
-          logger.debug("Running 'afterAll' hooks");
-          this.runHooksForData(hooks.afterAllHooks, transactions, () => {
-            if (this.hookHandlerError) {
-              return callback(this.hookHandlerError);
-            }
-            callback();
-          });
-        },
+      if (this.hookHandlerError) {
+        throw this.hookHandlerError;
+      }
+
+      logger.debug(
+        `Evaluating results of transaction execution #${transactionIndex + 1}:`,
+        transaction.name,
       );
+      await new Promise<void>((resolve) => {
+        this.emitResult(transaction, () => resolve());
+      });
+    }
+
+    logger.debug("Running 'afterAll' hooks");
+    await new Promise<void>((resolve) => {
+      this.runHooksForData(hooks.afterAllHooks, transactions, () => resolve());
     });
+
+    if (this.hookHandlerError) {
+      throw this.hookHandlerError;
+    }
   }
 
   // The 'data' argument can be 'transactions' array or 'transaction' object
@@ -234,16 +253,23 @@ class TransactionRunner {
     if (hooks && hooks.length) {
       logger.debug('Running hooks...');
 
-      // Capture outer this
-      const runHookWithData = (hookFnIndex: number, runHookCallback: () => void): void => {
-        const hookFn = hooks[hookFnIndex];
+      this._runHooksForDataAsync(hooks, data).then(() => callback()).catch(callback);
+    } else {
+      callback();
+    }
+  }
+
+  private async _runHooksForDataAsync(hooks: any[], data: any): Promise<void> {
+    for (let i = 0; i < hooks.length; i++) {
+      await new Promise<void>((resolve) => {
+        const hookFn = hooks[i];
         try {
           this.runHook(hookFn, data, (err?: any) => {
             if (err) {
               logger.debug('Hook errored:', err);
               this.emitHookError(err, data);
             }
-            runHookCallback();
+            resolve();
           });
         } catch (error: any) {
           // Beware! This is very problematic part of code. This try/catch block
@@ -263,13 +289,9 @@ class TransactionRunner {
             this.emitHookError(error, data);
           }
 
-          runHookCallback();
+          resolve();
         }
-      };
-
-      async.timesSeries(hooks.length, runHookWithData, () => callback());
-    } else {
-      callback();
+      });
     }
   }
 
@@ -655,7 +677,13 @@ Not performing HTTP request for '${transaction.name}'.\
 
   // An actual HTTP request, before validation hooks triggering
   // and the response validation is invoked here
-  performRequestAndValidate(test: any, transaction: any, hooks: any, callback: () => void): void {
+  performRequestAndValidate(test: any, transaction: any, hooks: any, callback: (...args: any[]) => void): void {
+    this._performRequestAndValidateAsync(test, transaction, hooks)
+      .then(() => callback())
+      .catch(callback);
+  }
+
+  private async _performRequestAndValidateAsync(test: any, transaction: any, hooks: any): Promise<void> {
     const uri =
       url.format({
         protocol: transaction.protocol,
@@ -664,41 +692,57 @@ Not performing HTTP request for '${transaction.name}'.\
       }) + transaction.fullPath;
     const options = { http: this.configuration.http };
 
-    performRequest(uri, transaction.request, options, (error: any, real: any) => {
-      if (error) {
-        logger.debug('Requesting tested server errored:', error);
-        test.title = transaction.id;
-        test.expected = transaction.expected;
-        test.request = transaction.request;
-        this.emitError(error, test);
-        return callback();
-      }
-      transaction.real = real;
+    const real = await new Promise<any>((resolve, reject) => {
+      performRequest(uri, transaction.request, options, (error: any, real: any) => {
+        if (error) {
+          logger.debug('Requesting tested server errored:', error);
+          test.title = transaction.id;
+          test.expected = transaction.expected;
+          test.request = transaction.request;
+          this.emitError(error, test);
+          // Resolve with null to match original behavior: callback() was called without error
+          resolve(null);
+        } else {
+          resolve(real);
+        }
+      });
+    });
 
-      logger.debug("Running 'beforeEachValidation' hooks");
+    if (real === null) {
+      return;
+    }
+
+    transaction.real = real;
+
+    logger.debug("Running 'beforeEachValidation' hooks");
+    await new Promise<void>((resolve, reject) => {
       this.runHooksForData(
         hooks && hooks.beforeEachValidationHooks,
         transaction,
-        (err?: any) => {
+        () => {
           if (this.hookHandlerError) {
-            return (callback as any)(this.hookHandlerError);
+            return reject(this.hookHandlerError);
           }
-
-          logger.debug("Running 'beforeValidation' hooks");
-          this.runHooksForData(
-            hooks && hooks.beforeValidationHooks[transaction.name],
-            transaction,
-            (err2?: any) => {
-              if (this.hookHandlerError) {
-                return (callback as any)(this.hookHandlerError);
-              }
-
-              this.validateTransaction(test, transaction, callback);
-            },
-          );
+          resolve();
         },
       );
     });
+
+    logger.debug("Running 'beforeValidation' hooks");
+    await new Promise<void>((resolve, reject) => {
+      this.runHooksForData(
+        hooks && hooks.beforeValidationHooks[transaction.name],
+        transaction,
+        () => {
+          if (this.hookHandlerError) {
+            return reject(this.hookHandlerError);
+          }
+          resolve();
+        },
+      );
+    });
+
+    this.validateTransaction(test, transaction, () => {});
   }
 
   // TODO Rewrite this entire method.
