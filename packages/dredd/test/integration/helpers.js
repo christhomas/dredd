@@ -11,7 +11,10 @@ import spawn from 'cross-spawn';
 import logger from '../../lib/logger';
 import reporterOutputLogger from '../../lib/reporters/reporterOutputLogger';
 
-export const DEFAULT_SERVER_PORT = 9876;
+// Use port 0 to let the OS assign random available ports, avoiding EADDRINUSE
+// conflicts between test suites. The actual port is read back from
+// server.address().port after listen.
+export const DEFAULT_SERVER_PORT = 0;
 const DREDD_BIN = require.resolve('../../bin/dredd');
 
 // Records logging during runtime of a given function. Given function
@@ -198,7 +201,9 @@ export const runDreddWithServer = (dredd, app, serverPort, callback) => {
       return callback(err);
     }
 
-    runDredd(dredd, serverPort, (error, dreddRuntimeInfo) =>
+    // When using port 0, read the actual assigned port
+    const actualPort = server.address().port;
+    runDredd(dredd, actualPort, (error, dreddRuntimeInfo) =>
       server.close(() =>
         callback(error, { server: serverRuntimeInfo, dredd: dreddRuntimeInfo }),
       ),
@@ -245,6 +250,7 @@ export const runCLI = (args, spawnOptions, callback) =>
 
 // Runs given Express.js server instance and then runs Dredd command with given
 // arguments. Collects their runtime information and provides it to the callback.
+// When using port 0, replaces DEFAULT_SERVER_PORT placeholder in args with actual port.
 export const runCLIWithServer = (args, app, serverPort, callback) => {
   if (typeof serverPort === 'function') {
     [callback, serverPort] = Array.from([serverPort, DEFAULT_SERVER_PORT]);
@@ -255,7 +261,15 @@ export const runCLIWithServer = (args, app, serverPort, callback) => {
       return callback(err);
     }
 
-    runCLI(args, (error, cliInfo) =>
+    // When using port 0, replace port placeholder in CLI args with actual port
+    const actualPort = server.address().port;
+    const resolvedArgs = args.map((arg) =>
+      typeof arg === 'string'
+        ? arg.replace(/127\.0\.0\.1:0\b/g, `127.0.0.1:${actualPort}`)
+        : arg,
+    );
+
+    runCLI(resolvedArgs, (error, cliInfo) =>
       server.close(() =>
         callback(error, { server: serverRuntimeInfo, dredd: cliInfo }),
       ),

@@ -17,7 +17,6 @@ import DotReporter from '../../lib/reporters/DotReporter';
 import NyanReporter from '../../lib/reporters/NyanReporter';
 import HTMLReporter from '../../lib/reporters/HTMLReporter';
 import MarkdownReporter from '../../lib/reporters/MarkdownReporter';
-import ApiaryReporter from '../../lib/reporters/ApiaryReporter';
 
 const proxyquire = noCallThru();
 const BaseReporterStub = sinon.spy(BaseReporter);
@@ -27,7 +26,6 @@ const DotReporterStub = sinon.spy(DotReporter);
 const NyanCatReporterStub = sinon.spy(NyanReporter);
 const HtmlReporterStub = sinon.spy(HTMLReporter);
 const MarkdownReporterStub = sinon.spy(MarkdownReporter);
-const ApiaryReporterStub = sinon.spy(ApiaryReporter);
 
 const emitterStub = new EventEmitter();
 
@@ -40,7 +38,6 @@ const configureReporters = proxyquire('../../lib/configureReporters', {
   './reporters/NyanReporter': NyanCatReporterStub,
   './reporters/HTMLReporter': HtmlReporterStub,
   './reporters/MarkdownReporter': MarkdownReporterStub,
-  './reporters/ApiaryReporter': ApiaryReporterStub,
 }).default;
 
 function resetStubs() {
@@ -52,7 +49,6 @@ function resetStubs() {
   NyanCatReporterStub.resetHistory();
   HtmlReporterStub.resetHistory();
   MarkdownReporterStub.resetHistory();
-  return ApiaryReporterStub.resetHistory();
 }
 
 describe('configureReporters()', () => {

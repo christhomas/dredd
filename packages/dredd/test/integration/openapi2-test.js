@@ -5,7 +5,7 @@ import logger from '../../lib/logger';
 import reporterOutputLogger from '../../lib/reporters/reporterOutputLogger';
 import Dredd from '../../lib/Dredd';
 
-const PORT = 9876;
+const PORT = 19876; // Avoid conflicts with other test suites
 
 let output = '';
 

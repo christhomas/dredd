@@ -1,4 +1,3 @@
-import ApiaryReporter from './reporters/ApiaryReporter';
 import BaseReporter from './reporters/BaseReporter';
 import CLIReporter from './reporters/CLIReporter';
 import DotReporter from './reporters/DotReporter';
@@ -9,7 +8,7 @@ import XUnitReporter from './reporters/XUnitReporter';
 
 import logger from './logger';
 
-const fileReporters = ['xunit', 'html', 'markdown', 'apiary'];
+const fileReporters = ['xunit', 'html', 'markdown'];
 
 const cliReporters = ['dot', 'nyan'];
 
@@ -61,8 +60,6 @@ function configureReporters(config, stats, runner) {
         return new HTMLReporter(emitter, statistics, path, config.details);
       case 'markdown':
         return new MarkdownReporter(emitter, statistics, path, config.details);
-      case 'apiary':
-        return new ApiaryReporter(emitter, statistics, config, runner);
       default:
         // I don't even know where to begin...
         // TODO: DESIGN / REFACTOR WHOLE REPORTER(S) API FROM SCRATCH, THIS IS MADNESS!!1
@@ -78,10 +75,6 @@ function configureReporters(config, stats, runner) {
 
   if (usedFileReporters.length > 0) {
     let usedFileReportersLength = usedFileReporters.length;
-    if (reporters.indexOf('apiary') > -1) {
-      usedFileReportersLength -= 1;
-    }
-
     if (usedFileReportersLength > outputs.length) {
       logger.warn(`
 There are more reporters requiring output paths than there are output paths

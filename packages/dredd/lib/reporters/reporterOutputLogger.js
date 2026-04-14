@@ -33,6 +33,7 @@ winston.addColors(customLevels.colors);
 
 const consoleTransport = new winston.transports.Console({
   level: 'info',
+  stderrLevels: ['error'],
   format: winston.format.combine(
     winston.format.colorize(),
     winston.format.simple(),

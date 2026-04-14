@@ -13,7 +13,7 @@ import * as packageData from '../../package.json';
 
 const proxyquire = noCallThru();
 
-const PORT = 9876;
+const PORT = 0; // Use random port to avoid EADDRINUSE
 
 let exitStatus;
 
@@ -213,21 +213,25 @@ describe('CLI class', () => {
         res.json([{ my: 'another', world: 'service' }]);
       });
 
-      dc = new CLIStub({
-        custom: {
-          argv: [
-            './test/fixtures/single-get.apib',
-            `http://127.0.0.1:${PORT}`,
-            '--path=./test/fixtures/single-get.apib',
-          ],
-        },
-        exit(code) {
-          exitStatus = code;
-          server.close();
-        },
-      });
+      const server = app.listen(PORT, () => {
+        const actualPort = server.address().port;
 
-      const server = app.listen(PORT, () => dc.run());
+        dc = new CLIStub({
+          custom: {
+            argv: [
+              './test/fixtures/single-get.apib',
+              `http://127.0.0.1:${actualPort}`,
+              '--path=./test/fixtures/single-get.apib',
+            ],
+          },
+          exit(code) {
+            exitStatus = code;
+            server.close();
+          },
+        });
+
+        dc.run();
+      });
 
       server.on('close', done);
     });
@@ -244,9 +248,9 @@ describe('CLI class', () => {
           dc.dreddInstance.configuration.path[0],
           './test/fixtures/single-get.apib',
         );
-        assert.equal(
+        assert.match(
           dc.dreddInstance.configuration.endpoint,
-          `http://127.0.0.1:${PORT}`,
+          /^http:\/\/127\.0\.0\.1:\d+$/,
         );
       });
     });
@@ -263,9 +267,9 @@ describe('CLI class', () => {
           dc.dreddInstance.configuration.path[0],
           './test/fixtures/single-get.apib',
         );
-        assert.equal(
+        assert.match(
           dc.dreddInstance.configuration.endpoint,
-          `http://127.0.0.1:${PORT}`,
+          /^http:\/\/127\.0\.0\.1:\d+$/,
         );
       });
     });
