@@ -28,6 +28,7 @@ class HooksWorkerClient {
   handlerClient: any;
   handlerCommand!: string;
   handlerCommandArgs!: string[];
+  stopped: boolean;
 
   constructor(runner: any) {
     this.runner = runner;
@@ -45,27 +46,34 @@ class HooksWorkerClient {
     this.handlerMessageDelimiter = '\n';
     this.clientConnected = false;
     this.connectError = false;
+    this.stopped = false;
     this.emitter = new EventEmitter();
   }
 
   start(callback: (err?: Error) => void): void {
+    let callbackCalled = false;
+    const safeCallback = (err?: Error): void => {
+      if (callbackCalled || this.stopped) return;
+      callbackCalled = true;
+      callback(err);
+    };
     logger.debug('Looking up hooks handler implementation:', this.language);
     this.setCommandAndCheckForExecutables((executablesError?: Error) => {
       if (executablesError) {
-        return callback(executablesError);
+        return safeCallback(executablesError);
       }
 
       logger.debug('Starting hooks handler.');
       this.spawnHandler((spawnHandlerError?: Error) => {
         if (spawnHandlerError) {
-          return callback(spawnHandlerError);
+          return safeCallback(spawnHandlerError);
         }
 
         logger.debug('Connecting to hooks handler.');
         this.connectToHandler((connectHandlerError?: Error) => {
           if (connectHandlerError) {
             this.terminateHandler((terminateError?: Error) =>
-              callback(connectHandlerError || terminateError),
+              safeCallback(connectHandlerError || terminateError),
             );
             return;
           }
@@ -73,9 +81,9 @@ class HooksWorkerClient {
           logger.debug('Registering hooks.');
           this.registerHooks((registerHooksError?: Error) => {
             if (registerHooksError) {
-              return callback(registerHooksError);
+              return safeCallback(registerHooksError);
             }
-            callback();
+            safeCallback();
           });
         });
       });
@@ -83,6 +91,7 @@ class HooksWorkerClient {
   }
 
   stop(callback: (err?: Error) => void): void {
+    this.stopped = true;
     this.disconnectFromHandler();
     this.terminateHandler(callback);
   }
@@ -342,6 +351,10 @@ $ go get github.com/snikch/goodman/cmd/goodman
     };
 
     const waitForConnect = (): void => {
+      if (this.stopped) {
+        clearTimeout(timeout);
+        return;
+      }
       if (Date.now() - start < this.connectTimeout) {
         clearTimeout(timeout);
 
