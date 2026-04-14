@@ -2,16 +2,13 @@ environment:
   nodejs_version: '20'
 install:
   - ps: Install-Product node 20
-  - 'npm install -g yarn'
-  - "set PATH=%APPDATA%\\npm;%PATH%"
-  - 'yarn install'
+  - 'npm ci'
 cache:
-  - 'node_modules -> yarn.lock'
-  - "%APPDATA%\\npm-cache -> yarn.lock"
+  - 'node_modules'
+  - "%APPDATA%\\npm-cache"
 build: off
 test_script:
   - 'node --version'
   - 'npm --version'
-  - 'yarn --version'
-  - 'yarn build'
-  - 'yarn test'
+  - 'npm run build'
+  - 'npm test'

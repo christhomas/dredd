@@ -1,24 +1,23 @@
 {
   "private": true,
   "scripts": {
-    "build": "lerna exec --scope=\"*\" yarn build",
-    "prettify:check": "lerna exec --scope=\"dredd\" yarn prettify:check",
+    "build": "npm run build --workspaces",
+    "prettify:check": "npm run prettify:check --workspace=@antimatter-studios/dredd",
     "docs:lint": "sphinx-build -nW -b linkcheck ./docs ./docs/_build",
     "docs:test-extensions": "python -m unittest docs/_extensions/*.py --verbose",
     "docs:build": "sphinx-build -nW -b html ./docs ./docs/_build",
     "docs:serve": "sphinx-autobuild ./docs ./docs/_build",
-    "lint": "lerna exec --scope=\"*\" --concurrency=1 --no-bail yarn lint",
-    "test:smoke": "lerna exec --scope=\"*\" --concurrency=1 --no-bail yarn test:smoke",
-    "test": "lerna exec --scope=\"*\" --concurrency=1 --no-bail yarn test"
+    "lint": "npm run lint --workspaces --if-present",
+    "test:smoke": "npm run test:smoke --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "commit:lint": "commitlint --from HEAD~1 --to HEAD"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.4",
     "@commitlint/cli": "19.8.1",
-    "@commitlint/config-conventional": "19.8.1",
-    "lerna": "^3.22.1"
+    "@commitlint/config-conventional": "19.8.1"
   },
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ]
-  }
+  "workspaces": [
+    "packages/*"
+  ]
 }

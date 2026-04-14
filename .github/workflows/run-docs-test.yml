@@ -1,84 +1,57 @@
-
 name: run-docs-test
 
 on: push
-    # here add directory listing on push to test
-    # paths:
-      # - /docs/*.rst
-      # - /docs/**/*.rst
 
 jobs:
-
   commitlint:
-
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node-version: [20.x]
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - run: yarn install
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - run: npm ci
       - run: npx commitlint --from HEAD~${{ github.event.pull_request.commits }} --to HEAD
 
   quality-checks:
-
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        node-version: [20.x]
 
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
+    - uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 20.x
     - uses: actions/setup-python@v5
       with:
         python-version: '3.x'
-
-    # venv
     - run: pip install -r ./docs/requirements.txt
-    - run: echo $(python --version) > .python-version
-    - run: 'if [ ! -d ./venv ]; then python -m venv ./venv; fi'
-    - run: source $(pwd)/venv/bin/activate
-
-    # install
-    - run: yarn install
-    - run: yarn lint
-    - run: yarn docs:lint
-    - run: yarn docs:test-extensions
+    - run: npm ci
+    - run: npm run lint
+    - run: npm run docs:lint
+    - run: npm run docs:test-extensions
 
   docs-dry-run:
-
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        node-version: [20.x]
 
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
+    - uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 20.x
     - uses: actions/setup-python@v5
       with:
         python-version: '3.x'
-
-    # venv
     - run: pip install -r ./docs/requirements.txt
-    - run: echo $(python --version) > .python-version
-    - run: 'if [ ! -d ./venv ]; then python -m venv ./venv; fi'
-    - run: source $(pwd)/venv/bin/activate
-
-    - run: yarn install
-    - run: yarn docs:build
+    - run: npm ci
+    - run: npm run docs:build

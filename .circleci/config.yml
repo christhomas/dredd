@@ -16,7 +16,7 @@ commands:
 
 aliases:
   - &install
-    - run: yarn install --frozen-lockfile
+    - run: npm ci
 
   - &node20
     image: cimg/node:20.20
@@ -28,8 +28,8 @@ aliases:
     steps:
       - checkout
       - <<: *install
-      - run: yarn build
-      - run: yarn test
+      - run: npm run build
+      - run: npm test
 
 jobs:
   test-node20:
@@ -45,16 +45,16 @@ jobs:
     steps:
       - checkout
       - <<: *install
-      - run: yarn build
-      - run: npx lerna exec --scope="dredd" yarn e2e:apib
+      - run: npm run build
+      - run: npm run e2e:apib --workspace=@antimatter-studios/dredd
 
   test-e2e-openapi2:
     docker: [<<: *node20]
     steps:
       - checkout
       - <<: *install
-      - run: yarn build
-      - run: npx lerna exec --scope="dredd" yarn e2e:openapi2
+      - run: npm run build
+      - run: npm run e2e:openapi2 --workspace=@antimatter-studios/dredd
 
   quality-checks:
     docker: [<<: *python-docs]
@@ -62,27 +62,25 @@ jobs:
       - checkout
       - <<: *install
       - pip-install-docs
-      - run: yarn lint
-      - run: yarn commit:lint
-      - run: yarn docs:lint
-      - run: yarn docs:test-extensions
+      - run: npm run lint
+      - run: npm run commit:lint
+      - run: npm run docs:lint
+      - run: npm run docs:test-extensions
 
   format-check:
     docker: [<<: *node20]
     steps:
       - checkout
       - <<: *install
-      - run: yarn prettify:check
+      - run: npm run prettify:check
 
   docs-dry-run:
-    # 'dry run', because production build happens directly on the ReadTheDocs
-    # infrastructure
     docker: [<<: *python-docs]
     steps:
       - checkout
       - <<: *install
       - pip-install-docs
-      - run: yarn docs:build
+      - run: npm run docs:build
 
   smoke-tests:
     docker:
@@ -91,7 +89,7 @@ jobs:
     steps:
       - checkout
       - <<: *install
-      - run: yarn test:smoke
+      - run: npm run test:smoke
 
 workflows:
   version: 2

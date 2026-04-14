@@ -1,32 +1,44 @@
 # Release process
 
-- [Release reference #1](https://github.com/apiaryio/dredd/pull/1626)
-- [Release reference #2](https://github.com/apiaryio/dredd/pull/1862)
+## Prerequisites
 
-## 1. Create a release pull request
+### npm trusted publishing (one-time setup)
+
+For each package (`@antimatter-studios/dredd` and `@antimatter-studios/dredd-transactions`):
+
+1. Go to **npmjs.com → package → Settings → Publishing access**
+2. Under **Trusted publishers**, click **Add trusted publisher**
+3. Fill in:
+   - **Repository owner**: `christhomas`
+   - **Repository name**: `dredd`
+   - **Workflow filename**: `publish.yml`
+   - **Environment**: `npm-publish`
+4. Save
+
+Also create a GitHub environment called `npm-publish` in **repo Settings → Environments**.
+
+## Creating a release
+
+### 1. Add a changeset
+
+When you make changes that should be released, run:
 
 ```bash
-$ git checkout -b <user>/dredd-14.0.0
-$ npx lerna version --no-push --no-git-tag-version
-$ git add .
-$ git push -u origin <user>/dredd-14.0.0
+npx changeset
 ```
 
-## 2. Post-merge process
+This will prompt you to select which packages changed and the semver bump type (patch/minor/major). Commit the generated changeset file with your PR.
 
-**Once the release pull request is approved and merged**, proceed using the following instructions:
+### 2. Publish
 
-```bash
-$ git checkout master
-$ git pull
+Once your PR is merged to master, go to **Actions → publish → Run workflow** on the master branch.
 
-# Publish the packages respecting their versions from "package.json".
-$ npx lerna publish from-package
+The workflow will:
+- Install, build, and test
+- Apply version bumps from pending changesets
+- Publish to npm via OIDC trusted publishing (no tokens needed)
+- Push version commits and git tags back to master
 
-# Tag the packages manually with the corresponding next versions.
-$ git tag -a -m dredd@14.0.0 dredd@14.0.0
-$ git tag -a -m dredd-transactions@10.0.0 dredd-transactions@10.0.0
+### Dry run
 
-# Push the new tags to master.
-$ git push --tags
-```
+You can select **dry-run: true** when triggering the workflow to verify what would be published without actually publishing.
