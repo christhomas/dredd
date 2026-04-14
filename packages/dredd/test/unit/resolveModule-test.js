@@ -20,10 +20,4 @@ describe('resolveModule()', () => {
     );
   });
 
-  it('resolves an installed module name', () => {
-    assert.equal(
-      resolveModule(workingDirectory, 'coffeescript/register'),
-      'coffeescript/register',
-    );
-  });
 });

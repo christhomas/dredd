@@ -21,11 +21,11 @@ function measureExecutionDurationMs(fn) {
   return timeDiff[0] * 1000 + timeDiff[1] * 1e-6;
 }
 
-const COFFEE_BIN = 'node_modules/.bin/coffee';
+const NODE_BIN = 'node';
 const MIN_COMMAND_EXECUTION_DURATION_MS =
   2 *
   measureExecutionDurationMs(() =>
-    crossSpawnStub.sync(COFFEE_BIN, ['test/fixtures/scripts/exit-0.coffee']),
+    crossSpawnStub.sync(NODE_BIN, ['test/fixtures/scripts/exit-0.js']),
   );
 const PORT = 61321;
 
@@ -88,7 +88,7 @@ describe('Hooks worker client', () => {
     });
 
     it('should pipe spawned process stdout to the Dredd process stdout', (done) => {
-      runner.hooks.configuration.language = `${COFFEE_BIN} test/fixtures/scripts/stdout.coffee`;
+      runner.hooks.configuration.language = `${NODE_BIN} test/fixtures/scripts/stdout.js`;
       loadWorkerClient((workerError) => {
         if (workerError) {
           return done(workerError);
@@ -118,7 +118,7 @@ describe('Hooks worker client', () => {
     });
 
     it('should pipe spawned process stderr to the Dredd process stderr', (done) => {
-      runner.hooks.configuration.language = `${COFFEE_BIN} test/fixtures/scripts/stderr.coffee`;
+      runner.hooks.configuration.language = `${NODE_BIN} test/fixtures/scripts/stderr.js`;
       loadWorkerClient((workerError) => {
         if (workerError) {
           return done(workerError);
@@ -151,7 +151,7 @@ describe('Hooks worker client', () => {
       'should not set the error on worker if process gets intentionally killed by Dredd ' +
         "because it can be killed after all hooks execution if SIGTERM isn't handled",
       (done) => {
-        runner.hooks.configuration.language = `${COFFEE_BIN} test/fixtures/scripts/endless-ignore-term.coffee`;
+        runner.hooks.configuration.language = `${NODE_BIN} test/fixtures/scripts/endless-ignore-term.js`;
         loadWorkerClient((workerError) => {
           if (workerError) {
             return done(workerError);
@@ -863,7 +863,7 @@ describe('Hooks worker client', () => {
     afterEach(() => server.close());
 
     it('should connect to the server', (done) => {
-      runner.hooks.configuration.language = `${COFFEE_BIN} test/fixtures/scripts/exit-0.coffee`;
+      runner.hooks.configuration.language = `${NODE_BIN} test/fixtures/scripts/exit-0.js`;
 
       loadWorkerClient((err) => {
         assert.isUndefined(err);
@@ -889,7 +889,7 @@ describe('Hooks worker client', () => {
         if (eventType.indexOf('All') > -1) {
           beforeEach((done) => {
             receivedData = '';
-            runner.hooks.configuration.language = `${COFFEE_BIN} test/fixtures/scripts/exit-0.coffee`;
+            runner.hooks.configuration.language = `${NODE_BIN} test/fixtures/scripts/exit-0.js`;
             sentData = clone([transaction]);
             loadWorkerClient((err) => {
               assert.isUndefined(err);
@@ -899,7 +899,7 @@ describe('Hooks worker client', () => {
         } else {
           beforeEach((done) => {
             receivedData = '';
-            runner.hooks.configuration.language = `${COFFEE_BIN} test/fixtures/scripts/exit-0.coffee`;
+            runner.hooks.configuration.language = `${NODE_BIN} test/fixtures/scripts/exit-0.js`;
             sentData = clone(transaction);
             loadWorkerClient((err) => {
               assert.isUndefined(err);
@@ -988,7 +988,7 @@ describe('Hooks worker client', () => {
 
         beforeEach((done) => {
           // Dummy placeholder for a real hooks handler
-          runner.hooks.configuration.language = `${COFFEE_BIN} test/fixtures/scripts/exit-0.coffee`;
+          runner.hooks.configuration.language = `${NODE_BIN} test/fixtures/scripts/exit-0.js`;
 
           // Mock hooks handler implementation, which ocuppies expected port instead
           // of a real hooks handler.

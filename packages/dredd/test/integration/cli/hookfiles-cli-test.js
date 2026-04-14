@@ -11,7 +11,6 @@ import {
   DEFAULT_SERVER_PORT
 } from '../helpers'
 
-const COFFEE_BIN = require.resolve('coffeescript/bin/coffee')
 const DEFAULT_HOOK_HANDLER_PORT = 61321
 
 describe('CLI', () => {
@@ -189,7 +188,7 @@ describe('CLI', () => {
           const args = [
             './test/fixtures/single-get.apib',
             `http://127.0.0.1:${DEFAULT_SERVER_PORT}`,
-            `--server=${COFFEE_BIN} ./test/fixtures/scripts/endless-ignore-term.coffee`,
+            `--server=node ./test/fixtures/scripts/endless-ignore-term.js`,
             '--server-wait=0',
             '--language=node ./test/fixtures/scripts/kill-self.js',
             '--hookfiles=./test/fixtures/scripts/emptyfile'
@@ -253,9 +252,9 @@ describe('CLI', () => {
           const args = [
             './test/fixtures/single-get.apib',
             `http://127.0.0.1:${DEFAULT_SERVER_PORT}`,
-            `--server=${COFFEE_BIN} ./test/fixtures/scripts/endless-ignore-term.coffee`,
+            `--server=node ./test/fixtures/scripts/endless-ignore-term.js`,
             '--server-wait=0',
-            `--language=${COFFEE_BIN} ./test/fixtures/scripts/endless-ignore-term.coffee`,
+            `--language=node ./test/fixtures/scripts/endless-ignore-term.js`,
             '--hookfiles=test/fixtures/hooks.js'
           ]
           hookHandler.listen(DEFAULT_HOOK_HANDLER_PORT, () =>
@@ -313,9 +312,9 @@ describe('CLI', () => {
           const args = [
             './test/fixtures/single-get.apib',
             `http://127.0.0.1:${DEFAULT_SERVER_PORT}`,
-            `--server=${COFFEE_BIN} ./test/fixtures/scripts/endless-ignore-term.coffee`,
+            `--server=node ./test/fixtures/scripts/endless-ignore-term.js`,
             '--server-wait=0',
-            `--language=${COFFEE_BIN} ./test/fixtures/scripts/endless-ignore-term.coffee`,
+            `--language=node ./test/fixtures/scripts/endless-ignore-term.js`,
             '--hookfiles=./test/fixtures/scripts/emptyfile'
           ]
           hookHandler.listen(DEFAULT_HOOK_HANDLER_PORT, () =>
@@ -760,7 +759,6 @@ describe('CLI', () => {
       const args = [
         './test/fixtures/single-get.apib',
         `http://127.0.0.1:${DEFAULT_SERVER_PORT}`,
-        '--require=coffeescript/register',
         '--hookfiles=./test/fixtures/*_all.*'
       ]
       runCLIWithServer(args, app, (err, info) => {
@@ -878,8 +876,7 @@ describe('CLI', () => {
         const args = [
           './test/fixtures/multifile/*.apib',
           `http://127.0.0.1:${DEFAULT_SERVER_PORT}`,
-          '--require=coffeescript/register',
-          '--hookfiles=./test/fixtures/multifile/multifile_hooks.coffee'
+          '--hookfiles=./test/fixtures/multifile/multifile_hooks.js'
         ]
         runCLIWithServer(args, app, (err, info) => {
           runtimeInfo = info

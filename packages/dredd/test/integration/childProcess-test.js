@@ -4,7 +4,7 @@ import { assert } from 'chai';
 import * as helpers from './helpers';
 import { spawn, signalTerm, signalKill } from '../../lib/childProcess';
 
-const COFFEE_BIN = 'node_modules/.bin/coffee';
+const NODE_BIN = 'node';
 const WAIT_AFTER_COMMAND_SPAWNED_MS = 500;
 const WAIT_AFTER_COMMAND_TERMINATED_MS = 1500;
 
@@ -21,7 +21,7 @@ function runChildProcess(command, fn, callback) {
     onCrash,
   };
 
-  const childProcess = spawn(COFFEE_BIN, [command]);
+  const childProcess = spawn(NODE_BIN, [command]);
 
   childProcess.stdout.on('data', (data) => {
     processInfo.stdout += data.toString();
@@ -65,7 +65,7 @@ describe('Babysitting Child Processes', () => {
 
       before((done) =>
         runChildProcess(
-          'test/fixtures/scripts/stdout.coffee',
+          'test/fixtures/scripts/stdout.js',
           (childProcess) => childProcess.signalKill(),
           (err, info) => {
             processInfo = info;
@@ -94,7 +94,7 @@ describe('Babysitting Child Processes', () => {
 
       before((done) =>
         runChildProcess(
-          'test/fixtures/scripts/endless-ignore-term.coffee',
+          'test/fixtures/scripts/endless-ignore-term.js',
           (childProcess) => childProcess.signalKill(),
           (err, info) => {
             processInfo = info;
@@ -125,7 +125,7 @@ describe('Babysitting Child Processes', () => {
 
         before((done) =>
           runChildProcess(
-            'test/fixtures/scripts/stdout.coffee',
+            'test/fixtures/scripts/stdout.js',
             (childProcess) => childProcess[functionName](),
             (err, info) => {
               processInfo = info;
@@ -154,7 +154,7 @@ describe('Babysitting Child Processes', () => {
 
         before((done) =>
           runChildProcess(
-            'test/fixtures/scripts/endless-ignore-term.coffee',
+            'test/fixtures/scripts/endless-ignore-term.js',
             (childProcess) => childProcess.terminate(),
             (err, info) => {
               processInfo = info;
@@ -186,7 +186,7 @@ describe('Babysitting Child Processes', () => {
 
       before((done) =>
         runChildProcess(
-          'test/fixtures/scripts/stdout.coffee',
+          'test/fixtures/scripts/stdout.js',
           (childProcess) => childProcess.terminate({ force: true }),
           (err, info) => {
             processInfo = info;
@@ -214,7 +214,7 @@ describe('Babysitting Child Processes', () => {
 
       before((done) =>
         runChildProcess(
-          'test/fixtures/scripts/endless-ignore-term.coffee',
+          'test/fixtures/scripts/endless-ignore-term.js',
           (childProcess) => childProcess.terminate({ force: true }),
           (err, info) => {
             processInfo = info;
@@ -248,7 +248,7 @@ describe('Babysitting Child Processes', () => {
       before((done) =>
         // eslint-disable-next-line
         runChildProcess(
-          'test/fixtures/scripts/exit-0.coffee',
+          'test/fixtures/scripts/exit-0.js',
           () => true,
           (err, info) => {
             processInfo = info;
@@ -276,7 +276,7 @@ describe('Babysitting Child Processes', () => {
       before((done) =>
         // eslint-disable-next-line
         runChildProcess(
-          'test/fixtures/scripts/exit-3.coffee',
+          'test/fixtures/scripts/exit-3.js',
           () => true,
           (err, info) => {
             processInfo = info;
@@ -307,7 +307,7 @@ describe('Babysitting Child Processes', () => {
 
       before((done) =>
         runChildProcess(
-          'test/fixtures/scripts/stdout.coffee',
+          'test/fixtures/scripts/stdout.js',
           (childProcess) => childProcess.signalTerm(),
           (err, info) => {
             processInfo = info;
@@ -334,7 +334,7 @@ describe('Babysitting Child Processes', () => {
 
       before((done) =>
         runChildProcess(
-          'test/fixtures/scripts/stdout-exit-3.coffee',
+          'test/fixtures/scripts/stdout-exit-3.js',
           (childProcess) => childProcess.signalTerm(),
           (err, info) => {
             processInfo = info;
@@ -361,7 +361,7 @@ describe('Babysitting Child Processes', () => {
 
       before((done) =>
         runChildProcess(
-          'test/fixtures/scripts/stdout.coffee',
+          'test/fixtures/scripts/stdout.js',
           (childProcess) => childProcess.signalKill(),
           (err, info) => {
             processInfo = info;
@@ -394,7 +394,7 @@ describe('Babysitting Child Processes', () => {
 
       before((done) =>
         runChildProcess(
-          'test/fixtures/scripts/stdout.coffee',
+          'test/fixtures/scripts/stdout.js',
           (childProcess) => {
             // Simulate that the process was terminated externally
             const emit = sinon.stub(childProcess, 'emit');
@@ -426,7 +426,7 @@ describe('Babysitting Child Processes', () => {
 
       before((done) =>
         runChildProcess(
-          'test/fixtures/scripts/stdout-exit-3.coffee',
+          'test/fixtures/scripts/stdout-exit-3.js',
           (childProcess) => {
             // Simulate that the process was terminated externally
             const emit = sinon.stub(childProcess, 'emit');
@@ -462,7 +462,7 @@ describe('Babysitting Child Processes', () => {
 
       before((done) =>
         runChildProcess(
-          'test/fixtures/scripts/stdout.coffee',
+          'test/fixtures/scripts/stdout.js',
           (childProcess) => {
             // Simulate that the process was killed externally
             const emit = sinon.stub(childProcess, 'emit');

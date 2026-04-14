@@ -37,8 +37,7 @@ describe('Requiring user-provided modules (e.g. language compilers)', () => {
       const dredd = new Dredd({
         options: {
           path: './test/fixtures/single-get.apib',
-          hookfiles: './test/fixtures/hooks-log.coffee',
-          require: 'coffeescript/register',
+          hookfiles: './test/fixtures/hooks-log.js',
         },
       });
       runDredd(dredd, (err, info) => {

@@ -108,11 +108,11 @@ describe('resolvePaths()', () => {
         path.join(workingDirectory, 'hooks-glob/foo/a.js'),
         path.join(workingDirectory, 'hooks-glob/bar/b.js'),
         path.join(workingDirectory, 'hooks-glob/baz/c.js'),
-        path.join(workingDirectory, 'multifile/multifile_hooks.coffee'),
+        path.join(workingDirectory, 'multifile/multifile_hooks.js'),
         path.join(workingDirectory, 'hooks-glob/foo/o.js'),
         path.join(workingDirectory, 'hooks-glob/bar/p.js'),
         path.join(workingDirectory, 'test2_hooks.js'),
-        path.join(workingDirectory, 'test_hooks.coffee'),
+        path.join(workingDirectory, 'test_hooks.js'),
         path.join(workingDirectory, 'hooks-glob/baz/x.js'),
         path.join(workingDirectory, 'hooks-glob/foo/y.js'),
         path.join(workingDirectory, 'hooks-glob/bar/z.js'),
@@ -125,12 +125,12 @@ describe('resolvePaths()', () => {
       const paths = resolvePaths(workingDirectory, [
         './test2_hooks.js',
         './**/*_hooks.*',
-        'multifile/multifile_hooks.coffee',
+        'multifile/multifile_hooks.js',
       ]);
       assert.deepEqual(paths, [
-        path.join(workingDirectory, 'multifile/multifile_hooks.coffee'),
+        path.join(workingDirectory, 'multifile/multifile_hooks.js'),
         path.join(workingDirectory, 'test2_hooks.js'),
-        path.join(workingDirectory, 'test_hooks.coffee'),
+        path.join(workingDirectory, 'test_hooks.js'),
       ]);
     });
   });

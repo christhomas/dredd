@@ -119,7 +119,7 @@ Programming language
 
 Dredd is written in modern JavaScript, ran by `Node.js <https://nodejs.org/>`__, and distributed by `npm <https://www.npmjs.com/>`__.
 
-Previously Dredd was written in `CoffeeScript <https://coffeescript.org>`__, and it was only recently converted to modern JavaScript. That's why sometimes the code does not feel very nice. Any efforts to refactor the code to something more human-friendly are greatly appreciated.
+Dredd was originally written in CoffeeScript and has since been fully converted to JavaScript. CoffeeScript is no longer used anywhere in the project.
 
 .. _cpp-dependencies:
 .. _compiled-vs-pure-javascript:
@@ -167,7 +167,7 @@ Use ``npm test`` to run all tests. Dredd uses `Mocha <https://mochajs.org/>`__ a
 Linting
 ~~~~~~~
 
-Dredd uses `eslint <https://eslint.org/>`__ to test the quality of the JavaScript codebase. We are adhering to the `Airbnb’s styleguide <https://github.com/airbnb/javascript>`__. Several rules are disabled to allow us to temporarily have dirty code after we migrated from CoffeeScript to JavaScript. The long-term intention is to remove all these exceptions.
+Dredd uses `eslint <https://eslint.org/>`__ to test the quality of the JavaScript codebase. We are adhering to the `Airbnb’s styleguide <https://github.com/airbnb/javascript>`__.
 
 The linter is optional for local development to make easy prototyping and working with unpolished code, but it’s enforced on the CI level. It is recommended you integrate `eslint <https://eslint.org/>`__ with your favorite editor so you see violations immediately during coding.
 

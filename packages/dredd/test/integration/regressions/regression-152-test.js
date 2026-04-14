@@ -16,8 +16,7 @@ describe('Regression: Issue #152', () =>
       const dredd = new Dredd({
         options: {
           path: './test/fixtures/single-get.apib',
-          require: 'coffeescript/register',
-          hookfiles: './test/fixtures/regression-152.coffee'
+          hookfiles: './test/fixtures/regression-152.js'
         }
       })
 

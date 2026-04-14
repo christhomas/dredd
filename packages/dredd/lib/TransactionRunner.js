@@ -320,7 +320,6 @@ class TransactionRunner {
     request.headers = headers;
 
     // The data models as used here must conform to Gavel.js
-    // as defined in `http-response.coffee`
     const expected = { headers: headersArrayToObject(response.headers) };
     if (response.body) {
       expected.body = response.body;
