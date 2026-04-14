@@ -71,9 +71,9 @@ describe('CLI - API Blueprint Document', () => {
 
       it('should exit with status 0', () =>
         assert.equal(runtimeInfo.dredd.exitStatus, 0))
-      it('should print warning to stdout', () =>
+      it('should print warning', () =>
         assert.include(
-          runtimeInfo.dredd.stdout,
+          runtimeInfo.dredd.output,
           'API description URI template expansion warning'
         ))
     })

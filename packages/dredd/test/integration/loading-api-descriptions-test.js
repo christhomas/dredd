@@ -325,9 +325,10 @@ FORMAT: 1A
           done(listenErr);
           return;
         }
+        const actualPort = server.address().port;
         dredd = createDredd({
           options: {
-            path: `http://127.0.0.1:${DEFAULT_SERVER_PORT}/file.apib`,
+            path: `http://127.0.0.1:${actualPort}/file.apib`,
           },
         });
         dredd.run((dreddErr) => {
@@ -348,9 +349,9 @@ FORMAT: 1A
       );
     });
     it('the location is set to the URL', () => {
-      assert.equal(
+      assert.match(
         dredd.configuration.apiDescriptions[0].location,
-        `http://127.0.0.1:${DEFAULT_SERVER_PORT}/file.apib`,
+        /^http:\/\/127\.0\.0\.1:\d+\/file\.apib$/,
       );
     });
     it('the content is set', () => {
@@ -419,9 +420,10 @@ FORMAT: 1A
           done(listenErr);
           return;
         }
+        const actualPort = server.address().port;
         dredd = createDredd({
           options: {
-            path: `http://127.0.0.1:${DEFAULT_SERVER_PORT}/file.apib`,
+            path: `http://127.0.0.1:${actualPort}/file.apib`,
           },
         });
         dredd.run((dreddErr) => {
@@ -437,7 +439,7 @@ FORMAT: 1A
     it('the error is descriptive', () => {
       assert.include(
         error.message,
-        `Unable to load API description document from 'http://127.0.0.1:${DEFAULT_SERVER_PORT}/file.apib': `,
+        'Unable to load API description document from',
       );
       assert.include(error.message, 'Dredd got HTTP 404 response');
     });

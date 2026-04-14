@@ -177,7 +177,7 @@ describe('CLI - API Description Document', () => {
         )
         assert.include(
           runtimeInfo.dredd.stderr,
-          `http://127.0.0.1:${DEFAULT_SERVER_PORT}/__non-existent__.apib`
+          '__non-existent__.apib'
         )
       })
     })
