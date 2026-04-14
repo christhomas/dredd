@@ -1,4 +1,3 @@
-import R from 'ramda';
 import console from 'console'; // Stubbed in tests by proxyquire
 import fs from 'fs';
 import yargs from 'yargs/yargs';
@@ -384,9 +383,7 @@ Example:
   initConfig() {
     this.lastArgvIsApiEndpoint().takeRestOfParamsAsPath();
 
-    const cliConfig = R.mergeDeepRight(this.argv, {
-      server: this.server,
-    });
+    const cliConfig = { ...this.argv, server: this.server };
 
     // Push first argument (without some known configuration --key) into paths
     if (!cliConfig.path) {
@@ -398,7 +395,7 @@ Example:
     // (used for internal testing), and "cliConfig" which is a result
     // of merge upon "argv". Otherwise "custom" key from "dredd.yml"
     // is always overridden by "this.custom".
-    cliConfig.custom = R.mergeDeepRight(this.custom, cliConfig.custom || {});
+    cliConfig.custom = { ...this.custom, ...(cliConfig.custom || {}) };
 
     return cliConfig;
   }
