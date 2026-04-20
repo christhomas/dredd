@@ -75,7 +75,7 @@ Following execution life cycle documentation should help you to understand how D
 Automatic Expectations
 ----------------------
 
-Dredd automatically generates expectations on HTTP responses based on examples in the API description with use of the `Gavel`_ library. Please refer to `Gavel's rules <https://relishapp.com/apiary/gavel/docs>`__ if you want know more.
+Dredd automatically generates expectations on HTTP responses based on examples in the API description with use of the `Gavel`_ library.
 
 Response Headers Expectations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

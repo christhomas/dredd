@@ -116,8 +116,6 @@ Transaction result equals to the result of the `Gavel <https://github.com/apiary
 Gavel Validation Result Field (object)
 --------------------------------------
 
-Can be seen also `here <https://relishapp.com/apiary/gavel/docs/data-validators-and-output-format#validators-output-format>`__.
-
 -  valid (boolean) - Whether the HTTP message field is valid
 -  kind (enum[string], nullable) - The validation kind applied to the expected/actual data (how the values were compared)
    -  json
