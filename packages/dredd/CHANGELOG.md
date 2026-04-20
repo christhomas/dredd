@@ -1,5 +1,13 @@
 # @antimatter-studios/dredd
 
+## 15.0.6
+
+### Patch Changes
+
+- Retry publish now that trusted publisher is configured for dredd-transactions
+- Updated dependencies
+  - @antimatter-studios/dredd-transactions@11.0.6
+
 ## 15.0.5
 
 ### Patch Changes
