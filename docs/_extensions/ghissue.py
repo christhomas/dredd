@@ -26,9 +26,19 @@ def github_issue(name, rawtext, text, lineno, inliner,
 def parse_text(text):
     match = REFERENCE_RE.match(text)
     if match:
-        owner = match.group(3) or 'christhomas'
-        repo = match.group(4) or 'dredd'
+        explicit_owner = match.group(3)
+        explicit_repo = match.group(4)
         issueno = match.group(5) or None
+
+        # '#123' refers to this repo (the fork); 'repo#123' refers to an
+        # apiaryio sibling repo (api-blueprint, dredd-transactions, etc.);
+        # 'owner/repo#123' refers to an arbitrary repo.
+        if explicit_owner:
+            owner, repo = explicit_owner, explicit_repo
+        elif explicit_repo:
+            owner, repo = 'apiaryio', explicit_repo
+        else:
+            owner, repo = 'christhomas', 'dredd'
 
         if issueno:
             return URL_TEMPLATE.format(owner=owner, repo=repo, issueno=issueno)
