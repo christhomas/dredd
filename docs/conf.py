@@ -113,6 +113,11 @@ html_show_copyright = False
 
 # -- External links check -------------------------------------------------
 
+# Don't probe fragment anchors; many external docs sites (GitHub markdown
+# rendering, json-schema.org, nodejs.org, MDN, etc.) change or move anchor
+# slugs without notice. Dead base URLs are still reported.
+linkcheck_anchors = False
+
 linkcheck_ignore = [
     'https://crates.io/crates/dredd-hooks',  # https://github.com/sphinx-doc/sphinx/pull/5140
     # Exclude Dredd repository links, because they are checked
