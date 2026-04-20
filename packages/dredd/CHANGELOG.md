@@ -1,5 +1,13 @@
 # @antimatter-studios/dredd
 
+## 15.0.8
+
+### Patch Changes
+
+- Use npm publish --workspace from root for OIDC token acquisition
+- Updated dependencies
+  - @antimatter-studios/dredd-transactions@11.0.8
+
 ## 15.0.7
 
 ### Patch Changes

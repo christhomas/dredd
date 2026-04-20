@@ -38,10 +38,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Publish dredd-transactions first (dredd depends on it)
-        working-directory: packages/dredd-transactions
-        run: npm publish --access public || true
+      - name: Publish dredd-transactions (dredd depends on it)
+        run: npm publish --workspace=@antimatter-studios/dredd-transactions --access public
 
       - name: Publish dredd
-        working-directory: packages/dredd
-        run: npm publish --access public
+        run: npm publish --workspace=@antimatter-studios/dredd --access public
