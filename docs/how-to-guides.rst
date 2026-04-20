@@ -452,7 +452,7 @@ If you describe a JSON body which has attributes ``name`` and ``size``, the foll
 If the size should be always equal to 300, you need to specify the fact in your API description.
 
 -  In API Blueprint’s :apib:`Attributes <def-attributes-section>` sections you can mark your property with ``fixed`` (:mson:`353-type-attribute`), which turns the sample value into a required value. You can also use ``enum`` (:mson:`212-structure-types`) to provide a set of possible values.
--  In API Blueprint’s :apib:`Schema <def-schema-section>` sections and in OpenAPI 2 you can use ``enum`` (`spec <https://json-schema.org/understanding-json-schema/reference/generic.html#enumerated-values>`__) with one or more possible values.
+-  In API Blueprint’s :apib:`Schema <def-schema-section>` sections and in OpenAPI 2 you can use ``enum`` (`spec <https://json-schema.org/understanding-json-schema/reference/enum>`__) with one or more possible values.
 
 Integrating Dredd with Your Test Suite
 --------------------------------------
