@@ -121,6 +121,9 @@ linkcheck_ignore = [
     # GitHub's anchor slugs for the OpenAPI spec markdown files keep shifting,
     # so anchor checks on those pages constantly break.
     r'https?://github\.com/OAI/OpenAPI-Specification/.+',
+    # json-schema.org migrated to a new docs layout; anchors on the
+    # understanding-json-schema pages no longer resolve as expected.
+    r'https?://json-schema\.org/understanding-json-schema/.+',
 ]
 
 sphinx_tabs_valid_builders = ['linkcheck']
