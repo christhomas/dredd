@@ -38,5 +38,10 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Publish to npm
-        run: npm publish --workspaces --access public
+      - name: Publish dredd-transactions first (dredd depends on it)
+        working-directory: packages/dredd-transactions
+        run: npm publish --access public || true
+
+      - name: Publish dredd
+        working-directory: packages/dredd
+        run: npm publish --access public

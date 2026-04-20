@@ -1,5 +1,11 @@
 # @antimatter-studios/dredd-transactions
 
+## 11.0.7
+
+### Patch Changes
+
+- Publish dredd-transactions first, then dredd (dependency order)
+
 ## 11.0.6
 
 ### Patch Changes

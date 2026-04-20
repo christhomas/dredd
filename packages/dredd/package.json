@@ -1,6 +1,6 @@
 {
   "name": "@antimatter-studios/dredd",
-  "version": "15.0.6",
+  "version": "15.0.7",
   "description": "HTTP API Testing Framework (Chris Thomas Fork)",
   "main": "build/index.js",
   "publishConfig": {
@@ -29,7 +29,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/christhomas/dredd"
+    "url": "git+https://github.com/christhomas/dredd.git"
   },
   "files": [
     "bin",
@@ -38,7 +38,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@antimatter-studios/dredd-transactions": "^11.0.6",
+    "@antimatter-studios/dredd-transactions": "^11.0.7",
     "caseless": "0.12.0",
     "chai": "4.3.4",
     "clone": "2.1.2",
