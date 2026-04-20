@@ -311,7 +311,9 @@ export const kill = (pid, callback) => {
   }
   try {
     process.kill(pid, 'SIGKILL');
-  } catch (error) {}
+  } catch (error) {
+    // PID doesn't exist; ignore
+  }
   // If the PID doesn't exist, process.kill() throws - we do not care
   process.nextTick(callback);
 };

@@ -1,5 +1,13 @@
 # @antimatter-studios/dredd
 
+## 15.0.9
+
+### Patch Changes
+
+- Fix all lint errors, add pre-commit hook, revert publish workflow to cd pattern
+- Updated dependencies
+  - @antimatter-studios/dredd-transactions@11.0.9
+
 ## 15.0.8
 
 ### Patch Changes

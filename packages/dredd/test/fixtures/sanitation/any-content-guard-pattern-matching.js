@@ -1,4 +1,4 @@
-const assert = require('chai').assert;
+const {assert} = require('chai');
 const hooks = require('hooks');
 
 const tokenPattern = /([0-9]|[a-f]){24,}/g;

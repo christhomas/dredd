@@ -3,7 +3,6 @@ const createCompileResultSchema = require('../schemas/createCompileResultSchema'
 const { assert, fixtures } = require('../support');
 const compile = require('../../compile');
 
-
 describe('compile() · OpenAPI 3', () => {
   describe('ordinary, valid API description', () => {
     const { mediaType, apiElements } = fixtures('proof-of-concept').openapi3;

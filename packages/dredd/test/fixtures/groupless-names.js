@@ -1,7 +1,7 @@
 const hooks = require('hooks');
 
-const before = hooks.before;
-const after = hooks.after;
+const {before} = hooks;
+const {after} = hooks;
 
 after(' > Machines collection > Get Machines', (transaction) => {
   transaction.fail = 'failed in sandboxed hook';

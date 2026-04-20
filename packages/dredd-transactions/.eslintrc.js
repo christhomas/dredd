@@ -20,4 +20,14 @@ module.exports = {
     // https://github.com/apiaryio/dredd-transactions/pull/179#discussion_r206852270
     'no-underscore-dangle': 'off',
   },
+  overrides: [
+    {
+      files: ['test/**/*.js', 'test/**/*.ts'],
+      rules: {
+        'import/no-extraneous-dependencies': 'off',
+        'no-new': 'off',
+        'no-unused-vars': ['error', { args: 'none' }],
+      },
+    },
+  ],
 };

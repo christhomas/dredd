@@ -8,8 +8,8 @@ import { EventEmitter } from 'events'
 import loggerStub from '../../../lib/logger'
 import reporterOutputLoggerStub from '../../../lib/reporters/reporterOutputLogger'
 
-const makeDirStub = (input, options) => makeDirStubImpl(input, options)
 let makeDirStubImpl = () => Promise.resolve()
+const makeDirStub = (input, options) => makeDirStubImpl(input, options)
 const makeDirStubImplBackup = makeDirStubImpl
 
 const proxyquire = noCallThru()

@@ -70,7 +70,7 @@ function parseDreddStdout(stdout) {
         results.failures.push(entry.body)
         break
       default:
-        continue
+        break
     }
   }
   return results

@@ -70,10 +70,10 @@ describe('performRequest()', () => {
     })
   })
   it('handles exceptions when preparing the HTTP request body', (done) => {
-    const invalidTransactionReq = Object.assign(
-      { bodyEncoding: 'latin2' },
-      transactionReq
-    )
+    const invalidTransactionReq = {
+      bodyEncoding: 'latin2',
+      ...transactionReq
+    }
     performRequest(uri, invalidTransactionReq, { request }, (err) => {
       assert.instanceOf(err, Error)
       done()

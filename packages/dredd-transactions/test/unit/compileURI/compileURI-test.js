@@ -1,8 +1,6 @@
 const { assert } = require('chai');
-const { assert: chaiAssert } = require('chai');
 const { fixtures } = require('../../support');
 const compile = require('../../../compile');
-
 
 describe('compileURI()', () => {
   // compileURI is an internal module that requires complex fury/minim element
@@ -71,7 +69,7 @@ describe('compileURI()', () => {
 
       it('annotations from URI expansion have the correct component', () => {
         const uriAnnotations = result.annotations.filter(
-          a => a.component === 'uriTemplateExpansion'
+          (a) => a.component === 'uriTemplateExpansion'
         );
         assert.isAbove(uriAnnotations.length, 0);
       });

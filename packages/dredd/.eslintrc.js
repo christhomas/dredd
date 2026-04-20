@@ -26,5 +26,20 @@ module.exports = {
 
     // Methods that don't use this are common in event handler classes
     'class-methods-use-this': 'off',
+
+    // ANSI escape codes in regex are intentional (stripping terminal colors)
+    'no-control-regex': 'off',
   },
+  overrides: [
+    {
+      // Test files commonly need patterns that airbnb considers errors
+      files: ['test/**/*.js', 'test/**/*.ts'],
+      rules: {
+        // Tests instantiate classes for side effects (sinon stubs, assertions)
+        'no-new': 'off',
+        // Test callback signatures expose params that may not be used
+        'no-unused-vars': ['error', { args: 'none' }],
+      },
+    },
+  ],
 };

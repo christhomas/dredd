@@ -1,12 +1,10 @@
 const fury = require('@apielements/core');
 
-
 fury.use(require('@apielements/apib-parser'));
 fury.use(require('@apielements/openapi2-parser'));
 fury.use(require('@apielements/openapi3-parser'));
 
 const { Annotation, SourceMap, ParseResult } = fury.minim.elements;
-
 
 function createAnnotation(type, message) {
   const element = new Annotation(message);
@@ -17,7 +15,6 @@ function createAnnotation(type, message) {
   return element;
 }
 
-
 function detectMediaType(apiDescription) {
   const adapters = fury.detect(apiDescription);
   if (adapters.length) {
@@ -25,7 +22,6 @@ function detectMediaType(apiDescription) {
   }
   return { mediaType: 'text/vnd.apiblueprint', fallback: true };
 }
-
 
 function parse(apiDescription, callback) {
   const { mediaType, fallback } = detectMediaType(apiDescription);
@@ -53,6 +49,5 @@ function parse(apiDescription, callback) {
     callback(null, { mediaType, apiElements });
   });
 }
-
 
 module.exports = parse;

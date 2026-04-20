@@ -1,7 +1,6 @@
 const { assert, fixtures } = require('../support');
 const compile = require('../../compile');
 
-
 describe('compile() entry point', () => {
   describe('return structure', () => {
     fixtures('ordinary').forEachDescribe(({ mediaType, apiElements }) => {
@@ -113,7 +112,7 @@ describe('compile() entry point', () => {
       });
 
       it('annotations have error type', () => {
-        const errorAnnotations = result.annotations.filter(a => a.type === 'error');
+        const errorAnnotations = result.annotations.filter((a) => a.type === 'error');
         assert.isAbove(errorAnnotations.length, 0);
       });
     });
@@ -137,7 +136,7 @@ describe('compile() entry point', () => {
 
   describe('with multiple transaction examples (API Blueprint)', () => {
     const fixture = fixtures('multiple-transaction-examples');
-    const apibFixture = fixture.find(f => f.format === 'apib');
+    const apibFixture = fixture.find((f) => f.format === 'apib');
 
     if (apibFixture) {
       const result = compile(apibFixture.mediaType, apibFixture.apiElements, 'multi.apib');

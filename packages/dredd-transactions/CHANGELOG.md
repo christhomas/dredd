@@ -1,5 +1,11 @@
 # @antimatter-studios/dredd-transactions
 
+## 11.0.9
+
+### Patch Changes
+
+- Fix all lint errors, add pre-commit hook, revert publish workflow to cd pattern
+
 ## 11.0.8
 
 ### Patch Changes

@@ -10,14 +10,21 @@
     "lint": "npm run lint --workspaces --if-present",
     "test:smoke": "npm run test:smoke --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
-    "commit:lint": "commitlint --from HEAD~1 --to HEAD"
+    "commit:lint": "commitlint --from HEAD~1 --to HEAD",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.4",
     "@commitlint/cli": "19.8.1",
-    "@commitlint/config-conventional": "19.8.1"
+    "@commitlint/config-conventional": "19.8.1",
+    "husky": "9.1.7",
+    "lint-staged": "15.5.2"
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "lint-staged": {
+    "packages/dredd/**/*.{js,ts}": "eslint --fix",
+    "packages/dredd-transactions/**/*.{js,ts}": "eslint --fix"
+  }
 }

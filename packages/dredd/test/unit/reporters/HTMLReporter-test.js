@@ -10,8 +10,8 @@ import reporterOutputLoggerStub from '../../../lib/reporters/reporterOutputLogge
 
 const proxyquire = noCallThru()
 
-const makeDirStub = (input, options) => makeDirStubImpl(input, options)
 let makeDirStubImpl = () => Promise.resolve()
+const makeDirStub = (input, options) => makeDirStubImpl(input, options)
 const makeDirStubImplBackup = makeDirStubImpl
 
 const HTMLReporter = proxyquire('../../../lib/reporters/HTMLReporter', {
