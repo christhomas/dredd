@@ -26,7 +26,7 @@ def github_issue(name, rawtext, text, lineno, inliner,
 def parse_text(text):
     match = REFERENCE_RE.match(text)
     if match:
-        owner = match.group(3) or 'apiaryio'
+        owner = match.group(3) or 'christhomas'
         repo = match.group(4) or 'dredd'
         issueno = match.group(5) or None
 
@@ -57,7 +57,7 @@ class Tests(unittest.TestCase):
     def test_issueno(self):
         self.assertEqual(
             parse_text('#1119'),
-            'https://github.com/apiaryio/dredd/issues/1119'
+            'https://github.com/christhomas/dredd/issues/1119'
         )
 
     def test_syntax_error(self):

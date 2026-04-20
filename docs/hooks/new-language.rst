@@ -108,7 +108,7 @@ There is a `BDD <https://en.wikipedia.org/wiki/Behavior-driven_development>`__ t
 
 When developing a new hooks handler, make sure it passes the test suite. Third party hooks handlers not passing the test suite cannot be endorsed by Dredd maintainers, integrated with Dredd's :option:`--language` option, or added to Dredd's documentation.
 
-If you have any issues integrating the test suite to your project, reach out to the maintainers in `Dredd issues <https://github.com/apiaryio/dredd/issues>`__, we're happy to help!
+If you have any issues integrating the test suite to your project, reach out to the maintainers in `Dredd issues <https://github.com/christhomas/dredd/issues>`__, we're happy to help!
 
 
 Configuration options
@@ -139,4 +139,4 @@ If you have any questions, please:
 
 -  Have a look at the reference `Python <https://github.com/apiaryio/dredd-hooks-python>`__ and `Ruby <https://github.com/apiaryio/dredd-hooks-ruby>`__ implementations.
 -  If your language is compiled, check out how `Go <https://github.com/snikch/goodman>`__ and `Rust <https://github.com/hobofan/dredd-hooks-rust>`__ are done.
--  `File an issue <https://github.com/apiaryio/dredd/issues/new>`__ and get help from Dredd maintainers.
+-  `File an issue <https://github.com/christhomas/dredd/issues/new>`__ and get help from Dredd maintainers.

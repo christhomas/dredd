@@ -4,8 +4,6 @@
 Dredd — HTTP API Testing Framework
 ==================================
 
-|npm version| |Build Status| |Windows Build Status| |Documentation Status| |Coverage Status| |Known Vulnerabilities|
-
 .. figure:: _static/images/dredd.png
    :alt: Dredd - HTTP API Testing Framework
 
@@ -64,9 +62,9 @@ Contents
 Useful Links
 ------------
 
--  `GitHub Repository <https://github.com/apiaryio/dredd>`__
--  `Bug Tracker <https://github.com/apiaryio/dredd/issues?q=is%3Aopen>`__
--  `Changelog <https://github.com/apiaryio/dredd/releases>`__
+-  `GitHub Repository <https://github.com/christhomas/dredd>`__
+-  `Bug Tracker <https://github.com/christhomas/dredd/issues?q=is%3Aopen>`__
+-  `Changelog <https://github.com/christhomas/dredd/releases>`__
 
 Example Applications
 --------------------
@@ -76,15 +74,3 @@ Example Applications
 -  `Laravel & OpenAPI 3 <https://github.com/AndyWendt/laravel-dredd-openapi-v3>`__
 -  `Ruby on Rails <https://gitlab.com/theodorton/dredd-test-rails/>`__
 
-.. |npm version| image:: https://badge.fury.io/js/dredd.svg
-   :target: https://www.npmjs.com/package/dredd
-.. |Build Status| image:: https://circleci.com/gh/apiaryio/dredd/tree/master.svg?style=svg
-   :target: https://circleci.com/gh/apiaryio/dredd/tree/master
-.. |Windows Build Status| image:: https://ci.appveyor.com/api/projects/status/n3ixfxh72qushyr4/branch/master?svg=true
-   :target: https://ci.appveyor.com/project/Apiary/dredd/branch/master
-.. |Documentation Status| image:: https://readthedocs.org/projects/dredd/badge/?version=latest
-   :target: https://readthedocs.org/projects/dredd/builds/
-.. |Coverage Status| image:: https://coveralls.io/repos/apiaryio/dredd/badge.svg?branch=master
-   :target: https://coveralls.io/github/apiaryio/dredd
-.. |Known Vulnerabilities| image:: https://snyk.io/test/npm/dredd/badge.svg
-   :target: https://snyk.io/test/npm/dredd

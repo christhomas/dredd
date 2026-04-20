@@ -117,7 +117,7 @@ linkcheck_ignore = [
     'https://crates.io/crates/dredd-hooks',  # https://github.com/sphinx-doc/sphinx/pull/5140
     # Exclude Dredd repository links, because they are checked
     # by "_extensions/ghlink_check.py".
-    r'https?://github\.com/apiaryio/dredd/.+',
+    r'https?://github\.com/christhomas/dredd/.+',
     # GitHub's anchor slugs for the OpenAPI spec markdown files keep shifting,
     # so anchor checks on those pages constantly break.
     r'https?://github\.com/OAI/OpenAPI-Specification/.+',
