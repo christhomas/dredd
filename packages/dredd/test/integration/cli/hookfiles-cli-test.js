@@ -580,8 +580,8 @@ describe('CLI', () => {
         })
       })
 
-      it('should notify skipping to the stdout', () =>
-        assert.include(runtimeInfo.dredd.stdout, 'skip: GET (200) /machines'))
+      it('should not emit filtered-out transactions as skipped', () =>
+        assert.notInclude(runtimeInfo.dredd.stdout, 'skip: GET (200) /machines'))
 
       it('should hit the only transaction', () =>
         assert.deepEqual(runtimeInfo.server.requestCounts, { '/message': 1 }))

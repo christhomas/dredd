@@ -24,7 +24,7 @@
     "packages/*"
   ],
   "lint-staged": {
-    "packages/dredd/**/*.{js,ts}": "eslint --fix",
-    "packages/dredd-transactions/**/*.{js,ts}": "eslint --fix"
+    "packages/dredd/**/*.js": "eslint --fix",
+    "packages/dredd-transactions/**/*.js": "eslint --fix"
   }
 }

@@ -31,6 +31,7 @@ function applyLoggingOptions(config: any): void {
   // Track colorize state on transport for test observability
   logger.consoleTransport.colorize = colorize;
   reporterOutputLogger.consoleTransport.colorize = colorize;
+  reporterOutputLogger.consoleTransport.format = buildFormat(colorize, false);
 
   // TODO https://github.com/apiaryio/dredd/issues/1346
   if (config.loglevel) {
