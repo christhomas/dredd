@@ -1,5 +1,13 @@
 # @antimatter-studios/dredd
 
+## 15.0.3
+
+### Patch Changes
+
+- Fix npm self-upgrade corruption by installing to prefix path
+- Updated dependencies
+  - @antimatter-studios/dredd-transactions@11.0.3
+
 ## 15.0.2
 
 ### Patch Changes
