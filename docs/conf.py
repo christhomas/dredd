@@ -118,6 +118,9 @@ linkcheck_ignore = [
     # Exclude Dredd repository links, because they are checked
     # by "_extensions/ghlink_check.py".
     r'https?://github\.com/apiaryio/dredd/.+',
+    # GitHub's anchor slugs for the OpenAPI spec markdown files keep shifting,
+    # so anchor checks on those pages constantly break.
+    r'https?://github\.com/OAI/OpenAPI-Specification/.+',
 ]
 
 sphinx_tabs_valid_builders = ['linkcheck']
