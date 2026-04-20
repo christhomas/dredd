@@ -1,5 +1,11 @@
 # @antimatter-studios/dredd-transactions
 
+## 11.0.5
+
+### Patch Changes
+
+- Remove registry-url from setup-node to allow OIDC auth instead of placeholder token
+
 ## 11.0.4
 
 ### Patch Changes
