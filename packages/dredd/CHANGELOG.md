@@ -1,5 +1,13 @@
 # @antimatter-studios/dredd
 
+## 15.0.4
+
+### Patch Changes
+
+- Use npm publish --workspaces directly and add npm version verification
+- Updated dependencies
+  - @antimatter-studios/dredd-transactions@11.0.4
+
 ## 15.0.3
 
 ### Patch Changes
