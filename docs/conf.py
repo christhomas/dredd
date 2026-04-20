@@ -129,6 +129,9 @@ linkcheck_ignore = [
     # json-schema.org migrated to a new docs layout; anchors on the
     # understanding-json-schema pages no longer resolve as expected.
     r'https?://json-schema\.org/understanding-json-schema/.+',
+    # npmjs.com rate-limits HEAD/GET from CI runners (403 Forbidden) even
+    # for valid package pages. Skip to avoid false positives.
+    r'https?://(www\.)?npmjs\.com(/.+)?',
 ]
 
 sphinx_tabs_valid_builders = ['linkcheck']
