@@ -1,5 +1,13 @@
 # @antimatter-studios/dredd
 
+## 15.0.2
+
+### Patch Changes
+
+- Upgrade npm to 11.5.1+ in publish workflow for OIDC trusted publishing support
+- Updated dependencies
+  - @antimatter-studios/dredd-transactions@11.0.2
+
 ## 15.0.1
 
 ### Patch Changes
