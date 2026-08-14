@@ -15,11 +15,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Use Node.js 22.x
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
+          cache: 'pnpm'
 
       - name: Upgrade npm to support OIDC trusted publishing (requires 11.5.1+)
         run: |
@@ -33,10 +37,10 @@ jobs:
           node --version
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
       - name: Publish dredd-transactions (dredd depends on it)
         working-directory: packages/dredd-transactions

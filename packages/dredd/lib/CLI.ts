@@ -1,6 +1,11 @@
 import console from 'console'; // Stubbed in tests by proxyquire
 import fs from 'fs';
-import yargs from 'yargs/yargs';
+// Imported from the package root, not 'yargs/yargs'. yargs declares "type": "module" but
+// ships 'yargs/yargs' as an extensionless file containing CommonJS. Node used to treat an
+// extensionless file as CommonJS regardless; it now honours the package type, evaluates that
+// file as ESM and fails on its first require(), so the CLI could not start at all on Node 22
+// and later. The root entry resolves through exports to index.cjs and is the same factory.
+import yargs from 'yargs';
 import os from 'os';
 import spawnArgs from 'spawn-args';
 import { spawn as spawnSync } from 'cross-spawn';

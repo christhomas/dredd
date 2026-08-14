@@ -1,15 +1,15 @@
 {
   "private": true,
   "scripts": {
-    "build": "npm run build --workspaces",
-    "prettify:check": "npm run prettify:check --workspace=@antimatter-studios/dredd",
+    "build": "pnpm -r run build",
+    "prettify:check": "pnpm --filter @antimatter-studios/dredd run prettify:check",
     "docs:lint": "sphinx-build -nW -b linkcheck ./docs ./docs/_build",
     "docs:test-extensions": "python -m unittest docs/_extensions/*.py --verbose",
     "docs:build": "sphinx-build -nW -b html ./docs ./docs/_build",
     "docs:serve": "sphinx-autobuild ./docs ./docs/_build",
-    "lint": "npm run lint --workspaces --if-present",
-    "test:smoke": "npm run test:smoke --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present",
+    "lint": "pnpm -r --if-present run lint",
+    "test:smoke": "pnpm -r --if-present run test:smoke",
+    "test": "pnpm -r --if-present run test",
     "commit:lint": "commitlint --from HEAD~1 --to HEAD",
     "prepare": "husky"
   },
@@ -26,5 +26,8 @@
   "lint-staged": {
     "packages/dredd/**/*.js": "eslint --fix",
     "packages/dredd-transactions/**/*.js": "eslint --fix"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": []
   }
 }

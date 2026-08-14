@@ -9,15 +9,23 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [18.x, 20.x]
+        # 22 and 24 are included because the CLI could not start on either: yargs ships an
+        # extensionless CommonJS file inside a "type": "module" package, which newer Node
+        # evaluates as ESM. Testing only the versions that happened to work is what let that
+        # reach a release.
+        node-version: [18.x, 20.x, 22.x, 24.x]
 
     steps:
     - uses: actions/checkout@v4
+    - uses: pnpm/action-setup@v4
+      with:
+        version: 10
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run build
-    - run: npm run lint
-    - run: npm test
+        cache: 'pnpm'
+    - run: pnpm install --frozen-lockfile
+    - run: pnpm run build
+    - run: pnpm run lint
+    - run: pnpm test
