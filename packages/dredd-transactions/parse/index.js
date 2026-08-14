@@ -2,7 +2,7 @@ const fury = require('@apielements/core');
 
 fury.use(require('@apielements/apib-parser'));
 fury.use(require('@apielements/openapi2-parser'));
-fury.use(require('@apielements/openapi3-parser'));
+fury.use(require('@antimatter-studios/openapi3-parser'));
 
 const { Annotation, SourceMap, ParseResult } = fury.minim.elements;
 

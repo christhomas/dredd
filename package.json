@@ -24,8 +24,8 @@
     "packages/*"
   ],
   "lint-staged": {
-    "packages/dredd/**/*.js": "eslint --fix",
-    "packages/dredd-transactions/**/*.js": "eslint --fix"
+    "packages/dredd/**/*.js": "pnpm --filter @antimatter-studios/dredd exec eslint --fix",
+    "packages/dredd-transactions/**/*.js": "pnpm --filter @antimatter-studios/dredd-transactions exec eslint --fix"
   },
   "pnpm": {
     "onlyBuiltDependencies": []
