@@ -73,20 +73,20 @@ Installing Node.js and npm
       - If you’re using `Homebrew <https://brew.sh/>`__, run ``brew install node``
       - Otherwise `download Node.js <https://nodejs.org/en/download/>`__ from the official website and install it using the downloaded installer
       - Make sure both ``node --version`` and ``npm --version`` work in your Terminal
-      - Node.js needs to be version 18 or 20, the versions Dredd is tested against
+      - Node.js needs to be version 18 or newer; 18, 20, 22 and 24 are the versions Dredd is tested against
 
    .. group-tab:: Linux
 
       - `Install Node.js as a system package <https://nodejs.org/en/download/package-manager/>`__
       - In case your Linux distribution calls the Node.js binary ``nodejs``, please `follow this advice <https://stackoverflow.com/a/18130296/325365>`__ to have it as ``node`` instead
       - Make sure both ``node --version`` and ``npm --version`` work in your Terminal
-      - Node.js needs to be version 18 or 20, the versions Dredd is tested against
+      - Node.js needs to be version 18 or newer; 18, 20, 22 and 24 are the versions Dredd is tested against
 
    .. group-tab:: Windows
 
       - `Download Node.js <https://nodejs.org/en/download/>`__ from the official website and install it using the downloaded installer
       - Make sure both ``node --version`` and ``npm --version`` work in your Command Prompt
-      - Node.js needs to be version 18 or 20, the versions Dredd is tested against
+      - Node.js needs to be version 18 or newer; 18, 20, 22 and 24 are the versions Dredd is tested against
 
 .. note::
    If your internet connection is restricted (VPN, firewall, proxy), you need to `configure npm <https://docs.npmjs.com/cli/using-npm/config#https-proxy>`__:
