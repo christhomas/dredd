@@ -13,13 +13,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - uses: pnpm/action-setup@v4
+      with:
+        version: 10
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run build
-    - run: npm run e2e:apib --workspace=@antimatter-studios/dredd
+        cache: 'pnpm'
+    - run: pnpm install --frozen-lockfile
+    - run: pnpm run build
+    - run: pnpm --filter @antimatter-studios/dredd run e2e:apib
 
   test-e2e-openapi2:
     runs-on: ${{ matrix.os }}
@@ -31,10 +35,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - uses: pnpm/action-setup@v4
+      with:
+        version: 10
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run build
-    - run: npm run e2e:openapi2 --workspace=@antimatter-studios/dredd
+        cache: 'pnpm'
+    - run: pnpm install --frozen-lockfile
+    - run: pnpm run build
+    - run: pnpm --filter @antimatter-studios/dredd run e2e:openapi2
