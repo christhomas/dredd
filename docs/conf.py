@@ -132,6 +132,9 @@ linkcheck_ignore = [
     # npmjs.com rate-limits HEAD/GET from CI runners (403 Forbidden) even
     # for valid package pages. Skip to avoid false positives.
     r'https?://(www\.)?npmjs\.com(/.+)?',
+    # Stack Overflow answers 403 Forbidden to CI runners, so a live answer is
+    # indistinguishable from a deleted one. Same reason as npmjs.com above.
+    r'https?://(www\.)?stackoverflow\.com(/.+)?',
 ]
 
 sphinx_tabs_valid_builders = ['linkcheck']
