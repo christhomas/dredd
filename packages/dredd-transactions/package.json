@@ -23,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/christhomas/dredd.git"
+    "url": "git+https://github.com/antimatter-studios/dredd.git"
   },
   "files": [
     "parse",
@@ -68,8 +68,8 @@
   "original_author": "Apiary Czech Republic, s.r.o. <support@apiary.io>",
   "author": "Chris Thomas <chris.thomas@antimatter-studios.com>",
   "license": "MIT",
-  "homepage": "https://github.com/christhomas/dredd/tree/master/packages/dredd-transactions",
-  "fork": "christhomas/dredd",
+  "homepage": "https://github.com/antimatter-studios/dredd/tree/master/packages/dredd-transactions",
+  "fork": "antimatter-studios/dredd",
   "bundleDependencies": [
     "@apielements/apib-parser"
   ]
