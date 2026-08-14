@@ -62,9 +62,9 @@ Contents
 Useful Links
 ------------
 
--  `GitHub Repository <https://github.com/christhomas/dredd>`__
--  `Bug Tracker <https://github.com/christhomas/dredd/issues?q=is%3Aopen>`__
--  `Changelog <https://github.com/christhomas/dredd/releases>`__
+-  `GitHub Repository <https://github.com/antimatter-studios/dredd>`__
+-  `Bug Tracker <https://github.com/antimatter-studios/dredd/issues?q=is%3Aopen>`__
+-  `Changelog <https://github.com/antimatter-studios/dredd/releases>`__
 
 Example Applications
 --------------------

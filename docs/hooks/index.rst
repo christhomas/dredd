@@ -168,7 +168,7 @@ You can get a list of all transaction names available in your API description do
       - ``Articles > Publish an article > 201 > application/json; charset=utf-8``
 
 .. note::
-   The transaction names and the :option:`--names` workflow mostly do their job, but with `many documented flaws <https://github.com/christhomas/dredd/labels/Epic%3A%20Transaction%20Names>`__. A successor to transaction names is being designed in :ghissue:`#227`
+   The transaction names and the :option:`--names` workflow mostly do their job, but with `many documented flaws <https://github.com/antimatter-studios/dredd/labels/Epic%3A%20Transaction%20Names>`__. A successor to transaction names is being designed in :ghissue:`#227`
 
 
 .. _types-of-hooks:
@@ -197,7 +197,7 @@ As mentioned in :ref:`supported-languages`, running hooks written in languages o
 
 If you're :ref:`running Dredd inside Docker <docker>`, you may want to use a separate container for the hooks handler and then run all your containers together as described in the :ref:`docker-compose` section.
 
-However, hooks were not originally designed with this scenario in mind. Dredd gets a name of (or path to) the hooks handler in :option:`--language` and then starts it as a child process. To work around this, `fool Dredd with a dummy script <https://github.com/christhomas/dredd/issues/748#issuecomment-285355519>`__ and set :option:`--hooks-worker-handler-host` together with :option:`--hooks-worker-handler-port` to point Dredd's TCP communication to the other container.
+However, hooks were not originally designed with this scenario in mind. Dredd gets a name of (or path to) the hooks handler in :option:`--language` and then starts it as a child process. To work around this, `fool Dredd with a dummy script <https://github.com/antimatter-studios/dredd/issues/748#issuecomment-285355519>`__ and set :option:`--hooks-worker-handler-host` together with :option:`--hooks-worker-handler-port` to point Dredd's TCP communication to the other container.
 
 .. note::
     The issue described above is tracked in :ghissue:`#755`.

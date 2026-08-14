@@ -122,7 +122,7 @@ linkcheck_ignore = [
     'https://crates.io/crates/dredd-hooks',  # https://github.com/sphinx-doc/sphinx/pull/5140
     # Exclude Dredd repository links, because they are checked
     # by "_extensions/ghlink_check.py".
-    r'https?://github\.com/christhomas/dredd/.+',
+    r'https?://github\.com/antimatter-studios/dredd/.+',
     # GitHub's anchor slugs for the OpenAPI spec markdown files keep shifting,
     # so anchor checks on those pages constantly break.
     r'https?://github\.com/OAI/OpenAPI-Specification/.+',
@@ -132,6 +132,9 @@ linkcheck_ignore = [
     # npmjs.com rate-limits HEAD/GET from CI runners (403 Forbidden) even
     # for valid package pages. Skip to avoid false positives.
     r'https?://(www\.)?npmjs\.com(/.+)?',
+    # Stack Overflow answers 403 Forbidden to CI runners, so a live answer is
+    # indistinguishable from a deleted one. Same reason as npmjs.com above.
+    r'https?://(www\.)?stackoverflow\.com(/.+)?',
 ]
 
 sphinx_tabs_valid_builders = ['linkcheck']

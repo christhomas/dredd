@@ -7,7 +7,7 @@ For each package (`@antimatter-studios/dredd` and `@antimatter-studios/dredd-tra
 1. Go to **npmjs.com → package → Settings → Publishing access**
 2. Under **Trusted publishers**, click **Add trusted publisher**
 3. Fill in:
-   - **Repository owner**: `christhomas`
+   - **Repository owner**: `antimatter-studios`
    - **Repository name**: `dredd`
    - **Workflow filename**: `publish.yml`
    - **Environment**: `npm-publish`

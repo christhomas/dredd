@@ -38,7 +38,7 @@ def parse_text(text):
         elif explicit_repo:
             owner, repo = 'apiaryio', explicit_repo
         else:
-            owner, repo = 'christhomas', 'dredd'
+            owner, repo = 'antimatter-studios', 'dredd'
 
         if issueno:
             return URL_TEMPLATE.format(owner=owner, repo=repo, issueno=issueno)
@@ -67,7 +67,7 @@ class Tests(unittest.TestCase):
     def test_issueno(self):
         self.assertEqual(
             parse_text('#1119'),
-            'https://github.com/christhomas/dredd/issues/1119'
+            'https://github.com/antimatter-studios/dredd/issues/1119'
         )
 
     def test_syntax_error(self):
