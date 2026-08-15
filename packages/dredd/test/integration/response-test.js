@@ -257,7 +257,7 @@ files.forEach((apiDescription) =>
         // returning HTTP 200 here and in the assertions we're making sure
         // the failures are there only because of non-matching status codes.
         const app = createServer();
-        app.get('*', (req, res) => res.type('text/plain').send('test\n'));
+        app.get('/*splat', (req, res) => res.type('text/plain').send('test\n'));
 
         const dredd = new Dredd({ options: { path: apiDescription.path } });
         runDreddWithServer(dredd, app, (err, info) => {
@@ -296,7 +296,7 @@ files.forEach((apiDescription) =>
         // sure the extra failures are there only because of non-matching status
         // codes.
         const app = createServer();
-        app.get('*', (req, res) => res.type('text/plain').send());
+        app.get('/*splat', (req, res) => res.type('text/plain').send());
 
         const dredd = new Dredd({ options: { path: apiDescription.path } });
         runDreddWithServer(dredd, app, (err, info) => {
