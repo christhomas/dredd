@@ -229,10 +229,14 @@ Example:
       this.argv = configUtils.load(configPath);
     }
 
-    // Overwrite saved config with cli arguments
+    // Overwrite saved config with cli arguments. Only the arguments actually given on the
+    // command line count: yargs reports a value for every option it knows, so overwriting
+    // with all of them would let an untyped option's default silently replace what the
+    // configuration file says.
+    const defaulted = (this.optimist as any).parsed?.defaulted || {};
     Object.keys(this.cliArgv).forEach((key: string) => {
       const value = this.cliArgv[key];
-      if (key !== '_' && key !== '$0') {
+      if (key !== '_' && key !== '$0' && !defaulted[key]) {
         this.argv[key] = value;
       }
     });

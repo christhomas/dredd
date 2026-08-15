@@ -62,6 +62,8 @@ const CLIStub = (
   )
 ).default;
 
+let lastCli;
+
 function execCommand(custom = {}, cb) {
   stderr = '';
   exitStatus = null;
@@ -74,6 +76,7 @@ function execCommand(custom = {}, cb) {
     }
   });
 
+  lastCli = cli;
   cli.run();
 }
 
@@ -119,6 +122,40 @@ describe('CLI class Integration', () => {
         assert.isTrue(configUtilsLoad.calledWith(configPath)));
       it('should print message about using given configuration file', () =>
         assert.include(stderr, `debug: Configuration '${configPath}' found`));
+    });
+
+    describe('When the configuration file sets an option not given on the command line', () => {
+      const cmd = { argv: ['--loglevel=debug'] };
+      const options = {
+        _: ['api-description.apib', 'http://127.0.0.1'],
+        hookfiles: './hooks.js',
+        reporter: ['xunit'],
+      };
+
+      let fsExistsSync;
+      let configUtilsLoad;
+
+      before((done) => {
+        fsExistsSync = sinon.stub(fs, 'existsSync').callsFake(() => true);
+        configUtilsLoad = sinon
+          .stub(configUtils, 'load')
+          .callsFake(() => options);
+        execCommand(cmd, done);
+      });
+      after(() => {
+        fsExistsSync.restore();
+        configUtilsLoad.restore();
+      });
+
+      it('keeps the value from the configuration file', () => {
+        // yargs reports a value for every option it knows about, so merging all of them
+        // over the configuration used to let an untyped option's default win.
+        assert.equal(lastCli.argv.hookfiles, './hooks.js');
+        assert.deepEqual(lastCli.argv.reporter, ['xunit']);
+      });
+
+      it('still takes an option that was given on the command line', () =>
+        assert.equal(lastCli.argv.loglevel, 'debug'));
     });
 
     describe('When dredd.yml exists', () => {
