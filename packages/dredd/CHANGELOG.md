@@ -1,14 +1,44 @@
 # @antimatter-studios/dredd
 
+## 16.0.0
+
+### Major Changes
+
+- Ship both packages as ES modules.
+
+  Dredd is now an ES module and requires Node 20.19 or newer. Import it with
+  `import Dredd from '@antimatter-studios/dredd'`; a CommonJS project on a supported
+  Node version can still `require()` it, reaching the class through `.default`.
+
+  Hook files are unaffected: CommonJS hook files keep working, which is what almost
+  every project writes.
+
+  Two bugs that the conversion exposed are fixed along the way: the package entry
+  point exported through `module.exports` and so offered no default export to an
+  importer, and `--require` called an undefined `require`.
+
+### Patch Changes
+
+- cfb3bcd: Accept null for a nullable reference in a response body.
+
+  The OpenAPI 3 parser described a nullable reference as an object, so a response sending null
+  for it was rejected even though the specification permits it. Dependencies are also brought
+  up to date, except those that are ESM-only at their latest release.
+
+- Updated dependencies
+- Updated dependencies [cfb3bcd]
+  - @antimatter-studios/dredd-transactions@12.0.0
+
 ## 15.1.1
 
 ### Patch Changes
 
 - Accept null for a nullable reference in a response body.
-  
+
   The OpenAPI 3 parser described a nullable reference as an object, so a response sending null
   for it was rejected even though the specification permits it. Dependencies are also brought
   up to date, except those that are ESM-only at their latest release.
+
 - Updated dependencies
   - @antimatter-studios/dredd-transactions@11.1.1
 
