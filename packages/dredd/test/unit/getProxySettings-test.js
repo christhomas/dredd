@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import getProxySettings from '../../lib/getProxySettings';
+import getProxySettings from '../../build/getProxySettings.js';
 
 describe('getProxySettings()', () => {
   it('detects HTTP_PROXY', () => {

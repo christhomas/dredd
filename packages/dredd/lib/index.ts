@@ -1,10 +1,7 @@
-// This is an explicit package entry for proper exports.
-// When exported via "export default", the Dredd package
-// would need to be required as:
+// The package entry point. Dredd is the default export, so consumers write:
 //
-// const Dredd = require('dredd').default
+//   import Dredd from '@antimatter-studios/dredd'
 //
-// To prevent this, using "module.exports".
-import Dredd from './Dredd';
-
-module.exports = Dredd;
+// CommonJS consumers on Node >= 20.19 can require() this ES module, in which case
+// they get the module namespace and reach the class through '.default'.
+export { default } from './Dredd.js';

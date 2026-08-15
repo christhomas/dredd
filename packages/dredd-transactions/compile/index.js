@@ -1,7 +1,7 @@
-const detectTransactionExampleNumbers = require('./detectTransactionExampleNumbers');
-const compileUri = require('./compileURI');
-const compileTransactionName = require('./compileTransactionName');
-const compileAnnotation = require('./compileAnnotation');
+import detectTransactionExampleNumbers from './detectTransactionExampleNumbers.js';
+import compileUri from './compileURI/index.js';
+import compileTransactionName from './compileTransactionName.js';
+import compileAnnotation from './compileAnnotation.js';
 
 function findRelevantTransactions(mediaType, apiElements) {
   const relevantTransactions = [];
@@ -110,9 +110,9 @@ function compileRequest(httpRequestElement) {
   const { uri, annotations } = compileUri(httpRequestElement);
 
   annotations.forEach((annotation) => {
-    /* eslint-disable no-param-reassign */
+     
     annotation.location = null; // https://github.com/apiaryio/dredd-transactions/issues/275
-    /* eslint-enable */
+     
   });
 
   if (uri) {
@@ -151,10 +151,10 @@ function compileTransaction(mediaType, filename, httpTransactionElement, example
 
   const { request, annotations } = compileRequest(httpTransactionElement.request);
   annotations.forEach((annotation) => {
-    /* eslint-disable no-param-reassign */
+     
     annotation.name = name;
     annotation.origin = { ...origin };
-    /* eslint-enable */
+     
   });
   if (!request) { return { transaction: null, annotations }; }
 
@@ -185,8 +185,7 @@ function compile(mediaType, apiElements, filename) {
   return { mediaType, transactions, annotations };
 }
 
-// only for the purpose of unit tests
-compile._compileBody = compileBody;
-compile._hasMultipartBody = hasMultipartBody;
+export default compile;
 
-module.exports = compile;
+// Exported for the unit tests, which cover these directly.
+export { compileBody as _compileBody, hasMultipartBody as _hasMultipartBody };

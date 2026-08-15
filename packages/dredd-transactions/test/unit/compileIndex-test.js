@@ -1,5 +1,5 @@
-const { assert, fixtures } = require('../support');
-const compile = require('../../compile');
+import { assert, fixtures } from '../support.js';
+import compile from '../../compile/index.js';
 
 describe('compile() entry point', () => {
   describe('return structure', () => {

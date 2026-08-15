@@ -1,10 +1,10 @@
 import { EventEmitter } from 'events';
 
-import logger from '../logger';
-import getProxySettings from '../getProxySettings';
-import applyLoggingOptions from './applyLoggingOptions';
-import validateConfig from './validateConfig';
-import normalizeConfig from './normalizeConfig';
+import logger from '../logger.js';
+import getProxySettings from '../getProxySettings.js';
+import applyLoggingOptions from './applyLoggingOptions.js';
+import validateConfig from './validateConfig.js';
+import normalizeConfig from './normalizeConfig.js';
 
 export const DEFAULT_CONFIG: any = {
   http: {},
@@ -83,7 +83,11 @@ function flattenConfig(config: any): any {
   return deepMerge(rootOptions, nestedOptions || {});
 }
 
-export function resolveConfig(config: any): { config: any; warnings: string[]; errors: string[] } {
+export function resolveConfig(config: any): {
+  config: any;
+  warnings: string[];
+  errors: string[];
+} {
   const flattened = flattenConfig(config);
   const merged = deepMerge(DEFAULT_CONFIG, flattened);
 

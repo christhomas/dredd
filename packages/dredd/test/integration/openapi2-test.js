@@ -1,10 +1,10 @@
-import R from 'ramda';
+import * as R from 'ramda';
 import express from 'express';
 import { assert } from 'chai';
 
-import logger from '../../lib/logger';
-import reporterOutputLogger from '../../lib/reporters/reporterOutputLogger';
-import Dredd from '../../lib/Dredd';
+import logger from '../../build/logger.js';
+import reporterOutputLogger from '../../build/reporters/reporterOutputLogger.js';
+import Dredd from '../../build/Dredd.js';
 
 let output = '';
 let server;
@@ -87,7 +87,7 @@ describe('OpenAPI 2', () => {
         (err) => {
           let groups;
           const matches = [];
-          // eslint-disable-next-line
+
           while ((groups = reTransaction.exec(output))) {
             matches.push(groups);
           }
@@ -121,8 +121,7 @@ describe('OpenAPI 2', () => {
           assert.equal(expected.statusCode, actual[i].statusCode));
         it(`is ${
           expected.action === 'skip' ? 'skipped' : 'executed'
-        } by default`, () =>
-          assert.equal(expected.action, actual[i].action));
+        } by default`, () => assert.equal(expected.action, actual[i].action));
       }),
     );
   });
@@ -146,7 +145,7 @@ describe('OpenAPI 2', () => {
 
           let groups;
           const matches = [];
-          // eslint-disable-next-line
+
           while ((groups = reTransaction.exec(output))) {
             matches.push(groups);
           }
@@ -204,7 +203,7 @@ describe('OpenAPI 2', () => {
         (err) => {
           let groups;
           matches = [];
-          // eslint-disable-next-line
+
           while ((groups = reTransactionName.exec(output))) {
             matches.push(groups[1]);
           }

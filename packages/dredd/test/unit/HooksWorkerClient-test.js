@@ -1,18 +1,26 @@
 import clone from 'clone';
-import crossSpawnStub from 'cross-spawn';
+import * as realCrossSpawnStub from 'cross-spawn';
+
 import net from 'net';
 import path from 'path';
-import proxyquire from 'proxyquire';
+import esmock from 'esmock';
 import sinon from 'sinon';
 import { assert } from 'chai';
 import { EventEmitter } from 'events';
 
-import whichStub from '../../lib/which';
-import loggerStub from '../../lib/logger';
+import * as realWhichStub from '../../build/which.js';
 
-import Hooks from '../../lib/Hooks';
-import * as commandLineOptions from '../../options';
-import TransactionRunner from '../../lib/TransactionRunner';
+import * as realLoggerStub from '../../build/logger.js';
+
+import Hooks from '../../build/Hooks.js';
+import commandLineOptions from '../../options.json' with { type: 'json' };
+import TransactionRunner from '../../build/TransactionRunner.js';
+
+import { stubbable } from '../stubs.js';
+
+const [crossSpawnStub, crossSpawnStubForwarded] = stubbable(realCrossSpawnStub);
+const [whichStub, whichStubForwarded] = stubbable(realWhichStub);
+const [loggerStub, loggerStubForwarded] = stubbable(realLoggerStub);
 
 function measureExecutionDurationMs(fn) {
   const time = process.hrtime();
@@ -32,11 +40,17 @@ const PORT = 61321;
 let runner;
 const logLevels = ['error', 'warn', 'debug'];
 
-const HooksWorkerClient = proxyquire('../../lib/HooksWorkerClient', {
-  'cross-spawn': crossSpawnStub,
-  './which': whichStub,
-  './logger': loggerStub,
-}).default;
+const HooksWorkerClient = (
+  await esmock(
+    '../../build/HooksWorkerClient.js',
+    {
+      '../../build/which.js': whichStubForwarded,
+      '../../build/logger.js': loggerStubForwarded,
+    },
+    // childProcess.js spawns the handler, so cross-spawn is mocked across the whole tree.
+    { 'cross-spawn': crossSpawnStubForwarded },
+  )
+).default;
 
 let hooksWorkerClient;
 
@@ -846,8 +860,17 @@ describe('Hooks worker client', () => {
       server.on('connection', (socket) => {
         currentSocket = socket;
         connected = true;
+        let replied = false;
         socket.on('data', (data) => {
           receivedData += data.toString();
+
+          // The client writes the message and its delimiter as two separate writes, so both
+          // chunks can arrive on their own and both parse as JSON. Reply once, to the
+          // complete message.
+          if (replied || !receivedData.includes('\n')) {
+            return;
+          }
+          replied = true;
 
           const receivedObject = JSON.parse(receivedData.replace('\n', ''));
           const objectToSend = clone(receivedObject);
@@ -974,12 +997,12 @@ describe('Hooks worker client', () => {
         // the hooks which are called '*All' recieve an array of transactions
         // as a parameter
         transactionData = clone([transaction]);
-        // eslint-disable-next-line
+
         getFirstTransaction = (transactionData) => transactionData[0];
       } else {
         // all the other hooks recieve a single transaction as a parameter
         transactionData = clone(transaction);
-        // eslint-disable-next-line
+
         getFirstTransaction = (transactionData) => transactionData;
       }
 

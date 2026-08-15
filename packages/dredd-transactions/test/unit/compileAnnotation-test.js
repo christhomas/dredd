@@ -1,7 +1,7 @@
-const fury = require('@apielements/core');
+import fury from '@apielements/core';
 
-const { assert, fixtures } = require('../support');
-const compileAnnotation = require('../../compile/compileAnnotation');
+import { assert, fixtures } from '../support.js';
+import compileAnnotation from '../../compile/compileAnnotation.js';
 
 describe('compileAnnotation()', () => {
   const { Annotation } = fury.minim.elements;

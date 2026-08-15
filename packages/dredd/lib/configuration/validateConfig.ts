@@ -61,7 +61,9 @@ function flushMessages(rules: ConfigRule[], config: any): string[] {
 /**
  * Returns the errors and warnings relative to the given config.
  */
-const validateConfig = (config: any): { warnings: string[]; errors: string[] } => ({
+const validateConfig = (
+  config: any,
+): { warnings: string[]; errors: string[] } => ({
   warnings: flushMessages(deprecatedOptions, config),
   errors: flushMessages(unsupportedOptions, config),
 });

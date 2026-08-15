@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
 
-import Hooks from '../../lib/Hooks';
+import Hooks from '../../build/Hooks.js';
 
 describe('Hooks', () => {
   describe('constructor', () => {

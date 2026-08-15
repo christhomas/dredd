@@ -1,12 +1,12 @@
-import BaseReporter from './reporters/BaseReporter';
-import CLIReporter from './reporters/CLIReporter';
-import DotReporter from './reporters/DotReporter';
-import HTMLReporter from './reporters/HTMLReporter';
-import MarkdownReporter from './reporters/MarkdownReporter';
-import NyanCatReporter from './reporters/NyanReporter';
-import XUnitReporter from './reporters/XUnitReporter';
+import BaseReporter from './reporters/BaseReporter.js';
+import CLIReporter from './reporters/CLIReporter.js';
+import DotReporter from './reporters/DotReporter.js';
+import HTMLReporter from './reporters/HTMLReporter.js';
+import MarkdownReporter from './reporters/MarkdownReporter.js';
+import NyanCatReporter from './reporters/NyanReporter.js';
+import XUnitReporter from './reporters/XUnitReporter.js';
 
-import logger from './logger';
+import logger from './logger.js';
 
 const fileReporters: string[] = ['xunit', 'html', 'markdown'];
 
@@ -48,7 +48,12 @@ function configureReporters(config: any, stats: any): any {
     );
   }
 
-  function addReporter(reporter: string, emitter: any, statistics: any, path?: string): any {
+  function addReporter(
+    reporter: string,
+    emitter: any,
+    statistics: any,
+    path?: string,
+  ): any {
     switch (reporter) {
       case 'xunit':
         return new XUnitReporter(emitter, statistics, path, config.details);

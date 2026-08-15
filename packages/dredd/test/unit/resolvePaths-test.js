@@ -1,7 +1,11 @@
 import path from 'path';
 import { assert } from 'chai';
 
-import resolvePaths from '../../lib/resolvePaths';
+import resolvePaths from '../../build/resolvePaths.js';
+import { fileURLToPath } from 'url';
+
+// import.meta.url is the ES module equivalent of __filename.
+const __filename = fileURLToPath(import.meta.url);
 
 describe('resolvePaths()', () => {
   const workingDirectory = path.join(__filename, '..', '..', 'fixtures');

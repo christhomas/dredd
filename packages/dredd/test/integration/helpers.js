@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'url';
 import bodyParser from 'body-parser';
 import clone from 'clone';
 import express from 'express';
@@ -9,8 +10,13 @@ import spawn from 'cross-spawn';
 
 import net from 'net';
 
-import logger from '../../lib/logger';
-import reporterOutputLogger from '../../lib/reporters/reporterOutputLogger';
+import logger from '../../build/logger.js';
+import reporterOutputLogger from '../../build/reporters/reporterOutputLogger.js';
+import { createRequire } from 'module';
+
+// import.meta.url is the ES module equivalent of __dirname and __filename.
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Use port 0 to let the OS assign random available ports, avoiding EADDRINUSE
 // conflicts between test suites. The actual port is read back from
@@ -26,7 +32,7 @@ export function getFreePort(callback) {
     srv.close(() => callback(null, port));
   });
 }
-const DREDD_BIN = require.resolve('../../bin/dredd');
+const DREDD_BIN = createRequire(import.meta.url).resolve('../../bin/dredd');
 
 // Records logging during runtime of a given function. Given function
 // is provided with a 'next' callback. The final callback is provided
@@ -38,8 +44,8 @@ const DREDD_BIN = require.resolve('../../bin/dredd');
 // - logging (string) - the recorded logging output
 export const recordLogging = (fn, callback) => {
   const loggerSilent = !!logger.consoleTransport.silent;
-  const reporterOutputLoggerSilent = !!reporterOutputLogger.consoleTransport
-    .silent;
+  const reporterOutputLoggerSilent =
+    !!reporterOutputLogger.consoleTransport.silent;
 
   // Supress Dredd's console output (remove if debugging)
   logger.consoleTransport.silent = true;

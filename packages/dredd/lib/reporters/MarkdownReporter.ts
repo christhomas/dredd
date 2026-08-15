@@ -6,11 +6,17 @@ import untildify from 'untildify';
 import { makeDirectory } from 'make-dir';
 import pathmodule from 'path';
 
-import logger from '../logger';
-import reporterOutputLogger from './reporterOutputLogger';
-import prettifyResponse from '../prettifyResponse';
+import logger from '../logger.js';
+import reporterOutputLogger from './reporterOutputLogger.js';
+import prettifyResponse from '../prettifyResponse.js';
 
-function MarkdownReporter(this: any, emitter: any, stats: any, path: string, details: boolean): void {
+function MarkdownReporter(
+  this: any,
+  emitter: any,
+  stats: any,
+  path: string,
+  details: boolean,
+): void {
   EventEmitter.call(this);
 
   this.type = 'markdown';
@@ -38,7 +44,8 @@ MarkdownReporter.prototype.sanitizedPath = function sanitizedPath(
 MarkdownReporter.prototype.configureEmitter = function configureEmitter(
   emitter: any,
 ): void {
-  const title = (str: string): string => `${Array(this.level).join('#')} ${str}`;
+  const title = (str: string): string =>
+    `${Array(this.level).join('#')} ${str}`;
 
   emitter.on('start', (apiDescriptions: any, callback: () => void) => {
     this.level++;

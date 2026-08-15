@@ -1,6 +1,6 @@
-const { assert } = require('chai');
+import { assert } from 'chai';
 
-const expandUriTemplate = require('../../../compile/compileURI/expandURItemplate');
+import expandUriTemplate from '../../../compile/compileURI/expandURItemplate.js';
 
 describe('expandUriTemplate()', () => {
   let data = null;

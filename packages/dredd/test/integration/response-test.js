@@ -1,8 +1,13 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { assert } from 'chai';
-import * as path from 'path';
 
-import { runDreddWithServer, createServer } from './helpers';
-import Dredd from '../../lib/Dredd';
+import { runDreddWithServer, createServer } from './helpers.js';
+import Dredd from '../../build/Dredd.js';
+
+// import.meta.url is the ES module equivalent of __dirname and __filename.
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const files = [
   {

@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 
-import { runDreddWithServer, createServer } from '../helpers';
-import Dredd from '../../../lib/Dredd';
+import { runDreddWithServer, createServer } from '../helpers.js';
+import Dredd from '../../../build/Dredd.js';
 
 describe(`Sending and receiving "application/hal+json" according to produces/consumes in OpenAPI 2.0`, () => {
   let runtimeInfo;

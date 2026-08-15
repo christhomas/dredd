@@ -7,11 +7,17 @@ import untildify from 'untildify';
 import { makeDirectory } from 'make-dir';
 import pathmodule from 'path';
 
-import logger from '../logger';
-import reporterOutputLogger from './reporterOutputLogger';
-import prettifyResponse from '../prettifyResponse';
+import logger from '../logger.js';
+import reporterOutputLogger from './reporterOutputLogger.js';
+import prettifyResponse from '../prettifyResponse.js';
 
-function XUnitReporter(this: any, emitter: any, stats: any, path: string, details: boolean): void {
+function XUnitReporter(
+  this: any,
+  emitter: any,
+  stats: any,
+  path: string,
+  details: boolean,
+): void {
   EventEmitter.call(this);
 
   this.type = 'xunit';
@@ -73,7 +79,10 @@ XUnitReporter.prototype.cdata = function cdata(str: string): string {
   return `<![CDATA[${str}]]>`;
 };
 
-XUnitReporter.prototype.appendLine = function appendLine(path: string, line: string): void {
+XUnitReporter.prototype.appendLine = function appendLine(
+  path: string,
+  line: string,
+): void {
   fs.appendFileSync(path, `${line}\n`);
 };
 
@@ -86,7 +95,9 @@ XUnitReporter.prototype.toTag = function toTag(
   const end: string = close ? '/>' : '>';
   const pairs: string[] = [];
   if (attrs) {
-    Object.keys(attrs).forEach((key: string) => pairs.push(`${key}="${attrs[key]}"`));
+    Object.keys(attrs).forEach((key: string) =>
+      pairs.push(`${key}="${attrs[key]}"`),
+    );
   }
   let tag: string = `<${name}${pairs.length ? ` ${pairs.join(' ')}` : ''}${end}`;
   if (content) {
@@ -106,7 +117,9 @@ XUnitReporter.prototype.sanitizedPath = function sanitizedPath(
   return filePath;
 };
 
-XUnitReporter.prototype.configureEmitter = function configureEmitter(emitter: any): void {
+XUnitReporter.prototype.configureEmitter = function configureEmitter(
+  emitter: any,
+): void {
   emitter.on('start', (apiDescriptions: any, callback: () => void) => {
     makeDirectory(pathmodule.dirname(this.path))
       .then(() => {

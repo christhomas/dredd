@@ -1,32 +1,27 @@
-import R from 'ramda';
+import * as R from 'ramda';
 import { expect } from 'chai';
-import sortTransactions from '../../lib/sortTransactions';
-import { Transaction, HTTPMethod } from '../../lib/general';
+import sortTransactions from '../../build/sortTransactions.js';
+import { HTTPMethod } from '../../build/general.js';
 
-const createTransaction = (transaction: Partial<Transaction>) => {
-  return R.mergeDeepRight<Partial<Transaction>>({
+const createTransaction = (transaction) => {
+  return R.mergeDeepRight({
     protocol: 'http:',
     host: 'localhost',
   })(transaction);
 };
 
-const transactions = Object.keys(HTTPMethod).reduce<
-  Record<HTTPMethod, Transaction>
->(
-  (acc, method: HTTPMethod) => {
-    return R.assoc(
-      method,
-      createTransaction({
-        request: {
-          url: '/endpoint',
-          method,
-        },
-      }),
-      acc,
-    );
-  },
-  {} as any,
-);
+const transactions = Object.keys(HTTPMethod).reduce((acc, method) => {
+  return R.assoc(
+    method,
+    createTransaction({
+      request: {
+        url: '/endpoint',
+        method,
+      },
+    }),
+    acc,
+  );
+}, {});
 
 describe('sortTransactions', () => {
   describe('given transactions list in arbitrary order', () => {
@@ -79,7 +74,7 @@ describe('sortTransactions', () => {
     });
 
     // This doesn't assert the identity of transactions.
-    const sorted = sortTransactions([getOne as any, getTwo]);
+    const sorted = sortTransactions([getOne, getTwo]);
 
     it('should sort transactions by occurence (asc)', () => {
       expect(sorted).to.deep.equal([getOne, getTwo]);

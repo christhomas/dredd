@@ -9,7 +9,7 @@
   "bin": {
     "dredd": "bin/dredd"
   },
-  "type": "commonjs",
+  "type": "module",
   "engines": {
     "node": ">=20.19"
   },
@@ -17,15 +17,16 @@
     "start": "npm run build -- --watch",
     "build": "tsc --build tsconfig.json",
     "lint": "eslint . bin/dredd",
-    "prettify": "prettier --write lib/**/*.js test/**/*.js",
-    "prettify:check": "prettier --check lib/**/*.js test/**/*.js",
+    "prettify": "prettier --write \"lib/**/*.ts\" \"test/**/*.js\" \"*.js\"",
+    "prettify:check": "prettier --check \"lib/**/*.ts\" \"test/**/*.js\" \"*.js\"",
     "test": "mocha \"./test/**/*-test.js\"",
-    "test:coverage": "nyc mocha --require ./test/ts-node.js --timeout 120000 --recursive \"./test/**/*-test.js\"",
+    "test:coverage": "nyc mocha --timeout 120000 --recursive \"./test/**/*-test.js\"",
     "test:smoke": "bash ./scripts/smoke.sh",
     "e2e": "npm run e2e:apib && npm run e2e:openapi2",
     "e2e:apib": "cucumber-js",
     "e2e:openapi2": "cucumber-js --world-parameters=\"{\\\"apiDescriptionFormat\\\": \\\"application/swagger+yaml\\\"}\"",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "pretest": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -60,6 +61,7 @@
     "yargs": "18.1.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
     "@types/chai": "5.2.3",
     "@types/clone": "0.1.30",
     "@types/mocha": "10.0.10",
@@ -69,16 +71,19 @@
     "@types/yargs": "17.0.35",
     "body-parser": "2.3.0",
     "cucumber": "6.0.5",
-    "eslint": "6.8.0",
+    "eslint": "9.39.5",
     "eslint-config-airbnb-base": "14.2.1",
-    "eslint-config-prettier": "6.11.0",
+    "eslint-config-prettier": "10.1.8",
     "eslint-plugin-import": "2.32.0",
+    "esmock": "2.7.6",
     "express": "5.2.1",
+    "globals": "^16.5.0",
     "mocha": "^11.8.0",
     "nock": "14.0.17",
     "nyc": "18.0.0",
     "prettier": "3.9.6",
     "ps-node": "0.1.6",
+    "ramda": "0.32.0",
     "sinon": "22.1.0",
     "ts-node": "10.9.2",
     "typescript": "5.4.5"
@@ -95,5 +100,10 @@
   "author": "Chris Thomas <chris.thomas@antimatter-studios.com>",
   "license": "MIT",
   "homepage": "https://github.com/antimatter-studios/dredd/tree/master/packages/dredd",
-  "fork": "antimatter-studios/dredd"
+  "fork": "antimatter-studios/dredd",
+  "exports": {
+    ".": "./build/index.js",
+    "./hooks": "./build/hooks.js",
+    "./package.json": "./package.json"
+  }
 }

@@ -3,16 +3,20 @@ import fs from 'fs';
 import { makeDirectorySync } from 'make-dir';
 import path from 'path';
 import inquirer from 'inquirer';
-import yaml from 'js-yaml';
+import { dump as dumpYaml, load as loadYaml } from 'js-yaml';
 
-import logger from './logger';
+import logger from './logger.js';
 
-import packageData from '../package.json';
+import packageData from '../package.json' with { type: 'json' };
 
 const INSTALL_DREDD = `npm install dredd@${packageData.version} --global`;
 const RUN_DREDD = 'dredd';
 
-function init(config: any, save: (config: any) => void, callback: (err?: any) => void): void {
+function init(
+  config: any,
+  save: (config: any) => void,
+  callback: (err?: any) => void,
+): void {
   if (!config) {
     config = {};
   }
@@ -60,7 +64,11 @@ function detect(files: string[]): DetectedConfig {
   };
 }
 
-function prompt(config: any, detected: DetectedConfig, callback: (error: any, answers?: any) => void): void {
+function prompt(
+  config: any,
+  detected: DetectedConfig,
+  callback: (error: any, answers?: any) => void,
+): void {
   inquirer
     .prompt([
       {
@@ -189,7 +197,11 @@ interface CIHandlers {
   [key: string]: () => void;
 }
 
-export function applyAnswers(config: any, answers: any, options: any = {}): any {
+export function applyAnswers(
+  config: any,
+  answers: any,
+  options: any = {},
+): any {
   const ci: CIHandlers = options.ci || {
     appveyor: updateAppVeyor,
     circleci: updateCircleCI,
@@ -231,7 +243,10 @@ export function applyAnswers(config: any, answers: any, options: any = {}): any 
   return config;
 }
 
-export function printClosingMessage(config: any, print: (...args: any[]) => void = console.log): void {
+export function printClosingMessage(
+  config: any,
+  print: (...args: any[]) => void = console.log,
+): void {
   print('\nConfiguration saved to dredd.yml\n');
   if (config.language === 'nodejs') {
     print('You can run tests now, with:\n');
@@ -265,17 +280,18 @@ export function printClosingMessage(config: any, print: (...args: any[]) => void
 
 export function editYaml(file: string, update: (contents: any) => void): void {
   const contents = fs.existsSync(file)
-    ? yaml.load(fs.readFileSync(file) as any)
+    ? loadYaml(fs.readFileSync(file) as any)
     : {};
 
   update(contents);
 
   makeDirectorySync(path.dirname(file));
-  fs.writeFileSync(file, yaml.dump(contents));
+  fs.writeFileSync(file, dumpYaml(contents));
 }
 
 export function updateAppVeyor(options: any = {}): void {
-  const edit: (file: string, update: (contents: any) => void) => void = options.editYaml || editYaml;
+  const edit: (file: string, update: (contents: any) => void) => void =
+    options.editYaml || editYaml;
 
   edit('appveyor.yml', (contents: any) => {
     if (!contents.install) {
@@ -298,7 +314,8 @@ export function updateAppVeyor(options: any = {}): void {
 }
 
 export function updateCircleCI(options: any = {}): void {
-  const edit: (file: string, update: (contents: any) => void) => void = options.editYaml || editYaml;
+  const edit: (file: string, update: (contents: any) => void) => void =
+    options.editYaml || editYaml;
 
   edit('.circleci/config.yml', (contents: any) => {
     if (!contents.version) {
@@ -316,7 +333,8 @@ export function updateCircleCI(options: any = {}): void {
 }
 
 export function updateTravisCI(options: any = {}): void {
-  const edit: (file: string, update: (contents: any) => void) => void = options.editYaml || editYaml;
+  const edit: (file: string, update: (contents: any) => void) => void =
+    options.editYaml || editYaml;
 
   edit('.travis.yml', (contents: any) => {
     if (!contents.language) {
@@ -336,7 +354,8 @@ export function updateTravisCI(options: any = {}): void {
 }
 
 export function updateWercker(options: any = {}): void {
-  const edit: (file: string, update: (contents: any) => void) => void = options.editYaml || editYaml;
+  const edit: (file: string, update: (contents: any) => void) => void =
+    options.editYaml || editYaml;
 
   edit('wercker.yml', (contents: any) => {
     if (!contents.box) {
@@ -417,7 +436,9 @@ export function detectApiDescription(files: string[]): string {
     return openapi2[0];
   }
 
-  const openapi = files.filter((f: string) => f.match(/\.ya?ml$/i) && f.match(/api/));
+  const openapi = files.filter(
+    (f: string) => f.match(/\.ya?ml$/i) && f.match(/api/),
+  );
   if (openapi.length) {
     return openapi[0];
   }

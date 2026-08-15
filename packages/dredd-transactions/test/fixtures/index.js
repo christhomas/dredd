@@ -1,7 +1,11 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const fury = require('@apielements/core');
+import fury from '@apielements/core';
+
+// import.meta.url is the ESM equivalent of __dirname.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const FORMATS = {
   apib: { name: 'API Blueprint', ext: '.apib', mediaType: 'text/vnd.apiblueprint' },
@@ -55,4 +59,4 @@ function fixtures(basename) {
   return array;
 }
 
-module.exports = fixtures;
+export default fixtures;

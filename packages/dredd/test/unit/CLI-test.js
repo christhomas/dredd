@@ -1,17 +1,26 @@
-import crossSpawnStub from 'cross-spawn';
+import * as realCrossSpawnStub from 'cross-spawn';
+
 import express from 'express';
-import fsStub from 'fs';
-import { noCallThru } from 'proxyquire';
+import * as realFsStub from 'fs';
+
+import esmock from 'esmock';
 
 import sinon from 'sinon';
 import { assert } from 'chai';
 
-import * as configUtilsStub from '../../lib/configUtils';
-import loggerStub from '../../lib/logger';
-import options from '../../options';
-import * as packageData from '../../package.json';
+import * as realConfigUtilsStub from '../../build/configUtils.js';
+import * as realLoggerStub from '../../build/logger.js';
 
-const proxyquire = noCallThru();
+import options from '../../options.json' with { type: 'json' };
+import packageData from '../../package.json' with { type: 'json' };
+
+import { stubbable } from '../stubs.js';
+
+const [crossSpawnStub, crossSpawnStubForwarded] = stubbable(realCrossSpawnStub);
+const [configUtilsStub, configUtilsStubForwarded] =
+  stubbable(realConfigUtilsStub);
+const [, fsStubForwarded] = stubbable(realFsStub);
+const [loggerStub, loggerStubForwarded] = stubbable(realLoggerStub);
 
 const PORT = 0; // Use random port to avoid EADDRINUSE
 
@@ -20,34 +29,52 @@ let exitStatus;
 let stderr = '';
 let stdout = '';
 
-const addHooksStub = proxyquire('../../lib/addHooks', {
-  './logger': loggerStub,
-}).default;
+const globalStubs = {
+  '../../build/logger.js': loggerStubForwarded,
+  '../../build/configUtils.js': configUtilsStubForwarded,
+};
 
-const transactionRunner = proxyquire('../../lib/TransactionRunner', {
-  './addHooks': addHooksStub,
-  './logger': loggerStub,
-}).default;
+const addHooksStub = (await esmock('../../build/addHooks.js', {}, globalStubs))
+  .default;
 
-const DreddStub = proxyquire('../../lib/Dredd', {
-  './TransactionRunner': transactionRunner,
-  './logger': loggerStub,
-}).default;
+const transactionRunner = (
+  await esmock(
+    '../../build/TransactionRunner.js',
+    {
+      '../../build/addHooks.js': addHooksStub,
+    },
+    globalStubs,
+  )
+).default;
+
+const DreddStub = (
+  await esmock(
+    '../../build/Dredd.js',
+    {
+      '../../build/TransactionRunner.js': transactionRunner,
+    },
+    globalStubs,
+  )
+).default;
 
 const initStub = sinon.stub().callsFake((config, save, callback) => {
   save(config);
   callback();
 });
 
-const CLIStub = proxyquire('../../lib/CLI', {
-  './Dredd': DreddStub,
-  console: loggerStub,
-  './logger': loggerStub,
-  './init': initStub,
-  './configUtils': configUtilsStub,
-  fs: fsStub,
-  'cross-spawn': crossSpawnStub,
-}).default;
+const CLIStub = (
+  await esmock(
+    '../../build/CLI.js',
+    {
+      '../../build/Dredd.js': DreddStub,
+      console: loggerStubForwarded,
+      '../../build/init.js': initStub,
+      fs: fsStubForwarded,
+      'cross-spawn': crossSpawnStubForwarded,
+    },
+    globalStubs,
+  )
+).default;
 
 function execCommand(custom = {}, cb) {
   stdout = '';

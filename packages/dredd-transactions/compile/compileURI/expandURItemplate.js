@@ -1,6 +1,6 @@
-const ut = require('uri-template');
+import ut from 'uri-template';
 
-module.exports = function expandURITemplate(uriTemplate, params) {
+export default function expandURITemplate(uriTemplate, params) {
   let parsed;
   const result = {
     errors: [],

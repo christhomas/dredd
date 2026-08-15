@@ -1,6 +1,6 @@
 import crossSpawn from 'cross-spawn';
 
-import ignorePipeErrors from './ignorePipeErrors';
+import ignorePipeErrors from './ignorePipeErrors.js';
 
 const ASCII_CTRL_C = 3;
 const IS_WINDOWS = process.platform === 'win32';
@@ -9,7 +9,10 @@ const TERM_DEFAULT_TIMEOUT_MS = 1000;
 const TERM_DEFAULT_RETRY_MS = 300;
 
 // Signals the child process to forcefully terminate
-export function signalKill(childProcess: any, callback: (err?: Error) => void): void {
+export function signalKill(
+  childProcess: any,
+  callback: (err?: Error) => void,
+): void {
   childProcess.emit('signalKill');
   if (IS_WINDOWS) {
     const taskkill = spawn('taskkill', ['/F', '/T', '/PID', childProcess.pid]);
@@ -30,7 +33,10 @@ export function signalKill(childProcess: any, callback: (err?: Error) => void): 
 }
 
 // Signals the child process to gracefully terminate
-export function signalTerm(childProcess: any, callback: (err?: Error) => void): void {
+export function signalTerm(
+  childProcess: any,
+  callback: (err?: Error) => void,
+): void {
   childProcess.emit('signalTerm');
   if (IS_WINDOWS) {
     // On Windows, there is no such way as SIGTERM or SIGINT. The closest
@@ -72,7 +78,11 @@ export function signalTerm(childProcess: any, callback: (err?: Error) => void): 
 //                      attempts will be done
 // - retryDelay (number) - Delay in ms between termination attempts
 // - force (boolean) - Kills the process forcefully after the timeout
-export function terminate(childProcess: any, options: any = {}, callback?: (err?: Error) => void): void {
+export function terminate(
+  childProcess: any,
+  options: any = {},
+  callback?: (err?: Error) => void,
+): void {
   if (typeof options === 'function') {
     [callback, options] = Array.from([options, {}]);
   }
@@ -80,7 +90,9 @@ export function terminate(childProcess: any, options: any = {}, callback?: (err?
 
   // If the timeout is zero or less then the delay for waiting between
   // retries, there will be just one termination attempt
-  const timeout: number = options.timeout ? options.timeout : TERM_DEFAULT_TIMEOUT_MS;
+  const timeout: number = options.timeout
+    ? options.timeout
+    : TERM_DEFAULT_TIMEOUT_MS;
   const retryDelay: number = options.retryDelay
     ? options.retryDelay
     : TERM_DEFAULT_RETRY_MS;
@@ -183,38 +195,41 @@ export function spawn(...args: any[]): any {
     }
   });
 
-  childProcess.on('exit', (exitStatus: number | null, signal: string | null) => {
-    childProcess.terminated = true;
-    childProcess.killedIntentionally = killedIntentionally;
-    childProcess.terminatedIntentionally = terminatedIntentionally;
+  childProcess.on(
+    'exit',
+    (exitStatus: number | null, signal: string | null) => {
+      childProcess.terminated = true;
+      childProcess.killedIntentionally = killedIntentionally;
+      childProcess.terminatedIntentionally = terminatedIntentionally;
 
-    // Crash detection. Emits a 'crash' event in case the process
-    // unintentionally terminated with non-zero status code.
-    // The 'crash' event's signature:
-    //
-    // - exitStatus (number, nullable) - The non-zero status code
-    // - killed (boolean) - Whether the process was killed or not
-    //
-    // How to distinguish a process was killed?
-    //
-    // UNIX:
-    // - exitStatus is null or 137 or... https://github.com/apiaryio/dredd/issues/735
-    // - signal is 'SIGKILL'
-    //
-    // Windows:
-    // - exitStatus is usually 1
-    // - signal isn't set (Windows do not have signals)
-    //
-    // Yes, you got it - on Windows there's no way to distinguish
-    // a process was forcefully killed...
-    if (!killedIntentionally && !terminatedIntentionally) {
-      if (signal === 'SIGKILL') {
-        childProcess.emit('crash', null, true);
-      } else if (exitStatus !== 0) {
-        childProcess.emit('crash', exitStatus, false);
+      // Crash detection. Emits a 'crash' event in case the process
+      // unintentionally terminated with non-zero status code.
+      // The 'crash' event's signature:
+      //
+      // - exitStatus (number, nullable) - The non-zero status code
+      // - killed (boolean) - Whether the process was killed or not
+      //
+      // How to distinguish a process was killed?
+      //
+      // UNIX:
+      // - exitStatus is null or 137 or... https://github.com/apiaryio/dredd/issues/735
+      // - signal is 'SIGKILL'
+      //
+      // Windows:
+      // - exitStatus is usually 1
+      // - signal isn't set (Windows do not have signals)
+      //
+      // Yes, you got it - on Windows there's no way to distinguish
+      // a process was forcefully killed...
+      if (!killedIntentionally && !terminatedIntentionally) {
+        if (signal === 'SIGKILL') {
+          childProcess.emit('crash', null, true);
+        } else if (exitStatus !== 0) {
+          childProcess.emit('crash', exitStatus, false);
+        }
       }
-    }
-  });
+    },
+  );
 
   return childProcess;
 }

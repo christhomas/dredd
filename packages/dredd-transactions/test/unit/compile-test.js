@@ -1,9 +1,9 @@
-const { assert } = require('chai');
+import { assert } from 'chai';
 
-const {
-  _compileBody: compileBody,
-  _hasMultipartBody: hasMultipartBody,
-} = require('../../compile');
+import {
+  _compileBody as compileBody,
+  _hasMultipartBody as hasMultipartBody,
+} from '../../compile/index.js';
 
 describe('compile()', () => {
   describe('compileBody()', () => {

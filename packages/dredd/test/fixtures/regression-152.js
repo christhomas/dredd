@@ -16,8 +16,8 @@ hooks.beforeEach = (hookFn) => {
 hooks.beforeEach((transaction) => {
   const paramToAdd = 'api-key=23456';
   if (transaction.fullPath.indexOf('?') > -1) {
-    transaction.fullPath += `&${  paramToAdd}`;
+    transaction.fullPath += `&${paramToAdd}`;
   } else {
-    transaction.fullPath += `?${  paramToAdd}`;
+    transaction.fullPath += `?${paramToAdd}`;
   }
 });

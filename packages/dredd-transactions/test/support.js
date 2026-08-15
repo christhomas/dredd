@@ -1,8 +1,8 @@
-const chai = require('chai');
-const chaiJSONschema = require('chai-json-schema');
+import { assert, use } from 'chai';
+import chaiJSONschema from 'chai-json-schema';
 
-const fixtures = require('./fixtures');
+import fixtures from './fixtures/index.js';
 
-chai.use(chaiJSONschema);
+use(chaiJSONschema);
 
-module.exports = { assert: chai.assert, fixtures };
+export { assert, fixtures };

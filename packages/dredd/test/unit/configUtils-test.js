@@ -1,13 +1,20 @@
 import clone from 'clone';
-import fsStub from 'fs';
-import proxyquire from 'proxyquire';
+import * as realFsStub from 'fs';
+
+import esmock from 'esmock';
 import sinon from 'sinon';
-import yamlStub from 'js-yaml';
+import * as realYamlStub from 'js-yaml';
+
 import { assert } from 'chai';
 
-const configUtils = proxyquire('../../lib/configUtils', {
-  fs: fsStub,
-  'js-yaml': yamlStub,
+import { stubbable } from '../stubs.js';
+
+const [fsStub, fsStubForwarded] = stubbable(realFsStub);
+const [yamlStub, yamlStubForwarded] = stubbable(realYamlStub);
+
+const configUtils = await esmock('../../build/configUtils.js', {
+  fs: fsStubForwarded,
+  'js-yaml': yamlStubForwarded,
 });
 
 const argvData = {
@@ -62,7 +69,10 @@ describe('configUtils', () => {
     argv = clone(argvData);
   });
 
-  it('it should export an object', () => assert.isObject(configUtils));
+  it('it should export its functions', () => {
+    assert.isFunction(configUtils.save);
+    assert.isFunction(configUtils.load);
+  });
 
   describe('save(args, path)', () => {
     beforeEach(() => {

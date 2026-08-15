@@ -1,24 +1,25 @@
-/* eslint-disable
-    no-return-assign,
-*/
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.
 import { EventEmitter } from 'events';
 
 import { assert } from 'chai';
 import sinon from 'sinon';
-import { noCallThru } from 'proxyquire';
+import esmock from 'esmock';
 
-import loggerStub from '../../lib/logger';
-import BaseReporter from '../../lib/reporters/BaseReporter';
-import XUnitReporter from '../../lib/reporters/XUnitReporter';
-import CLIReporter from '../../lib/reporters/CLIReporter';
-import DotReporter from '../../lib/reporters/DotReporter';
-import NyanReporter from '../../lib/reporters/NyanReporter';
-import HTMLReporter from '../../lib/reporters/HTMLReporter';
-import MarkdownReporter from '../../lib/reporters/MarkdownReporter';
+import * as realLoggerStub from '../../build/logger.js';
 
-const proxyquire = noCallThru();
+import BaseReporter from '../../build/reporters/BaseReporter.js';
+import XUnitReporter from '../../build/reporters/XUnitReporter.js';
+import CLIReporter from '../../build/reporters/CLIReporter.js';
+import DotReporter from '../../build/reporters/DotReporter.js';
+import NyanReporter from '../../build/reporters/NyanReporter.js';
+import HTMLReporter from '../../build/reporters/HTMLReporter.js';
+import MarkdownReporter from '../../build/reporters/MarkdownReporter.js';
+
+import { stubbable } from '../stubs.js';
+
+const [loggerStub, loggerStubForwarded] = stubbable(realLoggerStub);
+
 const BaseReporterStub = sinon.spy(BaseReporter);
 const XUnitReporterStub = sinon.spy(XUnitReporter);
 const CliReporterStub = sinon.spy(CLIReporter);
@@ -29,16 +30,18 @@ const MarkdownReporterStub = sinon.spy(MarkdownReporter);
 
 const emitterStub = new EventEmitter();
 
-const configureReporters = proxyquire('../../lib/configureReporters', {
-  './logger': loggerStub,
-  './reporters/BaseReporter': BaseReporterStub,
-  './reporters/XUnitReporter': XUnitReporterStub,
-  './reporters/CLIReporter': CliReporterStub,
-  './reporters/DotReporter': DotReporterStub,
-  './reporters/NyanReporter': NyanCatReporterStub,
-  './reporters/HTMLReporter': HtmlReporterStub,
-  './reporters/MarkdownReporter': MarkdownReporterStub,
-}).default;
+const configureReporters = (
+  await esmock('../../build/configureReporters.js', {
+    '../../build/logger.js': loggerStubForwarded,
+    '../../build/reporters/BaseReporter.js': BaseReporterStub,
+    '../../build/reporters/XUnitReporter.js': XUnitReporterStub,
+    '../../build/reporters/CLIReporter.js': CliReporterStub,
+    '../../build/reporters/DotReporter.js': DotReporterStub,
+    '../../build/reporters/NyanReporter.js': NyanCatReporterStub,
+    '../../build/reporters/HTMLReporter.js': HtmlReporterStub,
+    '../../build/reporters/MarkdownReporter.js': MarkdownReporterStub,
+  })
+).default;
 
 function resetStubs() {
   emitterStub.removeAllListeners();

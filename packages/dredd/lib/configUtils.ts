@@ -1,6 +1,6 @@
 import clone from 'clone';
 import fs from 'fs';
-import yaml from 'js-yaml';
+import { load as loadYaml, dump as dumpYaml } from 'js-yaml';
 
 export function save(argsOrigin: any, path?: string): void {
   if (!path) {
@@ -20,7 +20,7 @@ export function save(argsOrigin: any, path?: string): void {
   delete args.$0;
   delete args._;
 
-  fs.writeFileSync(path, yaml.dump(args));
+  fs.writeFileSync(path, dumpYaml(args));
 }
 
 export function load(path?: string): any {
@@ -29,7 +29,7 @@ export function load(path?: string): any {
   }
 
   const yamlData = fs.readFileSync(path);
-  const data: any = yaml.load(yamlData as any);
+  const data: any = loadYaml(yamlData as any);
 
   data._ = [data.blueprint, data.endpoint];
 

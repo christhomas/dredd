@@ -3,8 +3,7 @@
 
 const fs = require('fs');
 const path = require('path');
-/* eslint-disable no-console */
-/* eslint-disable-next-line import/no-extraneous-dependencies */
+ 
 const { rimrafSync } = require('rimraf');
 
 const PACKAGE_DIR = path.resolve(path.dirname(__filename), '..');

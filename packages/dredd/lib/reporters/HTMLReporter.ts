@@ -7,13 +7,19 @@ import { makeDirectory } from 'make-dir';
 import markdownIt from 'markdown-it';
 import pathmodule from 'path';
 
-import logger from '../logger';
-import reporterOutputLogger from './reporterOutputLogger';
-import prettifyResponse from '../prettifyResponse';
+import logger from '../logger.js';
+import reporterOutputLogger from './reporterOutputLogger.js';
+import prettifyResponse from '../prettifyResponse.js';
 
 const md: any = markdownIt();
 
-function HTMLReporter(this: any, emitter: any, stats: any, path: string, details: boolean): void {
+function HTMLReporter(
+  this: any,
+  emitter: any,
+  stats: any,
+  path: string,
+  details: boolean,
+): void {
   EventEmitter.call(this);
 
   this.type = 'html';
@@ -38,8 +44,11 @@ HTMLReporter.prototype.sanitizedPath = function sanitizedPath(
   return filePath;
 };
 
-HTMLReporter.prototype.configureEmitter = function configureEmitter(emitter: any): void {
-  const title = (str: string): string => `${Array(this.level).join('#')} ${str}`;
+HTMLReporter.prototype.configureEmitter = function configureEmitter(
+  emitter: any,
+): void {
+  const title = (str: string): string =>
+    `${Array(this.level).join('#')} ${str}`;
 
   emitter.on('start', (apiDescriptions: any, callback: () => void) => {
     this.level++;

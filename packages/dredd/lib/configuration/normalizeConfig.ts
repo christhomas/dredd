@@ -44,9 +44,10 @@ export function coerceApiDescriptions(value: any): any[] {
   const arr = coerceToArray(value);
   return arr.map((content: any, index: number) => ({
     location: `configuration.apiDescriptions[${index}]`,
-    content: content && typeof content === 'object' && 'content' in content
-      ? content.content
-      : content,
+    content:
+      content && typeof content === 'object' && 'content' in content
+        ? content.content
+        : content,
   }));
 }
 
@@ -76,12 +77,14 @@ export function coerceDeprecatedLevelOption(config: any): any {
 export function coerceDeprecatedDataOption(config: any): any {
   if (config.data == null) return config;
   const result = { ...config };
-  const dataEntries = Object.entries(result.data).map(([location, content]: [string, any]) => {
-    if (typeof content === 'string') {
-      return { location, content };
-    }
-    return { location: content.filename, content: content.raw };
-  });
+  const dataEntries = Object.entries(result.data).map(
+    ([location, content]: [string, any]) => {
+      if (typeof content === 'string') {
+        return { location, content };
+      }
+      return { location: content.filename, content: content.raw };
+    },
+  );
   result.apiDescriptions = [
     ...coerceToArray(result.apiDescriptions),
     ...dataEntries,
@@ -107,7 +110,9 @@ function coerceOptions(config: any): any {
   result.reporter = coerceToArray(result.reporter);
   result.output = coerceToArray(result.output);
   result.header = coerceToArray(result.header);
-  result.method = coerceToArray(result.method).map((m: string) => m.toUpperCase());
+  result.method = coerceToArray(result.method).map((m: string) =>
+    m.toUpperCase(),
+  );
   result.only = coerceToArray(result.only);
   result.path = coerceToArray(result.path);
   result.hookfiles = coerceToArray(result.hookfiles);

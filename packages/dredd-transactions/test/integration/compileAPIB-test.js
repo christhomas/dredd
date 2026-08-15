@@ -1,12 +1,12 @@
-const sinon = require('sinon');
-const proxyquire = require('proxyquire').noPreserveCache();
+import sinon from 'sinon';
+import esmock from 'esmock';
 
-const createAnnotationSchema = require('../schemas/createAnnotationSchema');
-const createCompileResultSchema = require('../schemas/createCompileResultSchema');
-const detectTransactionExampleNumbers = require('../../compile/detectTransactionExampleNumbers');
+import createAnnotationSchema from '../schemas/createAnnotationSchema.js';
+import createCompileResultSchema from '../schemas/createCompileResultSchema.js';
+import detectTransactionExampleNumbers from '../../compile/detectTransactionExampleNumbers.js';
 
-const { assert, fixtures } = require('../support');
-const compile = require('../../compile');
+import { assert, fixtures } from '../support.js';
+import compile from '../../compile/index.js';
 
 describe('compile() · API Blueprint', () => {
   describe('causing a \'missing title\' warning', () => {
@@ -51,11 +51,19 @@ describe('compile() · API Blueprint', () => {
 
   describe('with multiple transaction examples', () => {
     const detectTransactionExampleNumbersStub = sinon.spy(detectTransactionExampleNumbers);
-    const stubbedCompile = proxyquire('../../compile', {
-      './detectTransactionExampleNumbers': detectTransactionExampleNumbersStub,
-    });
     const { mediaType, apiElements } = fixtures('multiple-transaction-examples').apib;
-    const compileResult = stubbedCompile(mediaType, apiElements);
+    // esmock resolves asynchronously, so the compile runs in a hook rather than while the
+    // suite is being defined.
+    let compileResult;
+
+    before(async () => {
+      const stubbedCompile = await esmock('../../compile/index.js', {
+        '../../compile/detectTransactionExampleNumbers.js': {
+          default: detectTransactionExampleNumbersStub,
+        },
+      });
+      compileResult = stubbedCompile(mediaType, apiElements);
+    });
 
     const expected = [
       { exampleName: '', requestContentType: 'application/json', responseStatusCode: 200 },
@@ -98,11 +106,19 @@ describe('compile() · API Blueprint', () => {
 
   describe('without multiple transaction examples', () => {
     const detectTransactionExampleNumbersStub = sinon.spy(detectTransactionExampleNumbers);
-    const stubbedCompile = proxyquire('../../compile', {
-      './detectTransactionExampleNumbers': detectTransactionExampleNumbersStub,
-    });
     const { mediaType, apiElements } = fixtures('one-transaction-example').apib;
-    const compileResult = stubbedCompile(mediaType, apiElements);
+    // esmock resolves asynchronously, so the compile runs in a hook rather than while the
+    // suite is being defined.
+    let compileResult;
+
+    before(async () => {
+      const stubbedCompile = await esmock('../../compile/index.js', {
+        '../../compile/detectTransactionExampleNumbers.js': {
+          default: detectTransactionExampleNumbersStub,
+        },
+      });
+      compileResult = stubbedCompile(mediaType, apiElements);
+    });
 
     it('calls the detection of transaction examples', () => {
       assert.isTrue(detectTransactionExampleNumbersStub.called);

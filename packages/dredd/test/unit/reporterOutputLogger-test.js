@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import reporterOutputLogger from '../../lib/reporters/reporterOutputLogger';
+import reporterOutputLogger from '../../build/reporters/reporterOutputLogger.js';
 
 describe('reporterOutputLogger', () => {
   it('is a winston logger instance', () => {
@@ -36,8 +36,14 @@ describe('reporterOutputLogger', () => {
   });
 
   it('has level ordering from error (lowest) to info (highest)', () => {
-    assert.isAbove(reporterOutputLogger.levels.info, reporterOutputLogger.levels.error);
-    assert.isAbove(reporterOutputLogger.levels.pass, reporterOutputLogger.levels.fail);
+    assert.isAbove(
+      reporterOutputLogger.levels.info,
+      reporterOutputLogger.levels.error,
+    );
+    assert.isAbove(
+      reporterOutputLogger.levels.pass,
+      reporterOutputLogger.levels.fail,
+    );
   });
 
   it('exposes log methods for custom levels', () => {

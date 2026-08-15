@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 
-import isURL from '../../lib/isURL';
+import isURL from '../../build/isURL.js';
 
 describe('isURL()', () => {
   it('recognizes HTTP URL', () => {

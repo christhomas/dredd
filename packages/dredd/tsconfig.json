@@ -1,13 +1,13 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "nodenext",
     "target": "es2020",
     "lib": ["es2020"],
     "typeRoots": ["node_modules/@types"],
     "rootDir": "./lib",
     "outDir": "./build",
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "esModuleInterop": true,
     "allowJs": true,
     "allowSyntheticDefaultImports": true,

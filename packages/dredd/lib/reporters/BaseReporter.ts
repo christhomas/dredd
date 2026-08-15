@@ -1,4 +1,4 @@
-import logger from '../logger';
+import logger from '../logger.js';
 
 function BaseReporter(this: any, emitter: any, stats: any): void {
   this.type = 'base';
@@ -7,7 +7,9 @@ function BaseReporter(this: any, emitter: any, stats: any): void {
   logger.debug(`Using '${this.type}' reporter.`);
 }
 
-BaseReporter.prototype.configureEmitter = function configureEmitter(emitter: any): void {
+BaseReporter.prototype.configureEmitter = function configureEmitter(
+  emitter: any,
+): void {
   emitter.on('start', (apiDescriptions: any, callback: () => void) => {
     this.stats.start = new Date();
     callback();

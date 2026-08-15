@@ -1,10 +1,12 @@
-import compileTransactionName from './compileTransactionName';
+import compileTransactionName from './compileTransactionName.js';
 
 /**
  * Turns annotation type into a log level
  */
 function typeToLogLevel(annotationType: string): string {
-  const level = ({ error: 'error', warning: 'warn' } as Record<string, string>)[annotationType];
+  const level = ({ error: 'error', warning: 'warn' } as Record<string, string>)[
+    annotationType
+  ];
   if (!level) {
     throw new Error(`Invalid annotation type: '${annotationType}'`);
   }
@@ -30,7 +32,10 @@ function formatComponent(component: string): string {
 /**
  * Formats given location data as something user can understand
  */
-function formatLocation(apiDescriptionLocation: string, annotationLocation: any): string {
+function formatLocation(
+  apiDescriptionLocation: string,
+  annotationLocation: any,
+): string {
   if (!annotationLocation) {
     return apiDescriptionLocation;
   }

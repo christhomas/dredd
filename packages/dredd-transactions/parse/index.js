@@ -1,8 +1,11 @@
-const fury = require('@apielements/core');
+import fury from '@apielements/core';
+import adapter0 from '@apielements/apib-parser';
+import adapter1 from '@apielements/openapi2-parser';
+import adapter2 from '@antimatter-studios/openapi3-parser';
 
-fury.use(require('@apielements/apib-parser'));
-fury.use(require('@apielements/openapi2-parser'));
-fury.use(require('@antimatter-studios/openapi3-parser'));
+fury.use(adapter0);
+fury.use(adapter1);
+fury.use(adapter2);
 
 const { Annotation, SourceMap, ParseResult } = fury.minim.elements;
 
@@ -50,4 +53,4 @@ function parse(apiDescription, callback) {
   });
 }
 
-module.exports = parse;
+export default parse;

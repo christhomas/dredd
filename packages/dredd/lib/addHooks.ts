@@ -1,11 +1,18 @@
 import clone from 'clone';
-import { noCallThru } from 'proxyquire';
+import { createRequire } from 'module';
 
-import Hooks from './Hooks';
-import HooksWorkerClient from './HooksWorkerClient';
-import logger from './logger';
-import reporterOutputLogger from './reporters/reporterOutputLogger';
-import resolvePaths from './resolvePaths';
+// Hook files are CommonJS, and proxyquire is how each one receives its 'hooks' object: it
+// intercepts the require of a module named 'hooks' inside the file being loaded. That
+// mechanism is CommonJS by nature, so it is reached through createRequire rather than
+// imported - this module is an ES module now, while the files it loads are not.
+const require = createRequire(import.meta.url);
+const { noCallThru } = require('proxyquire');
+
+import Hooks from './Hooks.js';
+import HooksWorkerClient from './HooksWorkerClient.js';
+import logger from './logger.js';
+import reporterOutputLogger from './reporters/reporterOutputLogger.js';
+import resolvePaths from './resolvePaths.js';
 
 const proxyquire = noCallThru();
 
@@ -22,7 +29,10 @@ function loadHookFile(hookfile: string, hooks: any): void {
   }
 }
 
-export async function addHooksAsync(runner: any, transactions: any[]): Promise<void> {
+export async function addHooksAsync(
+  runner: any,
+  transactions: any[],
+): Promise<void> {
   if (!runner.logs) {
     runner.logs = [];
   }
@@ -37,7 +47,10 @@ export async function addHooksAsync(runner: any, transactions: any[]): Promise<v
   });
 
   // No hooks
-  if (!runner.configuration.hookfiles || !runner.configuration.hookfiles.length) {
+  if (
+    !runner.configuration.hookfiles ||
+    !runner.configuration.hookfiles.length
+  ) {
     return;
   }
 
@@ -52,8 +65,13 @@ export async function addHooksAsync(runner: any, transactions: any[]): Promise<v
   runner.hooks.configuration = clone(runner.configuration);
 
   // If the language is nodejs or empty
-  if (!runner.configuration.language || runner.configuration.language === 'nodejs') {
-    hookfiles.forEach((hookfile: string) => loadHookFile(hookfile, runner.hooks));
+  if (
+    !runner.configuration.language ||
+    runner.configuration.language === 'nodejs'
+  ) {
+    hookfiles.forEach((hookfile: string) =>
+      loadHookFile(hookfile, runner.hooks),
+    );
     return;
   }
 
@@ -69,7 +87,11 @@ export async function addHooksAsync(runner: any, transactions: any[]): Promise<v
 /**
  * Legacy callback interface for backward compatibility.
  */
-export default function addHooks(runner: any, transactions: any[], callback: (err?: any) => void): void {
+export default function addHooks(
+  runner: any,
+  transactions: any[],
+  callback: (err?: any) => void,
+): void {
   addHooksAsync(runner, transactions)
     .then(() => callback())
     .catch((err) => callback(err));

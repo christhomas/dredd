@@ -1,7 +1,7 @@
 import caseless from 'caseless';
-import defaultRequest from './httpRequest';
+import defaultRequest from './httpRequest.js';
 
-import defaultLogger from './logger';
+import defaultLogger from './logger.js';
 
 /**
  * Performs the HTTP request as described in the 'transaction.request' object.
@@ -15,7 +15,7 @@ export async function performRequestAsync(
   const logger = options.logger || defaultLogger;
   const request = options.request || defaultRequest;
 
-  const httpOptions: any = { ...options.http || {} };
+  const httpOptions: any = { ...(options.http || {}) };
   httpOptions.proxy = false;
   httpOptions.followRedirect = false;
   httpOptions.encoding = null;
@@ -70,10 +70,16 @@ function performRequest(
 /**
  * Coerces the HTTP request body to a Buffer
  */
-export function getBodyAsBuffer(body: string | Buffer, encoding: string | undefined): Buffer {
+export function getBodyAsBuffer(
+  body: string | Buffer,
+  encoding: string | undefined,
+): Buffer {
   return body instanceof Buffer
     ? body
-    : Buffer.from(`${body || ''}`, normalizeBodyEncoding(encoding) as BufferEncoding);
+    : Buffer.from(
+        `${body || ''}`,
+        normalizeBodyEncoding(encoding) as BufferEncoding,
+      );
 }
 
 /**
@@ -102,7 +108,11 @@ export function normalizeBodyEncoding(encoding: string | undefined): string {
  * Detects an existing Content-Length header and overrides the user-provided
  * header value in case it's out of sync with the real length of the body.
  */
-export function normalizeContentLengthHeader(headers: any, body: Buffer, options: any = {}): any {
+export function normalizeContentLengthHeader(
+  headers: any,
+  body: Buffer,
+  options: any = {},
+): any {
   const logger = options.logger || defaultLogger;
 
   const modifiedHeaders = { ...headers };

@@ -1,8 +1,8 @@
 import tty from 'tty';
 
-import logger from '../logger';
-import prettifyResponse from '../prettifyResponse';
-import reporterOutputLogger from './reporterOutputLogger';
+import logger from '../logger.js';
+import prettifyResponse from '../prettifyResponse.js';
+import reporterOutputLogger from './reporterOutputLogger.js';
 
 function NyanCatReporter(this: any, emitter: any, stats: any): void {
   let windowWidth: number;
@@ -223,8 +223,11 @@ NyanCatReporter.prototype.generateColors = function generateColors(): number[] {
   return colors;
 };
 
-NyanCatReporter.prototype.rainbowify = function rainbowify(str: string): string {
-  const color: number = this.rainbowColors[this.colorIndex % this.rainbowColors.length];
+NyanCatReporter.prototype.rainbowify = function rainbowify(
+  str: string,
+): string {
+  const color: number =
+    this.rainbowColors[this.colorIndex % this.rainbowColors.length];
   this.colorIndex += 1;
   return `\u001b[38;5;${color}m${str}\u001b[0m`;
 };

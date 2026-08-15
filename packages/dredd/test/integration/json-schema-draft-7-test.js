@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 
-import Dredd from '../../lib/Dredd';
-import { runDreddWithServer, createServer } from './helpers';
+import Dredd from '../../build/Dredd.js';
+import { runDreddWithServer, createServer } from './helpers.js';
 
 describe('Given API Blueprint with JSON Schema Draft 7', () => {
   describe('given explicit version of JSON Schema', () => {

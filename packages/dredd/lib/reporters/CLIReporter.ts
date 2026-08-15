@@ -1,6 +1,6 @@
-import logger from '../logger';
-import reporterOutputLogger from './reporterOutputLogger';
-import prettifyResponse from '../prettifyResponse';
+import logger from '../logger.js';
+import reporterOutputLogger from './reporterOutputLogger.js';
+import prettifyResponse from '../prettifyResponse.js';
 
 const CONNECTION_ERRORS: string[] = [
   'ECONNRESET',
@@ -12,7 +12,13 @@ const CONNECTION_ERRORS: string[] = [
   'EPIPE',
 ];
 
-function CLIReporter(this: any, emitter: any, stats: any, inlineErrors: boolean, details: boolean): void {
+function CLIReporter(
+  this: any,
+  emitter: any,
+  stats: any,
+  inlineErrors: boolean,
+  details: boolean,
+): void {
   this.type = 'cli';
   this.stats = stats;
   this.inlineErrors = inlineErrors;
@@ -27,13 +33,13 @@ function CLIReporter(this: any, emitter: any, stats: any, inlineErrors: boolean,
 function setTitle(title: string): void {
   const width: number = 80;
   reporterOutputLogger.test(
-    `${'='.repeat(width)}\n`
-    + `  Test:  ${title}\n`
-    + `${'='.repeat(width)}`
+    `${'='.repeat(width)}\n` + `  Test:  ${title}\n` + `${'='.repeat(width)}`,
   );
 }
 
-CLIReporter.prototype.configureEmitter = function configureEmitter(emitter: any): void {
+CLIReporter.prototype.configureEmitter = function configureEmitter(
+  emitter: any,
+): void {
   emitter.on('start', (apiDescriptions: any, callback: () => void) => {
     logger.debug('Beginning Dredd testing...');
     callback();

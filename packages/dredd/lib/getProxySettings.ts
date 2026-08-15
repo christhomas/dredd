@@ -13,7 +13,9 @@ const PROXY_ENV_VARIABLES: string[] = ['HTTP_PROXY', 'HTTPS_PROXY', 'NO_PROXY'];
  * is handled directly by the 'request' library, see
  * https://github.com/request/request#user-content-proxies
  */
-export default function getProxySettings(env: Record<string, string | undefined>): string[] {
+export default function getProxySettings(
+  env: Record<string, string | undefined>,
+): string[] {
   return Object.entries(env)
     .filter((entry) => PROXY_ENV_VARIABLES.includes(entry[0].toUpperCase()))
     .filter((entry) => entry[1] !== '')

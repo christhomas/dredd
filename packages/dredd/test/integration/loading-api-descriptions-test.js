@@ -3,8 +3,8 @@ import * as path from 'path';
 import express from 'express';
 import { assert } from 'chai';
 
-import { DEFAULT_SERVER_PORT } from './helpers';
-import Dredd from '../../lib/Dredd';
+import { DEFAULT_SERVER_PORT } from './helpers.js';
+import Dredd from '../../build/Dredd.js';
 
 const EXPECTED_API_DESCRIPTION_PROPS = [
   'location',
@@ -494,12 +494,15 @@ FORMAT: 1A
       const transactions = dredd.transactionRunner.run.firstCall.args[0];
 
       assert.lengthOf(transactions, 4);
-      assert.deepEqual(transactions.map(({ name }) => name), [
-        'Beehive API v1 > /honey > GET',
-        'Beehive API v2 > /honey > GET',
-        'Beehive API v2 > /bees > GET',
-        'Machines API > Machines > Machines collection > Get Machines',
-      ]);
+      assert.deepEqual(
+        transactions.map(({ name }) => name),
+        [
+          'Beehive API v1 > /honey > GET',
+          'Beehive API v2 > /honey > GET',
+          'Beehive API v2 > /bees > GET',
+          'Machines API > Machines > Machines collection > Get Machines',
+        ],
+      );
     });
   });
 });

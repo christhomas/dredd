@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
 
-import Dredd from '../../lib/Dredd';
-import { createServer, runDredd, runDreddWithServer } from './helpers';
+import Dredd from '../../build/Dredd.js';
+import { createServer, runDredd, runDreddWithServer } from './helpers.js';
 
 const EXPECTED_STATS_KEYS = [
   'tests',

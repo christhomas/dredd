@@ -1,8 +1,8 @@
-const fury = require('@apielements/core');
+import fury from '@apielements/core';
 
-const parse = require('../../parse');
+import parse from '../../parse/index.js';
 
-const { assert, fixtures } = require('../support');
+import { assert, fixtures } from '../support.js';
 
 describe('parse()', () => {
   const reMediaType = /\w+\/[\w.+]+/;

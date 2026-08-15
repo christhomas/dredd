@@ -1,6 +1,6 @@
-const { assert } = require('chai');
+import { assert } from 'chai';
 
-const compileTransactionName = require('../../compile/compileTransactionName');
+import compileTransactionName from '../../compile/compileTransactionName.js';
 
 describe('compileTransactionName()', () => {
   it('is a function', () => assert.isFunction(compileTransactionName));

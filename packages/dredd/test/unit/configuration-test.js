@@ -1,10 +1,10 @@
 import { assert } from 'chai';
 
-import { applyLoggingOptions } from '../../lib/configuration';
-import normalizeConfig from '../../lib/configuration/normalizeConfig';
-import validateConfig from '../../lib/configuration/validateConfig';
-import logger from '../../lib/logger';
-import reporterOutputLogger from '../../lib/reporters/reporterOutputLogger';
+import { applyLoggingOptions } from '../../build/configuration/index.js';
+import normalizeConfig from '../../build/configuration/normalizeConfig.js';
+import validateConfig from '../../build/configuration/validateConfig.js';
+import logger from '../../build/logger.js';
+import reporterOutputLogger from '../../build/reporters/reporterOutputLogger.js';
 
 const defaultLoggerState = {
   level: logger.consoleTransport.level,

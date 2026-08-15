@@ -10,7 +10,7 @@ function resolveGlob(workingDirectory: string, pattern: string): string[] {
   // globSync() does not resolve paths, only glob patterns
   if (hasMagic(pattern)) {
     return globSync(pattern, { cwd: workingDirectory }).map((matchingPath) =>
-      path.resolve(workingDirectory, matchingPath)
+      path.resolve(workingDirectory, matchingPath),
     );
   }
   const resolvedPath = path.resolve(workingDirectory, pattern);

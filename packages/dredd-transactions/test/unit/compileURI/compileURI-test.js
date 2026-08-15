@@ -1,6 +1,6 @@
-const { assert } = require('chai');
-const { fixtures } = require('../../support');
-const compile = require('../../../compile');
+import { assert } from 'chai';
+import { fixtures } from '../../support.js';
+import compile from '../../../compile/index.js';
 
 describe('compileURI()', () => {
   // compileURI is an internal module that requires complex fury/minim element

@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 
-import Dredd from '../../lib/Dredd';
-import { runDredd } from './helpers';
+import Dredd from '../../build/Dredd.js';
+import { runDredd } from './helpers.js';
 
 describe('Requiring user-provided modules (e.g. language compilers)', () => {
   describe('when provided with a local module', () => {

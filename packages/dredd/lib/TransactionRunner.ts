@@ -1,20 +1,23 @@
-import chai from 'chai';
+import { AssertionError } from 'chai';
 import gavel from 'gavel';
 import os from 'os';
 import url from 'url';
 
-import addHooks from './addHooks';
-import logger from './logger';
-import reporterOutputLogger from './reporters/reporterOutputLogger';
-import packageData from '../package.json';
-import sortTransactions from './sortTransactions';
-import performRequest from './performRequest';
+import addHooks from './addHooks.js';
+import logger from './logger.js';
+import reporterOutputLogger from './reporters/reporterOutputLogger.js';
+import packageData from '../package.json' with { type: 'json' };
+import sortTransactions from './sortTransactions.js';
+import performRequest from './performRequest.js';
 
 function headersArrayToObject(arr: any[]): { [key: string]: string } {
-  return Array.from(arr).reduce((result: { [key: string]: string }, currentItem: any) => {
-    result[currentItem.name] = currentItem.value;
-    return result;
-  }, {});
+  return Array.from(arr).reduce(
+    (result: { [key: string]: string }, currentItem: any) => {
+      result[currentItem.name] = currentItem.value;
+      return result;
+    },
+    {},
+  );
 }
 
 function eventCallback(reporterError: Error | null): void {
@@ -51,7 +54,9 @@ class TransactionRunner {
   }
 
   run(transactions: any[], callback: (err?: any) => void): void {
-    this._runAsync(transactions).then(() => callback()).catch(callback);
+    this._runAsync(transactions)
+      .then(() => callback())
+      .catch(callback);
   }
 
   private async _runAsync(transactions: any[]): Promise<void> {
@@ -122,11 +127,20 @@ class TransactionRunner {
     );
   }
 
-  executeAllTransactions(transactions: any[], hooks: any, callback: (err?: any) => void): void {
-    this._executeAllTransactionsAsync(transactions, hooks).then(() => callback()).catch(callback);
+  executeAllTransactions(
+    transactions: any[],
+    hooks: any,
+    callback: (err?: any) => void,
+  ): void {
+    this._executeAllTransactionsAsync(transactions, hooks)
+      .then(() => callback())
+      .catch(callback);
   }
 
-  private async _executeAllTransactionsAsync(transactions: any[], hooks: any): Promise<void> {
+  private async _executeAllTransactionsAsync(
+    transactions: any[],
+    hooks: any,
+  ): Promise<void> {
     // Warning: Following lines is "differently" performed by 'addHooks'
     // in TransactionRunner.run call. Because addHooks creates hooks.transactions
     // as an object `{}` with transaction.name keys and value is every
@@ -156,7 +170,11 @@ class TransactionRunner {
     }
 
     // Iterate over transactions' transaction
-    for (let transactionIndex = 0; transactionIndex < transactions.length; transactionIndex++) {
+    for (
+      let transactionIndex = 0;
+      transactionIndex < transactions.length;
+      transactionIndex++
+    ) {
       transaction = transactions[transactionIndex];
       logger.debug(
         `Processing transaction #${transactionIndex + 1}:`,
@@ -165,7 +183,9 @@ class TransactionRunner {
 
       logger.debug("Running 'beforeEach' hooks");
       await new Promise<void>((resolve) => {
-        this.runHooksForData(hooks.beforeEachHooks, transaction, () => resolve());
+        this.runHooksForData(hooks.beforeEachHooks, transaction, () =>
+          resolve(),
+        );
       });
 
       if (this.hookHandlerError) {
@@ -205,10 +225,8 @@ class TransactionRunner {
 
       logger.debug("Running 'afterEach' hooks");
       await new Promise<void>((resolve) => {
-        this.runHooksForData(
-          hooks.afterEachHooks,
-          transaction,
-          () => resolve(),
+        this.runHooksForData(hooks.afterEachHooks, transaction, () =>
+          resolve(),
         );
       });
 
@@ -249,11 +267,17 @@ class TransactionRunner {
   }
 
   // The 'data' argument can be 'transactions' array or 'transaction' object
-  runHooksForData(hooks: any[] | undefined, data: any, callback: (err?: any) => void): void {
+  runHooksForData(
+    hooks: any[] | undefined,
+    data: any,
+    callback: (err?: any) => void,
+  ): void {
     if (hooks && hooks.length) {
       logger.debug('Running hooks...');
 
-      this._runHooksForDataAsync(hooks, data).then(() => callback()).catch(callback);
+      this._runHooksForDataAsync(hooks, data)
+        .then(() => callback())
+        .catch(callback);
     } else {
       callback();
     }
@@ -276,7 +300,7 @@ class TransactionRunner {
           // catches also errors thrown in 'runHookCallback', i.e. in all
           // subsequent flow! Then also 'callback' is called twice and
           // all the flow can be executed twice. We need to reimplement this.
-          if (error instanceof chai.AssertionError) {
+          if (error instanceof AssertionError) {
             const transactions = Array.isArray(data) ? data : [data];
             for (const transaction of transactions) {
               this.failTransaction(
@@ -309,7 +333,11 @@ class TransactionRunner {
     this.emitError(error, test);
   }
 
-  runHook(hook: (...args: any[]) => void, data: any, callback: (err?: any) => void): void {
+  runHook(
+    hook: (...args: any[]) => void,
+    data: any,
+    callback: (err?: any) => void,
+  ): void {
     if (hook.length === 1) {
       // Sync api
       hook(data);
@@ -536,7 +564,8 @@ class TransactionRunner {
     }
 
     if (transaction.skip) {
-      if (!(transaction.test && transaction.test.filteredOut)) { // Suppress skip emission if filtered by --only
+      if (!(transaction.test && transaction.test.filteredOut)) {
+        // Suppress skip emission if filtered by --only
         logger.debug('Emitting to reporters: test skip');
         this.configuration.emitter.emit(
           'test skip',
@@ -591,7 +620,11 @@ class TransactionRunner {
 
   // This is actually doing more some pre-flight and conditional skipping of
   // the transcation based on the configuration or hooks. TODO rename
-  _executeTransaction(transaction: any, hooks: any, callback?: (...args: any[]) => void): void {
+  _executeTransaction(
+    transaction: any,
+    hooks: any,
+    callback?: (...args: any[]) => void,
+  ): void {
     if (!callback) {
       callback = hooks;
       hooks = undefined;
@@ -677,13 +710,22 @@ Not performing HTTP request for '${transaction.name}'.\
 
   // An actual HTTP request, before validation hooks triggering
   // and the response validation is invoked here
-  performRequestAndValidate(test: any, transaction: any, hooks: any, callback: (...args: any[]) => void): void {
+  performRequestAndValidate(
+    test: any,
+    transaction: any,
+    hooks: any,
+    callback: (...args: any[]) => void,
+  ): void {
     this._performRequestAndValidateAsync(test, transaction, hooks)
       .then(() => callback())
       .catch(callback);
   }
 
-  private async _performRequestAndValidateAsync(test: any, transaction: any, hooks: any): Promise<void> {
+  private async _performRequestAndValidateAsync(
+    test: any,
+    transaction: any,
+    hooks: any,
+  ): Promise<void> {
     const uri =
       url.format({
         protocol: transaction.protocol,
@@ -693,19 +735,24 @@ Not performing HTTP request for '${transaction.name}'.\
     const options = { http: this.configuration.http };
 
     const real = await new Promise<any>((resolve, reject) => {
-      performRequest(uri, transaction.request, options, (error: any, real: any) => {
-        if (error) {
-          logger.debug('Requesting tested server errored:', error);
-          test.title = transaction.id;
-          test.expected = transaction.expected;
-          test.request = transaction.request;
-          this.emitError(error, test);
-          // Resolve with null to match original behavior: callback() was called without error
-          resolve(null);
-        } else {
-          resolve(real);
-        }
-      });
+      performRequest(
+        uri,
+        transaction.request,
+        options,
+        (error: any, real: any) => {
+          if (error) {
+            logger.debug('Requesting tested server errored:', error);
+            test.title = transaction.id;
+            test.expected = transaction.expected;
+            test.request = transaction.request;
+            this.emitError(error, test);
+            // Resolve with null to match original behavior: callback() was called without error
+            resolve(null);
+          } else {
+            resolve(real);
+          }
+        },
+      );
     });
 
     if (real === null) {
@@ -804,8 +851,9 @@ include a message body: https://tools.ietf.org/html/rfc7231#section-6.3\
 
     // Order-sensitive list of Gavel validation fields to output in the log
     // Note that Dredd asserts EXACTLY this order. Make sure to adjust tests upon change.
-    const loggedFields = ['headers', 'body', 'statusCode'].filter((fieldName: string) =>
-      Object.prototype.hasOwnProperty.call(gavelResult.fields, fieldName),
+    const loggedFields = ['headers', 'body', 'statusCode'].filter(
+      (fieldName: string) =>
+        Object.prototype.hasOwnProperty.call(gavelResult.fields, fieldName),
     );
 
     loggedFields.forEach((fieldName: string) => {

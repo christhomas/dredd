@@ -1,7 +1,7 @@
-const detectTransactionExampleNumbers = require('../../compile/detectTransactionExampleNumbers');
-const parse = require('../../parse');
+import detectTransactionExampleNumbers from '../../compile/detectTransactionExampleNumbers.js';
+import parse from '../../parse/index.js';
 
-const { assert } = require('../support');
+import { assert } from '../support.js';
 
 // Encapsulates a single test scenario.
 function scenario(description, { actionContent, exampleNumbersPerTransaction }) {

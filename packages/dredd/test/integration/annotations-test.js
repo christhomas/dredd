@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
 
-import Dredd from '../../lib/Dredd';
+import Dredd from '../../build/Dredd.js';
 
 function compileTransactions(apiDescription, logger, callback) {
   const dredd = new Dredd({ apiDescriptions: [apiDescription] });

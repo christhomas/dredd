@@ -4,8 +4,8 @@ import util from 'util';
 
 import { assert } from 'chai';
 
-import hooksLog from '../../lib/hooksLog';
-import reporterOutputLoggerStub from '../../lib/reporters/reporterOutputLogger';
+import hooksLog from '../../build/hooksLog.js';
+import reporterOutputLoggerStub from '../../build/reporters/reporterOutputLogger.js';
 
 describe('hooksLog()', () => {
   const exampleLogs = [{ content: 'some text' }];

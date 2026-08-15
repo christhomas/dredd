@@ -67,4 +67,4 @@ function detectTransactionExampleNumbers(transitionElement) {
   return Array.from(finalState.transactionIndex.values());
 }
 
-module.exports = detectTransactionExampleNumbers;
+export default detectTransactionExampleNumbers;

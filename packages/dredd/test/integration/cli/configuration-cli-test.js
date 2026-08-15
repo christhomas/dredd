@@ -1,39 +1,66 @@
 import express from 'express';
-import fs from 'fs';
-import { noCallThru } from 'proxyquire';
+import * as realFs from 'fs';
+import esmock from 'esmock';
 import sinon from 'sinon';
 import { assert } from 'chai';
 
-import loggerStub from '../../../lib/logger';
-import * as configUtils from '../../../lib/configUtils';
+import * as realLoggerStub from '../../../build/logger.js';
 
-const proxyquire = noCallThru();
+import * as realConfigUtils from '../../../build/configUtils.js';
+
+import { stubbable } from '../../stubs.js';
+
+const [loggerStub, loggerStubForwarded] = stubbable(realLoggerStub);
+const [fs, fsForwarded] = stubbable(realFs);
+const [configUtils, configUtilsForwarded] = stubbable(realConfigUtils);
+
 const PORT = 19876;
 
 let exitStatus;
 
 let stderr = '';
 
-const addHooksStub = proxyquire('../../../lib/addHooks', {
-  './logger': loggerStub
-}).default;
+// The logger and configUtils are read all over the tree, so both are mocked globally.
+const globalStubs = {
+  '../../../build/logger.js': loggerStubForwarded,
+  '../../../build/configUtils.js': configUtilsForwarded,
+};
 
-const transactionRunner = proxyquire('../../../lib/TransactionRunner', {
-  './addHooks': addHooksStub,
-  './logger': loggerStub
-}).default;
+const addHooksStub = (
+  await esmock('../../../build/addHooks.js', {}, globalStubs)
+).default;
 
-const dreddStub = proxyquire('../../../lib/Dredd', {
-  './TransactionRunner': transactionRunner,
-  './logger': loggerStub
-}).default;
+const transactionRunner = (
+  await esmock(
+    '../../../build/TransactionRunner.js',
+    {
+      '../../../build/addHooks.js': addHooksStub,
+    },
+    globalStubs,
+  )
+).default;
 
-const CLIStub = proxyquire('../../../lib/CLI', {
-  './Dredd': dreddStub,
-  './configUtils': configUtils,
-  console: loggerStub,
-  fs
-}).default;
+const dreddStub = (
+  await esmock(
+    '../../../build/Dredd.js',
+    {
+      '../../../build/TransactionRunner.js': transactionRunner,
+    },
+    globalStubs,
+  )
+).default;
+
+const CLIStub = (
+  await esmock(
+    '../../../build/CLI.js',
+    {
+      '../../../build/Dredd.js': dreddStub,
+      console: loggerStubForwarded,
+      fs: fsForwarded,
+    },
+    globalStubs,
+  )
+).default;
 
 function execCommand(custom = {}, cb) {
   stderr = '';
@@ -155,17 +182,17 @@ describe('CLI class Integration', () => {
     const errorCmd = {
       argv: [
         `http://127.0.0.1:${PORT + 1}/connection-error.apib`,
-        `http://127.0.0.1:${PORT + 1}`
-      ]
+        `http://127.0.0.1:${PORT + 1}`,
+      ],
     };
     const wrongCmd = {
       argv: [
         `http://127.0.0.1:${PORT}/not-found.apib`,
-        `http://127.0.0.1:${PORT}`
-      ]
+        `http://127.0.0.1:${PORT}`,
+      ],
     };
     const goodCmd = {
-      argv: [`http://127.0.0.1:${PORT}/file.apib`, `http://127.0.0.1:${PORT}`]
+      argv: [`http://127.0.0.1:${PORT}/file.apib`, `http://127.0.0.1:${PORT}`],
     };
 
     before((done) => {
@@ -175,12 +202,12 @@ describe('CLI class Integration', () => {
 
       app.get('/file.apib', (req, res) => {
         fs.createReadStream('./test/fixtures/single-get.apib').pipe(
-          res.type('text')
+          res.type('text'),
         );
       });
 
       app.get('/machines', (req, res) =>
-        res.json([{ type: 'bulldozer', name: 'willy' }])
+        res.json([{ type: 'bulldozer', name: 'willy' }]),
       );
 
       app.get('/not-found.apib', (req, res) => res.status(404).end());
@@ -193,7 +220,7 @@ describe('CLI class Integration', () => {
         app = null;
         server = null;
         done();
-      })
+      }),
     );
 
     describe('and I try to load a file from bad hostname at all', () => {

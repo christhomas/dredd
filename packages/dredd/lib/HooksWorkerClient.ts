@@ -4,10 +4,10 @@ import path from 'path';
 import spawnArgs from 'spawn-args';
 import { EventEmitter } from 'events';
 
-import getGoBinary from './getGoBinary';
-import logger from './logger';
-import which from './which';
-import { spawn } from './childProcess';
+import getGoBinary from './getGoBinary.js';
+import logger from './logger.js';
+import which from './which.js';
+import { spawn } from './childProcess.js';
 
 class HooksWorkerClient {
   runner: any;
@@ -289,8 +289,9 @@ $ go get github.com/snikch/goodman/cmd/goodman
 
       this.handlerClient.on('connect', () => {
         logger.debug(
-          `Successfully connected to hooks handler. Waiting ${this
-            .afterConnectWait / 1000}s to start testing.`,
+          `Successfully connected to hooks handler. Waiting ${
+            this.afterConnectWait / 1000
+          }s to start testing.`,
         );
         this.clientConnected = true;
         clearTimeout(timeout);
@@ -376,8 +377,9 @@ $ go get github.com/snikch/goodman/cmd/goodman
             this.handlerClient.destroy();
           }
           const msg =
-            `Connection timeout ${this.connectTimeout /
-              1000}s to hooks handler ` +
+            `Connection timeout ${
+              this.connectTimeout / 1000
+            }s to hooks handler ` +
             `on ${this.handlerHost}:${this.handlerPort} exceeded. Try increasing the limit.`;
           callback(new Error(msg));
         }
@@ -458,24 +460,28 @@ $ go get github.com/snikch/goodman/cmd/goodman
       });
     }
 
-    this.runner.hooks.afterAll((transactions: any[], hookCallback: () => void) => {
-      // This is needed for transaction modification integration tests:
-      // https://github.com/apiaryio/dredd-hooks-template/blob/master/features/execution_order.feature
-      if (process.env.TEST_DREDD_HOOKS_HANDLER_ORDER === 'true') {
-        console.error('FOR TESTING ONLY');
-        const modifications =
-          (transactions[0] && transactions[0].hooks_modifications) || [];
-        if (!modifications.length) {
-          throw new Error('Hooks must modify transaction.hooks_modifications');
+    this.runner.hooks.afterAll(
+      (transactions: any[], hookCallback: () => void) => {
+        // This is needed for transaction modification integration tests:
+        // https://github.com/apiaryio/dredd-hooks-template/blob/master/features/execution_order.feature
+        if (process.env.TEST_DREDD_HOOKS_HANDLER_ORDER === 'true') {
+          console.error('FOR TESTING ONLY');
+          const modifications =
+            (transactions[0] && transactions[0].hooks_modifications) || [];
+          if (!modifications.length) {
+            throw new Error(
+              'Hooks must modify transaction.hooks_modifications',
+            );
+          }
+          for (let index = 0; index < modifications.length; index++) {
+            const modification = modifications[index];
+            console.error(`${index} ${modification}`);
+          }
+          console.error('FOR TESTING ONLY');
         }
-        for (let index = 0; index < modifications.length; index++) {
-          const modification = modifications[index];
-          console.error(`${index} ${modification}`);
-        }
-        console.error('FOR TESTING ONLY');
-      }
-      this.stop(hookCallback);
-    });
+        this.stop(hookCallback);
+      },
+    );
 
     callback();
   }

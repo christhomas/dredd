@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
 
-import * as helpers from './helpers';
-import { spawn, signalTerm, signalKill } from '../../lib/childProcess';
+import * as helpers from './helpers.js';
+import { spawn, signalTerm, signalKill } from '../../build/childProcess.js';
 
 const NODE_BIN = 'node';
 const WAIT_AFTER_COMMAND_SPAWNED_MS = 500;
@@ -246,7 +246,6 @@ describe('Babysitting Child Processes', () => {
       let processInfo;
 
       before((done) =>
-        // eslint-disable-next-line
         runChildProcess(
           'test/fixtures/scripts/exit-0.js',
           () => true,
@@ -274,7 +273,6 @@ describe('Babysitting Child Processes', () => {
       let processInfo;
 
       before((done) =>
-        // eslint-disable-next-line
         runChildProcess(
           'test/fixtures/scripts/exit-3.js',
           () => true,

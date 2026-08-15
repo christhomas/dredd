@@ -9,18 +9,18 @@ export enum HTTPMethod {
   LINK = 'LINK',
   UNLINK = 'UNLINK',
   DELETE = 'DELETE',
-  TRACE = 'TRACE'
+  TRACE = 'TRACE',
 }
 
 export enum BodyEncoding {
   'utf-8',
-  'base64',
+  base64,
 }
 
 export enum TransactionTestStatus {
-  'pass',
-  'fail',
-  'skip',
+  pass,
+  fail,
+  skip,
 }
 
 export interface Transaction {

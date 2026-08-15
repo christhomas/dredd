@@ -1,28 +1,36 @@
+import { createRequire } from 'module';
+
 import parse from '@antimatter-studios/dredd-transactions/parse';
 import compile from '@antimatter-studios/dredd-transactions/compile';
 
-import configureReporters from './configureReporters';
-import resolveLocations from './resolveLocations';
-import { readLocationAsync } from './readLocation';
-import resolveModule from './resolveModule';
-import logger from './logger';
-import TransactionRunner from './TransactionRunner';
-import { applyConfiguration } from './configuration';
-import annotationToLoggerInfo from './annotationToLoggerInfo';
+import configureReporters from './configureReporters.js';
+import resolveLocations from './resolveLocations.js';
+import { readLocationAsync } from './readLocation.js';
+import resolveModule from './resolveModule.js';
+import logger from './logger.js';
+import TransactionRunner from './TransactionRunner.js';
+import { applyConfiguration } from './configuration/index.js';
+import annotationToLoggerInfo from './annotationToLoggerInfo.js';
 
 function prefixError(error: Error, prefix: string): Error {
   error.message = `${prefix}: ${error.message}`;
   return error;
 }
 
-async function readLocations(locations: string[], options: any = {}): Promise<any[]> {
+async function readLocations(
+  locations: string[],
+  options: any = {},
+): Promise<any[]> {
   const apiDescriptions: any[] = [];
   for (const location of locations) {
     try {
       const content = await readLocationAsync(location, options);
       apiDescriptions.push({ location, content });
     } catch (error: any) {
-      throw prefixError(error, `Unable to load API description document from '${location}'`);
+      throw prefixError(
+        error,
+        `Unable to load API description document from '${location}'`,
+      );
     }
   }
   return apiDescriptions;
@@ -44,7 +52,10 @@ async function parseAll(apiDescriptions: any[]): Promise<any[]> {
       const parseResult = await parseContentAsync(apiDescription.content);
       results.push({ ...parseResult, ...apiDescription });
     } catch (error: any) {
-      throw prefixError(error, `Unable to parse API description document '${apiDescription.location}'`);
+      throw prefixError(
+        error,
+        `Unable to parse API description document '${apiDescription.location}'`,
+      );
     }
   }
   return results;
@@ -63,7 +74,10 @@ function compileTransactions(apiDescriptions: any[]): any[] {
         );
       }
     })
-    .map((compileResult: any, i: number) => ({ ...compileResult, ...apiDescriptions[i] }));
+    .map((compileResult: any, i: number) => ({
+      ...compileResult,
+      ...apiDescriptions[i],
+    }));
 }
 
 function toTransactions(apiDescriptions: any[]): any[] {
@@ -133,12 +147,15 @@ class Dredd {
       http: this.configuration.http,
     });
 
-    const allAPIdescriptions = this.configuration.apiDescriptions.concat(fileApiDescriptions);
+    const allAPIdescriptions =
+      this.configuration.apiDescriptions.concat(fileApiDescriptions);
 
     this.logger.debug('Parsing API description documents');
     const parsedDescriptions = await parseAll(allAPIdescriptions);
 
-    this.logger.debug('Compiling HTTP transactions from API description documents');
+    this.logger.debug(
+      'Compiling HTTP transactions from API description documents',
+    );
     return compileTransactions(parsedDescriptions);
   }
 
@@ -158,7 +175,9 @@ class Dredd {
         this.configuration.custom.cwd,
         this.configuration.require,
       );
-      require(requirePath); // eslint-disable-line global-require, import/no-dynamic-require
+      // A user module is loaded the way a user writes it: require() handles both CommonJS
+      // and ES modules, and keeps the native MODULE_NOT_FOUND error for a bad path.
+      createRequire(import.meta.url)(requirePath);
     }
 
     this.logger.debug('Configuring reporters');
@@ -169,8 +188,9 @@ class Dredd {
     const apiDescriptions = await this.prepareAPIdescriptions();
 
     const loggerInfos = toLoggerInfos(apiDescriptions);
-    loggerInfos.forEach(({ level, message }: { level: string; message: string }) =>
-      this.logger.log(level, message),
+    loggerInfos.forEach(
+      ({ level, message }: { level: string; message: string }) =>
+        this.logger.log(level, message),
     );
     if (loggerInfos.find((info: any) => info.level === 'error')) {
       throw new Error('API description processing error');

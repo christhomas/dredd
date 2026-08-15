@@ -1,4 +1,4 @@
-import hooksLog from './hooksLog';
+import hooksLog from './hooksLog.js';
 
 // READ THIS! Disclaimer:
 // Do not add any functionality to this class unless you want to expose it to the Hooks API.
@@ -72,7 +72,11 @@ class Hooks {
     this.afterEachHooks.push(hook);
   }
 
-  addHook(hooks: Record<string, Function[]>, name: string, hook: Function): void {
+  addHook(
+    hooks: Record<string, Function[]>,
+    name: string,
+    hook: Function,
+  ): void {
     if (hooks[name]) {
       hooks[name].push(hook);
     } else {

@@ -2,8 +2,11 @@ import { assert } from 'chai';
 import sinon from 'sinon';
 import { EventEmitter } from 'events';
 
-import { resolveConfig, DEFAULT_CONFIG } from '../../lib/configuration/applyConfiguration';
-import logger from '../../lib/logger';
+import {
+  resolveConfig,
+  DEFAULT_CONFIG,
+} from '../../build/configuration/applyConfiguration.js';
+import logger from '../../build/logger.js';
 
 describe('resolveConfig()', () => {
   let loggerWarnStub;

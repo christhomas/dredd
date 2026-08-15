@@ -1,6 +1,6 @@
-const { assert } = require('chai');
+import { assert } from 'chai';
 
-const validateParams = require('../../../compile/compileURI/validateParams');
+import validateParams from '../../../compile/compileURI/validateParams.js';
 
 describe('validateParams()', () => {
   it('should return an object', () => {

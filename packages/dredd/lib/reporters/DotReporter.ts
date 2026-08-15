@@ -1,6 +1,6 @@
-import logger from '../logger';
-import reporterOutputLogger from './reporterOutputLogger';
-import prettifyResponse from '../prettifyResponse';
+import logger from '../logger.js';
+import reporterOutputLogger from './reporterOutputLogger.js';
+import prettifyResponse from '../prettifyResponse.js';
 
 function DotReporter(this: any, emitter: any, stats: any): void {
   this.type = 'dot';
@@ -12,7 +12,9 @@ function DotReporter(this: any, emitter: any, stats: any): void {
   logger.debug(`Using '${this.type}' reporter.`);
 }
 
-DotReporter.prototype.configureEmitter = function configureEmitter(emitter: any): void {
+DotReporter.prototype.configureEmitter = function configureEmitter(
+  emitter: any,
+): void {
   emitter.on('start', (apiDescriptions: any, callback: () => void) => {
     logger.debug('Beginning Dredd testing...');
     callback();

@@ -22,7 +22,9 @@ interface HttpRequestResult {
  * Minimal HTTP request function. Returns a Promise with { response, body }.
  * Also supports legacy callback signature for backward compatibility.
  */
-export function httpRequestAsync(options: HttpRequestOptions): Promise<HttpRequestResult> {
+export function httpRequestAsync(
+  options: HttpRequestOptions,
+): Promise<HttpRequestResult> {
   return new Promise((resolve, reject) => {
     const url = new URL(options.uri);
     const transport = url.protocol === 'https:' ? https : http;

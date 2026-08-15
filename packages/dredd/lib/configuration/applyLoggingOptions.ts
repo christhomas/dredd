@@ -1,7 +1,7 @@
 import winston from 'winston';
 
-import logger from '../logger';
-import reporterOutputLogger from '../reporters/reporterOutputLogger';
+import logger from '../logger.js';
+import reporterOutputLogger from '../reporters/reporterOutputLogger.js';
 
 function buildFormat(colorize: boolean, timestamp: boolean): any {
   const formats: any[] = [];
@@ -10,10 +10,12 @@ function buildFormat(colorize: boolean, timestamp: boolean): any {
   }
   if (timestamp) {
     formats.push(
-      winston.format.printf(({ level, message }: { level: string; message: string }) => {
-        const ts = new Date().toISOString();
-        return `${level}: ${ts} - ${message}`;
-      }),
+      winston.format.printf(
+        ({ level, message }: { level: string; message: string }) => {
+          const ts = new Date().toISOString();
+          return `${level}: ${ts} - ${message}`;
+        },
+      ),
     );
   } else {
     formats.push(winston.format.simple());

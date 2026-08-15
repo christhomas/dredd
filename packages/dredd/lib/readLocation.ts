@@ -1,8 +1,8 @@
 import fs from 'fs';
 import { promisify } from 'util';
-import defaultRequest, { httpRequestAsync } from './httpRequest';
+import defaultRequest, { httpRequestAsync } from './httpRequest.js';
 
-import isURL from './isURL';
+import isURL from './isURL.js';
 
 const readFile = promisify(fs.readFile);
 
@@ -21,22 +21,32 @@ function getErrorFromResponse(response: any, hasBody: boolean): Error {
   );
 }
 
-async function readRemoteFileAsync(uri: string, options: any = {}): Promise<string> {
-  const httpOptions: any = { ...options.http || {} };
+async function readRemoteFileAsync(
+  uri: string,
+  options: any = {},
+): Promise<string> {
+  const httpOptions: any = { ...(options.http || {}) };
   httpOptions.uri = uri;
   httpOptions.timeout = 5000;
 
   // Support custom request function (used in tests)
   if (options.request) {
     return new Promise((resolve, reject) => {
-      options.request(httpOptions, (error: any, response: any, responseBody: any) => {
-        if (error) return reject(error);
-        if (!response) return reject(new Error('Unexpected error'));
-        if (!responseBody || response.statusCode < 200 || response.statusCode >= 300) {
-          return reject(getErrorFromResponse(response, !!responseBody));
-        }
-        resolve(responseBody);
-      });
+      options.request(
+        httpOptions,
+        (error: any, response: any, responseBody: any) => {
+          if (error) return reject(error);
+          if (!response) return reject(new Error('Unexpected error'));
+          if (
+            !responseBody ||
+            response.statusCode < 200 ||
+            response.statusCode >= 300
+          ) {
+            return reject(getErrorFromResponse(response, !!responseBody));
+          }
+          resolve(responseBody);
+        },
+      );
     });
   }
 
@@ -47,7 +57,10 @@ async function readRemoteFileAsync(uri: string, options: any = {}): Promise<stri
   return body as string;
 }
 
-export async function readLocationAsync(location: string, options: any = {}): Promise<string> {
+export async function readLocationAsync(
+  location: string,
+  options: any = {},
+): Promise<string> {
   if (isURL(location)) {
     return readRemoteFileAsync(location, options);
   }

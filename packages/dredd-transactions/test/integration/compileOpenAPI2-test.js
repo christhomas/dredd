@@ -1,12 +1,12 @@
-const sinon = require('sinon');
-const proxyquire = require('proxyquire');
+import sinon from 'sinon';
+import esmock from 'esmock';
 
-const createAnnotationSchema = require('../schemas/createAnnotationSchema');
-const createCompileResultSchema = require('../schemas/createCompileResultSchema');
-const detectTransactionExampleNumbers = require('../../compile/detectTransactionExampleNumbers');
+import createAnnotationSchema from '../schemas/createAnnotationSchema.js';
+import createCompileResultSchema from '../schemas/createCompileResultSchema.js';
+import detectTransactionExampleNumbers from '../../compile/detectTransactionExampleNumbers.js';
 
-const { assert, fixtures } = require('../support');
-const compile = require('../../compile');
+import { assert, fixtures } from '../support.js';
+import compile from '../../compile/index.js';
 
 describe('compile() · OpenAPI 2', () => {
   describe('causing a \'not specified in URI Template\' error', () => {
@@ -134,11 +134,19 @@ describe('compile() · OpenAPI 2', () => {
   describe('with multiple responses', () => {
     const filename = 'apiDescription.json';
     const detectTransactionExampleNumbersStub = sinon.spy(detectTransactionExampleNumbers);
-    const stubbedCompile = proxyquire('../../compile', {
-      './detectTransactionExampleNumbers': detectTransactionExampleNumbersStub,
-    });
     const { mediaType, apiElements } = fixtures('multiple-responses').openapi2;
-    const compileResult = stubbedCompile(mediaType, apiElements, filename);
+    // esmock resolves asynchronously, so the compile runs in a hook rather than while the
+    // suite is being defined.
+    let compileResult;
+
+    before(async () => {
+      const stubbedCompile = await esmock('../../compile/index.js', {
+        '../../compile/detectTransactionExampleNumbers.js': {
+          default: detectTransactionExampleNumbersStub,
+        },
+      });
+      compileResult = stubbedCompile(mediaType, apiElements, filename);
+    });
 
     const expectedStatusCodes = [200, 400, 500];
 

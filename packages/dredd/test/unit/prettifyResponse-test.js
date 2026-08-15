@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import { assert } from 'chai';
 
-import loggerStub from '../../lib/logger';
-import prettifyResponse from '../../lib/prettifyResponse';
+import loggerStub from '../../build/logger.js';
+import prettifyResponse from '../../build/prettifyResponse.js';
 
 describe('prettifyResponse(response)', () => {
   describe('with a real object without any circular references', () => {
@@ -28,8 +28,7 @@ body: \n{
         headers: {
           'content-type': 'text/html',
         },
-        body:
-          '<div>before paragraph <p>in para <i>italics</i><br /><b>bold</b> afterwords</p></div>',
+        body: '<div>before paragraph <p>in para <i>italics</i><br /><b>bold</b> afterwords</p></div>',
       });
 
       const expectedOutput = `\

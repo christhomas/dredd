@@ -42,6 +42,9 @@ fi
 npm test
 
 # Test the JavaScript API
-node -e 'process.exitCode = (new (require("dredd"))({})).run ? 0 : 1;'
+node --input-type=module -e '
+  import Dredd from "@antimatter-studios/dredd";
+  process.exitCode = new Dredd({}).run ? 0 : 1;
+'
 
 rm -fr "$TMPDIR"

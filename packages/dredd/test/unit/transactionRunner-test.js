@@ -1,22 +1,31 @@
 import bodyParser from 'body-parser';
 import clone from 'clone';
 import express from 'express';
-import htmlStub from 'html';
+import * as realHtmlStub from 'html';
+
 import nock from 'nock';
 import sinon from 'sinon';
-import proxyquire from 'proxyquire';
+import esmock from 'esmock';
 import { assert } from 'chai';
 import { EventEmitter } from 'events';
-import addHooks from '../../lib/addHooks';
-import loggerStub from '../../lib/logger';
-import Hooks from '../../lib/Hooks';
+import addHooks from '../../build/addHooks.js';
+import * as realLoggerStub from '../../build/logger.js';
+
+import Hooks from '../../build/Hooks.js';
+
+import { stubbable } from '../stubs.js';
+
+const [, htmlStubForwarded] = stubbable(realHtmlStub);
+const [loggerStub, loggerStubForwarded] = stubbable(realLoggerStub);
 
 nock.enableNetConnect();
 
-const Runner = proxyquire('../../lib/TransactionRunner', {
-  html: htmlStub,
-  './logger': loggerStub,
-}).default;
+const Runner = (
+  await esmock('../../build/TransactionRunner.js', {
+    html: htmlStubForwarded,
+    '../../build/logger.js': loggerStubForwarded,
+  })
+).default;
 
 describe('TransactionRunner', () => {
   let server;
@@ -108,8 +117,7 @@ describe('TransactionRunner', () => {
   describe('configureTransaction(transaction)', () => {
     beforeEach(() => {
       transaction = {
-        name:
-          'Machines API > Group Machine > Machine > Delete Message > Bogus example name',
+        name: 'Machines API > Group Machine > Machine > Delete Message > Bogus example name',
         request: {
           body: '{\n  "type": "bulldozer",\n  "name": "willy"}\n',
           headers: {
@@ -121,8 +129,7 @@ describe('TransactionRunner', () => {
           method: 'POST',
         },
         response: {
-          body:
-            '{\n  "type": "bulldozer",\n  "name": "willy",\n  "id": "5229c6e8e4b0bd7dbb07e29c"\n}\n',
+          body: '{\n  "type": "bulldozer",\n  "name": "willy",\n  "id": "5229c6e8e4b0bd7dbb07e29c"\n}\n',
           headers: {
             'content-type': {
               value: 'application/json',
@@ -471,8 +478,7 @@ describe('TransactionRunner', () => {
         },
         expected: {
           headers: { 'content-type': 'application/json' },
-          body:
-            '{\n  "type": "bulldozer",\n  "name": "willy",\n  "id": "5229c6e8e4b0bd7dbb07e29c"\n}\n',
+          body: '{\n  "type": "bulldozer",\n  "name": "willy",\n  "id": "5229c6e8e4b0bd7dbb07e29c"\n}\n',
           status: '202',
         },
         origin: {
@@ -547,9 +553,13 @@ describe('TransactionRunner', () => {
       beforeEach(() => {
         server = nock('http://127.0.0.1:3000')
           .post('/machines', { type: 'bulldozer', name: 'willy' })
-          .reply(parseInt(transaction.expected.status, 10), transaction.expected.body, {
-            'Content-Type': 'application/json',
-          });
+          .reply(
+            parseInt(transaction.expected.status, 10),
+            transaction.expected.body,
+            {
+              'Content-Type': 'application/json',
+            },
+          );
 
         configuration.only = [
           'Group Machine > Machine > Delete Message > Bogus example name',
@@ -701,9 +711,13 @@ describe('TransactionRunner', () => {
       beforeEach(() => {
         server = nock('https://127.0.0.1:3000')
           .post('/machines', { type: 'bulldozer', name: 'willy' })
-          .reply(parseInt(transaction.expected.status, 10), transaction.expected.body, {
-            'Content-Type': 'application/json',
-          });
+          .reply(
+            parseInt(transaction.expected.status, 10),
+            transaction.expected.body,
+            {
+              'Content-Type': 'application/json',
+            },
+          );
         configuration.endpoint = 'https://127.0.0.1:3000';
         transaction.protocol = 'https:';
         runner = new Runner(configuration);
@@ -722,9 +736,13 @@ describe('TransactionRunner', () => {
       beforeEach(() => {
         server = nock('http://127.0.0.1:3000')
           .post('/machines', { type: 'bulldozer', name: 'willy' })
-          .reply(parseInt(transaction.expected.status, 10), transaction.expected.body, {
-            'Content-Type': 'application/json',
-          });
+          .reply(
+            parseInt(transaction.expected.status, 10),
+            transaction.expected.body,
+            {
+              'Content-Type': 'application/json',
+            },
+          );
         configuration.endpoint = 'http://127.0.0.1:3000';
         transaction.protocol = 'http:';
         runner = new Runner(configuration);
@@ -743,9 +761,13 @@ describe('TransactionRunner', () => {
       beforeEach(() => {
         server = nock('http://127.0.0.1:3000')
           .post('/machines', { type: 'bulldozer', name: 'willy' })
-          .reply(parseInt(transaction.expected.status, 10), transaction.expected.body, {
-            'Content-Type': 'application/json',
-          });
+          .reply(
+            parseInt(transaction.expected.status, 10),
+            transaction.expected.body,
+            {
+              'Content-Type': 'application/json',
+            },
+          );
         runner = new Runner(configuration);
       });
 
@@ -790,9 +812,13 @@ describe('TransactionRunner', () => {
           .get('/machines/latest')
           .reply(303, '', { Location: '/machines/123' })
           .get('/machines/123')
-          .reply(parseInt(transaction.expected.status, 10), transaction.expected.body, {
-            'Content-Type': 'application/json',
-          });
+          .reply(
+            parseInt(transaction.expected.status, 10),
+            transaction.expected.body,
+            {
+              'Content-Type': 'application/json',
+            },
+          );
         runner = new Runner(configuration);
       });
 
@@ -813,9 +839,13 @@ describe('TransactionRunner', () => {
           .post('/machines')
           .reply(303, '', { Location: '/machines/123' })
           .get('/machines/123')
-          .reply(parseInt(transaction.expected.status, 10), transaction.expected.body, {
-            'Content-Type': 'application/json',
-          });
+          .reply(
+            parseInt(transaction.expected.status, 10),
+            transaction.expected.body,
+            {
+              'Content-Type': 'application/json',
+            },
+          );
         runner = new Runner(configuration);
       });
 
@@ -880,8 +910,7 @@ describe('TransactionRunner', () => {
           },
           expected: {
             headers: { 'content-type': 'application/json' },
-            body:
-              '{\n  "type": "bulldozer",\n  "name": "willy",\n  "id": "5229c6e8e4b0bd7dbb07e29c"\n}\n',
+            body: '{\n  "type": "bulldozer",\n  "name": "willy",\n  "id": "5229c6e8e4b0bd7dbb07e29c"\n}\n',
             statusCode: '202',
           },
           origin: {
@@ -935,15 +964,23 @@ describe('TransactionRunner', () => {
 
       serverNock1 = nock('http://127.0.0.1:3000')
         .post('/machines1', { type: 'bulldozer', name: 'willy' })
-        .reply(parseInt(transaction.expected.statusCode, 10), transaction.expected.body, {
-          'Content-Type': 'application/json',
-        });
+        .reply(
+          parseInt(transaction.expected.statusCode, 10),
+          transaction.expected.body,
+          {
+            'Content-Type': 'application/json',
+          },
+        );
 
       serverNock2 = nock('http://127.0.0.1:3000')
         .post('/machines2', { type: 'bulldozer', name: 'willy' })
-        .reply(parseInt(transaction.expected.statusCode, 10), transaction.expected.body, {
-          'Content-Type': 'application/json',
-        });
+        .reply(
+          parseInt(transaction.expected.statusCode, 10),
+          transaction.expected.body,
+          {
+            'Content-Type': 'application/json',
+          },
+        );
     });
 
     afterEach(() => {
@@ -1518,8 +1555,7 @@ describe('TransactionRunner', () => {
         },
         expected: {
           headers: { 'content-type': 'application/json' },
-          body:
-            '{\n  "type": "bulldozer",\n "name": "willy",\n  "id": "5229c6e8e4b0bd7dbb07e29c"\n}\n',
+          body: '{\n  "type": "bulldozer",\n "name": "willy",\n  "id": "5229c6e8e4b0bd7dbb07e29c"\n}\n',
           statusCode: '202',
         },
         origin: {
@@ -1534,9 +1570,13 @@ describe('TransactionRunner', () => {
 
       server = nock('http://127.0.0.1:3000')
         .post('/machines', { type: 'bulldozer', name: 'willy' })
-        .reply(parseInt(transaction.expected.statusCode, 10), transaction.expected.body, {
-          'Content-Type': 'application/json',
-        });
+        .reply(
+          parseInt(transaction.expected.statusCode, 10),
+          transaction.expected.body,
+          {
+            'Content-Type': 'application/json',
+          },
+        );
 
       transactions = {};
       transactions[transaction.name] = clone(transaction, false);
@@ -1551,20 +1591,17 @@ describe('TransactionRunner', () => {
         sinon.spy(loggerStub, 'debug');
         runner.hooks.beforeHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
-            // eslint-disable-next-line
             (transaction) => loggerStub.debug('before'),
           ],
         };
         runner.hooks.beforeValidationHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
-            // eslint-disable-next-line
             (transaction) => loggerStub.debug('beforeValidation'),
           ],
         };
         runner.hooks.afterHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
-            // eslint-disable-next-line
-            function(transaction, done) {
+            function (transaction, done) {
               loggerStub.debug('after');
               done();
             },
@@ -1589,20 +1626,17 @@ describe('TransactionRunner', () => {
         runner.hooks.transactions = null;
         runner.hooks.beforeHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
-            // eslint-disable-next-line
             (transaction) => loggerStub.debug('before'),
           ],
         };
         runner.hooks.beforeValidationHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
-            // eslint-disable-next-line
             (transaction) => loggerStub.debug('beforeValidation'),
           ],
         };
         runner.hooks.afterHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
-            // eslint-disable-next-line
-            function(transaction, done) {
+            function (transaction, done) {
               loggerStub.debug('after');
               done();
             },
@@ -1628,10 +1662,9 @@ describe('TransactionRunner', () => {
         sinon.spy(loggerStub, 'debug');
         runner.hooks.beforeHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
-            // eslint-disable-next-line
             (transaction) => loggerStub.debug('first'),
-            // eslint-disable-next-line
-            function(transaction, cb) {
+
+            function (transaction, cb) {
               loggerStub.debug('second');
               cb();
             },
@@ -1651,7 +1684,6 @@ describe('TransactionRunner', () => {
 
     describe('‘*All’ hooks with standard async API (first argument transactions, second callback)', () => {
       describe('with a ‘beforeAll’ hook', () => {
-        // eslint-disable-next-line
         const hook = (transactions, callback) => callback();
 
         const beforeAllStub = sinon.spy(hook);
@@ -1666,7 +1698,6 @@ describe('TransactionRunner', () => {
       });
 
       describe('with an ‘afterAll’ hook', () => {
-        // eslint-disable-next-line
         const hook = (transactions, callback) => callback();
 
         const afterAllStub = sinon.spy(hook);
@@ -1681,7 +1712,6 @@ describe('TransactionRunner', () => {
       });
 
       describe('with multiple hooks for the same events', () => {
-        // eslint-disable-next-line
         const hook = (transactions, callback) => callback();
 
         const beforeAllStub1 = sinon.spy(hook);
@@ -1729,8 +1759,7 @@ describe('TransactionRunner', () => {
           },
           expected: {
             headers: { 'content-type': 'application/json' },
-            body:
-              '{\n  "type": "bulldozer",\n  "name": "willy",\n  "id": "5229c6e8e4b0bd7dbb07e29c"\n}\n',
+            body: '{\n  "type": "bulldozer",\n  "name": "willy",\n  "id": "5229c6e8e4b0bd7dbb07e29c"\n}\n',
             statusCode: '202',
           },
           origin: {
@@ -1751,7 +1780,6 @@ describe('TransactionRunner', () => {
       });
 
       describe('with a ‘beforeEach’ hook', () => {
-        // eslint-disable-next-line
         const hook = (transactions, callback) => callback();
 
         const beforeEachStub = sinon.spy(hook);
@@ -1797,8 +1825,7 @@ describe('TransactionRunner', () => {
       });
 
       describe('with a ‘beforeEachValidation’ hook', () => {
-        // eslint-disable-next-line
-        const hook = function(transaction, callback) {
+        const hook = function (transaction, callback) {
           transaction.real.statusCode = '403';
           callback();
         };
@@ -1854,7 +1881,6 @@ describe('TransactionRunner', () => {
       });
 
       describe('with a ‘afterEach’ hook', () => {
-        // eslint-disable-next-line
         const hook = (transactions, callback) => callback();
 
         const afterEachStub = sinon.spy(hook);
@@ -1900,7 +1926,6 @@ describe('TransactionRunner', () => {
       });
 
       describe('with multiple hooks for the same events', () => {
-        // eslint-disable-next-line
         const hookFunction = (transactions, callback) => callback();
 
         const beforeAllStub1 = sinon.spy(hookFunction);
@@ -1930,7 +1955,6 @@ describe('TransactionRunner', () => {
       beforeEach(() => {
         runner.hooks.beforeHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
-            // eslint-disable-next-line
             (transaction) => JSON.parse('<<<>>>!@#!@#!@#4234234'),
           ],
         };
@@ -1962,7 +1986,6 @@ describe('TransactionRunner', () => {
       beforeEach(() => {
         runner.hooks.afterHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
-            // eslint-disable-next-line
             (transaction) => JSON.parse('<<<>>>!@#!@#!@#4234234'),
           ],
         };
@@ -1994,7 +2017,6 @@ describe('TransactionRunner', () => {
       beforeEach(() => {
         runner.hooks.beforeHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
-            // eslint-disable-next-line
             (transaction) => assert.isOk(false),
           ],
         };
@@ -2058,7 +2080,6 @@ describe('TransactionRunner', () => {
       beforeEach(() => {
         runner.hooks.afterHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
-            // eslint-disable-next-line
             (transaction) => assert.isOk(false),
           ],
         };
@@ -2716,8 +2737,7 @@ describe('TransactionRunner', () => {
 
         runner.hooks.beforeHooks = {
           'Group Machine > Machine > Delete Message > Bogus example name': [
-            // eslint-disable-next-line
-            function(transaction) {
+            function (transaction) {
               const body = JSON.parse(transaction.request.body);
               body.name = 'Michael';
               transaction.request.body = JSON.stringify(body);

@@ -10,16 +10,16 @@ import os from 'os';
 import spawnArgs from 'spawn-args';
 import { spawn as spawnSync } from 'cross-spawn';
 
-import * as configUtils from './configUtils';
-import Dredd from './Dredd';
-import ignorePipeErrors from './ignorePipeErrors';
-import interactiveConfig from './init';
-import logger from './logger';
-import { applyLoggingOptions } from './configuration';
-import { spawn } from './childProcess';
+import * as configUtils from './configUtils.js';
+import Dredd from './Dredd.js';
+import ignorePipeErrors from './ignorePipeErrors.js';
+import interactiveConfig from './init.js';
+import logger from './logger.js';
+import { applyLoggingOptions } from './configuration/index.js';
+import { spawn } from './childProcess.js';
 
-import dreddOptions from '../options.json';
-import packageData from '../package.json';
+import dreddOptions from '../options.json' with { type: 'json' };
+import packageData from '../package.json' with { type: 'json' };
 
 interface CLIOptions {
   exit?: (status: number) => void;
@@ -208,8 +208,12 @@ Example:
         const exePath = process.argv[1];
         const stats = fs.statSync(exePath);
         buildTime = Math.floor(stats.mtimeMs / 1000);
-      } catch (err) { /* Intentionally ignored */ }
-      console.log(`${packageData.name} v${packageData.version} [${(packageData as any).fork}] (${os.type()} ${os.release()}; ${os.arch()}) Build: ${buildTime}`);
+      } catch (err) {
+        /* Intentionally ignored */
+      }
+      console.log(
+        `${packageData.name} v${packageData.version} [${(packageData as any).fork}] (${os.type()} ${os.release()}; ${os.arch()}) Build: ${buildTime}`,
+      );
       this._processExit(0);
     }
   }
@@ -286,11 +290,14 @@ Example:
         logger.debug('Killing the backend server process'),
       );
 
-      this.serverProcess.on('crash', (exitStatus: number | null, killed: boolean) => {
-        if (killed) {
-          logger.debug('Backend server process was killed');
-        }
-      });
+      this.serverProcess.on(
+        'crash',
+        (exitStatus: number | null, killed: boolean) => {
+          if (killed) {
+            logger.debug('Backend server process was killed');
+          }
+        },
+      );
 
       this.serverProcess.on('exit', () => {
         logger.debug('Backend server process exited');

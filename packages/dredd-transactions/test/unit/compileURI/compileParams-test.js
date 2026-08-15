@@ -1,7 +1,7 @@
-const { assert } = require('chai');
-const fury = require('@apielements/core');
+import { assert } from 'chai';
+import fury from '@apielements/core';
 
-const compileParams = require('../../../compile/compileURI/compileParams');
+import compileParams from '../../../compile/compileURI/compileParams.js';
 
 describe('compileParams()', () => {
   it('should compile a primitive href variable', () => {

@@ -3,7 +3,7 @@ import path from 'path';
 import sinon from 'sinon';
 import { assert } from 'chai';
 
-import getGoBinary from '../../lib/getGoBinary';
+import getGoBinary from '../../build/getGoBinary.js';
 
 describe('getGoBinary()', () => {
   let goBin;

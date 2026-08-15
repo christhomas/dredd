@@ -1,8 +1,13 @@
+import { fileURLToPath } from 'url';
 import path from 'path';
 import { assert } from 'chai';
 
-import Hooks from '../../lib/Hooks';
-import addHooks from '../../lib/addHooks';
+import Hooks from '../../build/Hooks.js';
+import addHooks from '../../build/addHooks.js';
+
+// import.meta.url is the ES module equivalent of __dirname and __filename.
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const WORKING_DIRECTORY = path.join(__dirname, '..', 'fixtures');
 

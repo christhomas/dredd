@@ -1,11 +1,12 @@
-/* eslint-disable no-console */
+ 
 
 const path = require('path');
 const fs = require('fs');
 
 const fury = require('@apielements/core');
 
-const parse = require('../parse');
+// parse is an ES module now, so require() hands back the namespace.
+const { default: parse } = require('../parse/index.js');
 
 const FIXTURES_DIR = path.join(__dirname, '..', 'test', 'fixtures');
 
