@@ -1,5 +1,19 @@
 # @antimatter-studios/dredd-transactions
 
+## 11.1.0
+
+### Minor Changes
+
+- Validate response bodies against the schema the API description declares.
+
+  The OpenAPI 3 parser now generates a JSON Schema for message bodies, so a response is checked
+  against what the document says rather than against an example in which every key reads as
+  required. An optional property is finally describable: absent it passes, present it is
+  type-checked, and a nullable one may be null.
+
+  Suites that pass today can start failing where a response disagrees with its declared schema.
+  That is the point of the change, but it arrives looking like new failures.
+
 ## 11.0.9
 
 ### Patch Changes

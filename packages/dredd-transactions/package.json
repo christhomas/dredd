@@ -1,6 +1,6 @@
 {
   "name": "@antimatter-studios/dredd-transactions",
-  "version": "11.0.11",
+  "version": "11.1.0",
   "description": "Compiles HTTP Transactions (Request-Response pairs) from an API description document",
   "main": "index.js",
   "publishConfig": {
