@@ -18,7 +18,7 @@ const XUnitReporter = proxyquire('../../../lib/reporters/XUnitReporter', {
   '../logger': loggerStub,
   './reporterOutputLogger': reporterOutputLoggerStub,
   fs: fsStub,
-  'make-dir': makeDirStub
+  'make-dir': { makeDirectory: makeDirStub }
 }).default
 
 describe('XUnitReporter', () => {

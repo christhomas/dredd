@@ -18,7 +18,7 @@ const MarkdownReporter = proxyquire('../../../lib/reporters/MarkdownReporter', {
   '../logger': loggerStub,
   './reporterOutputLogger': reporterOutputLoggerStub,
   fs: fsStub,
-  'make-dir': makeDirStub
+  'make-dir': { makeDirectory: makeDirStub }
 }).default
 
 describe('MarkdownReporter', () => {

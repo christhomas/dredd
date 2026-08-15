@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-console */
-const rimraf = require('rimraf');
+const { rimrafSync } = require('rimraf');
 
 const PACKAGE_DIR = path.resolve(__dirname, '..');
 const SYMLINKS_LOG = path.join(PACKAGE_DIR, 'prepack-symlinks.log');
@@ -139,4 +139,4 @@ writePackageJson(APIB_PARSER_PATH, apibParserPackageData);
   path.join(PACKAGE_DIR, '..', '..', 'node_modules', 'protagonist'),
 ]
   .filter((protagonistPath) => fs.existsSync(protagonistPath))
-  .forEach((protagonistPath) => rimraf.sync(protagonistPath));
+  .forEach((protagonistPath) => rimrafSync(protagonistPath));

@@ -4,7 +4,7 @@ import { inherits } from 'util';
 
 import htmlencode from 'htmlencode';
 import untildify from 'untildify';
-import makeDir from 'make-dir';
+import { makeDirectory } from 'make-dir';
 import pathmodule from 'path';
 
 import logger from '../logger';
@@ -108,7 +108,7 @@ XUnitReporter.prototype.sanitizedPath = function sanitizedPath(
 
 XUnitReporter.prototype.configureEmitter = function configureEmitter(emitter: any): void {
   emitter.on('start', (apiDescriptions: any, callback: () => void) => {
-    makeDir(pathmodule.dirname(this.path))
+    makeDirectory(pathmodule.dirname(this.path))
       .then(() => {
         this.appendLine(
           this.path,
