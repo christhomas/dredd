@@ -1,4 +1,4 @@
-const { setWorldConstructor } = require('cucumber');
+import { setWorldConstructor } from '@cucumber/cucumber';
 
 
 const API_DESCRIPTION_EXTS = {
