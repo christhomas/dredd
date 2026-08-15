@@ -9,11 +9,9 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        # 22 and 24 are included because the CLI could not start on either: yargs ships an
-        # extensionless CommonJS file inside a "type": "module" package, which newer Node
-        # evaluates as ESM. Testing only the versions that happened to work is what let that
-        # reach a release.
-        node-version: [18.x, 20.x, 22.x, 24.x]
+        # 18 is gone: end of life since April 2025, and require(esm) - which lets this
+        # CommonJS package use the ESM-only releases of its dependencies - arrived in 20.19.
+        node-version: [20.x, 22.x, 24.x]
 
     steps:
     - uses: actions/checkout@v4

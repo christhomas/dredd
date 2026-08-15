@@ -18,7 +18,7 @@ const HTMLReporter = proxyquire('../../../lib/reporters/HTMLReporter', {
   '../logger': loggerStub,
   './reporterOutputLogger': reporterOutputLoggerStub,
   fs: fsStub,
-  'make-dir': makeDirStub
+  'make-dir': { makeDirectory: makeDirStub }
 }).default
 
 describe('HTMLReporter', () => {

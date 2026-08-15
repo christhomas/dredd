@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 /* eslint-disable no-console */
 /* eslint-disable-next-line import/no-extraneous-dependencies */
-const rimraf = require('rimraf');
+const { rimrafSync } = require('rimraf');
 
 const PACKAGE_DIR = path.resolve(path.dirname(__filename), '..');
 const SYMLINKS_LOG = path.join(PACKAGE_DIR, 'prepack-symlinks.log');
@@ -29,8 +29,8 @@ const dependencyPaths = dependencies
   .filter((symlinkPath) => fs.existsSync(symlinkPath));
 console.log('resolved dependency paths:', dependencyPaths);
 
-dependencyPaths.forEach((symlinkPath) => rimraf.sync(symlinkPath));
+dependencyPaths.forEach((symlinkPath) => rimrafSync(symlinkPath));
 console.log('successfully unlinked %d symlinks!', dependencyPaths.length);
 
-rimraf.sync(SYMLINKS_LOG);
+rimrafSync(SYMLINKS_LOG);
 console.log('successfully removed "%s"!', SYMLINKS_LOG);
