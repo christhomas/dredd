@@ -47,8 +47,8 @@ jobs:
       - name: Publish dredd-transactions (dredd depends on it)
         working-directory: packages/dredd-transactions
         run: |
-          NAME="$(npm pkg get name | tr -d '"')"
-          VERSION="$(npm pkg get version | tr -d '"')"
+          NAME="$(node -p "require('./package.json').name")"
+          VERSION="$(node -p "require('./package.json').version")"
           if npm view "$NAME@$VERSION" version > /dev/null 2>&1; then
             echo "$NAME@$VERSION is already published, nothing to do."
           else
@@ -58,8 +58,8 @@ jobs:
       - name: Publish dredd
         working-directory: packages/dredd
         run: |
-          NAME="$(npm pkg get name | tr -d '"')"
-          VERSION="$(npm pkg get version | tr -d '"')"
+          NAME="$(node -p "require('./package.json').name")"
+          VERSION="$(node -p "require('./package.json').version")"
           if npm view "$NAME@$VERSION" version > /dev/null 2>&1; then
             echo "$NAME@$VERSION is already published, nothing to do."
           else
