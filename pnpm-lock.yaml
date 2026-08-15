@@ -27,8 +27,8 @@ importers:
   packages/dredd:
     dependencies:
       '@antimatter-studios/dredd-transactions':
-        specifier: ^11.0.11
-        version: 11.0.11
+        specifier: ^11.1.0
+        version: link:../dredd-transactions
       caseless:
         specifier: 0.12.0
         version: 0.12.0
@@ -220,12 +220,6 @@ importers:
 
 packages:
 
-  '@antimatter-studios/dredd-transactions@11.0.11':
-    resolution: {integrity: sha512-p0dRGnKOR07HLPZtkp7hC6nuECDA6FV8gMZWK4VQ6xQTaxMAm0J+2aiyo0vonMxprqiNrE10CvWoar4IGMNESg==}
-    engines: {node: '>=18'}
-    bundledDependencies:
-      - '@apielements/apib-parser'
-
   '@antimatter-studios/openapi3-parser@0.17.0':
     resolution: {integrity: sha512-Hu/a6nRQiRvnxcZLR3oLrB+5KFHnJrpjsqiTkx0a8letKab4H8RmmK5PkMHtIBVpda8X31/L52e3bs8djbbCow==}
     engines: {node: '>=20'}
@@ -244,12 +238,6 @@ packages:
 
   '@apielements/openapi2-parser@0.32.4':
     resolution: {integrity: sha512-gD5KuN1vL1TPZL0GU+QmUCeLg0AAkbD50AvmbAuVDbaTeBrYmTDaowewAkhZMrbsTPDZzPqQ+jh7AlAB5kuStw==}
-    engines: {node: '>=8'}
-    peerDependencies:
-      '@apielements/core': '>=0.1.0 <0.3.0'
-
-  '@apielements/openapi3-parser@0.16.0':
-    resolution: {integrity: sha512-ZvDbp4kXz2FP7q5MIdQasks93tKsGun7kDL1De01gHKH6c43oicmELtxwqKpad8Vv0yBTceLNzXcVH+xZEuG3g==}
     engines: {node: '>=8'}
     peerDependencies:
       '@apielements/core': '>=0.1.0 <0.3.0'
@@ -2781,9 +2769,6 @@ packages:
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
-  ramda@0.27.0:
-    resolution: {integrity: sha512-pVzZdDpWwWqEVVLshWUHjNwuVP7SfcmPraYuqocJp1yo2U1R7P+5QAfDhdItkuoGqIBnBYrtPp7rEPqDn9HlZA==}
-
   ramda@0.27.2:
     resolution: {integrity: sha512-SbiLPU40JuJniHexQSAgad32hfwd+DRUdwF2PlVuI5RZD0/vahUco7R8vD86J/tcEKKF9vZrUVwgtmGCqlCKyA==}
 
@@ -3584,13 +3569,6 @@ packages:
 
 snapshots:
 
-  '@antimatter-studios/dredd-transactions@11.0.11':
-    dependencies:
-      '@apielements/core': 0.2.1
-      '@apielements/openapi2-parser': 0.32.4(@apielements/core@0.2.1)
-      '@apielements/openapi3-parser': 0.16.0(@apielements/core@0.2.1)
-      uri-template: 1.0.1
-
   '@antimatter-studios/openapi3-parser@0.17.0(@apielements/core@0.2.1)':
     dependencies:
       '@apielements/core': 0.2.1
@@ -3623,14 +3601,6 @@ snapshots:
       swagger-parser: 8.0.4
       yaml-js: 0.2.3
       z-schema: 4.2.4
-
-  '@apielements/openapi3-parser@0.16.0(@apielements/core@0.2.1)':
-    dependencies:
-      '@apielements/core': 0.2.1
-      content-type: 1.0.5
-      media-typer: 1.1.1
-      ramda: 0.27.0
-      yaml-js: 0.2.3
 
   '@babel/code-frame@7.29.7':
     dependencies:
@@ -6501,8 +6471,6 @@ snapshots:
   querystring@0.2.0: {}
 
   queue-microtask@1.2.3: {}
-
-  ramda@0.27.0: {}
 
   ramda@0.27.2: {}
 
