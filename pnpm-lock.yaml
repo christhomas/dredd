@@ -30,7 +30,7 @@ importers:
   packages/dredd:
     dependencies:
       '@antimatter-studios/dredd-transactions':
-        specifier: ^12.0.0
+        specifier: ^12.1.0
         version: link:../dredd-transactions
       caseless:
         specifier: 0.12.0
