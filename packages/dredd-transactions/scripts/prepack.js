@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Alters the 'node_modules' to remove a C++ dependency of the API Blueprint
-// parser before the 'npm pack' creates the package
+// parser before the 'npm pack' creates the package, and brings the bundled dependencies
+// into the package so pack can include them whatever layout the installer produced
 
 const fs = require('fs');
 const path = require('path');
@@ -76,6 +77,15 @@ function symlinkDependencyTreeToLocalNodeModules(dependencyName, fromDir = PACKA
   console.log('\nlinking dependency tree for "%s"', dependencyName);
   console.log('%s: %s', dependencyName, localDependencyPath);
 
+  // A path that exists as a symlink is not enough: npm pack follows it and records where it
+  // points, which under pnpm is a store path outside the package. The registry rejects such a
+  // tarball outright. Replace it with the real files.
+  if (fs.existsSync(localDependencyPath) && fs.lstatSync(localDependencyPath).isSymbolicLink()) {
+    console.log('%s is a symlink, replacing it with its contents...', dependencyName);
+    fs.unlinkSync(localDependencyPath);
+    fs.appendFileSync(SYMLINKS_LOG, `${dependencyName}\n`);
+  }
+
   if (!fs.existsSync(localDependencyPath)) {
     console.log('dependency does not exist!');
     const localDependencyPathDir = path.dirname(localDependencyPath);
@@ -85,11 +95,19 @@ function symlinkDependencyTreeToLocalNodeModules(dependencyName, fromDir = PACKA
       fs.mkdirSync(localDependencyPathDir, { recursive: true });
     }
 
-    const source = path.relative(localDependencyPathDir, realDependencyPath);
-    console.log('creating a symlink from "%s" to "%s"', localDependencyPath);
+    console.log('copying "%s" from "%s"', dependencyName, realDependencyPath);
 
-    fs.symlinkSync(source, localDependencyPath);
-    console.log('successfully linked "%s" at "%s"!', dependencyName, localDependencyPath);
+    // Copied rather than symlinked. npm pack follows a symlink and records the path it
+    // resolves to, which lies outside the package - under pnpm that is a store path, and the
+    // registry rejects the tarball outright: "invalid path: package/../../node_modules/...".
+    // Nested node_modules are skipped because each dependency in the tree is copied in its own
+    // right, which is the flat layout bundledDependencies expects.
+    fs.cpSync(realDependencyPath, localDependencyPath, {
+      recursive: true,
+      dereference: true,
+      filter: (source) => path.basename(source) !== 'node_modules',
+    });
+    console.log('successfully copied "%s" to "%s"!', dependencyName, localDependencyPath);
     console.log('updating symlink configuration...');
     fs.appendFileSync(SYMLINKS_LOG, `${dependencyName}\n`);
   } else {
