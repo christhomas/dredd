@@ -41,7 +41,9 @@ function resolvePackageDir(dependencyName, fromDir) {
     const found = candidates.find((candidate) => fs.existsSync(path.join(candidate, 'package.json')));
 
     if (!found) {
-      throw new Error(`cannot resolve "${dependencyName}" from ${searchPaths.join(' or ')}`);
+      throw new Error(`cannot resolve "${dependencyName}" from ${searchPaths.join(' or ')}`, {
+        cause: e,
+      });
     }
 
     return found;

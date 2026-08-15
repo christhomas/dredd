@@ -19,12 +19,14 @@ Error: ${e}\
   }
 
   // Get parameters from expression object
-  const uriParameters = parsed.expressions
-    .map((expression) => expression.params.map((param) => param.name))
+  // uri-template 2 exposes the parsed template as an AST rather than a list of expressions.
+  const expressions = parsed.ast.parts.filter((part) => part.type === 'expression');
+  const uriParameters = expressions
+    .map((expression) => expression.variables.map((variable) => variable.name))
     .reduce((accumulator, current) => accumulator.concat(current), [])
     .map(decodeURI);
 
-  if (parsed.expressions.length === 0) {
+  if (expressions.length === 0) {
     result.uri = uriTemplate;
   } else {
     let ambiguous = false;
