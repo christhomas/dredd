@@ -1,6 +1,7 @@
 {
   "name": "@antimatter-studios/remote",
   "version": "0.6.2",
+  "private": true,
   "description": "API Elements adapter for performing actions via a remote API",
   "author": "Apiary.io <support@apiary.io>",
   "license": "MIT",

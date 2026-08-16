@@ -1,6 +1,6 @@
 {
   "name": "@antimatter-studios/openapi3-parser",
-  "version": "0.17.2",
+  "version": "0.18.0",
   "description": "Open API Specification 3 API Elements Parser",
   "author": "Apiary.io <support@apiary.io>",
   "license": "MIT",

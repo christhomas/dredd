@@ -1,6 +1,7 @@
 {
   "name": "@antimatter-studios/json-serializer",
   "version": "0.1.4",
+  "private": true,
   "description": "JSON serializer for API Elements",
   "author": "Apiary.io <support@apiary.io>",
   "license": "MIT",

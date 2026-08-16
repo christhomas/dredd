@@ -1,5 +1,23 @@
 # API Elements: OpenAPI 3 Parser Changelog
 
+## 0.18.0
+
+### Minor Changes
+
+- Declare the dialect an OpenAPI 3.1 schema is written in.
+
+  A converted schema always announced draft-04, which is right for OpenAPI 3.0 and wrong for
+  3.1, whose Schema Object is JSON Schema 2020-12. A 3.1 document writing `exclusiveMinimum` as
+  the bound itself - which that version permits - produced a schema the validator refused
+  outright, so the check never ran. The version the document declares now decides the dialect,
+  and a 3.0 document is unchanged.
+
+  Validation moves to ajv 8, which is what makes the above safe: ajv 6 could not compile the
+  2020-12 dialect at all. `prefixItems`, `dependentRequired` and `unevaluatedProperties` are
+  enforced rather than passed over in silence, and a schema using OpenAPI's own formats -
+  `int64`, `int32`, `byte` - no longer stops the check, which it did for any Swagger 2 document
+  that used them.
+
 ## 0.16.1 (2021-07-15)
 
 ### Enhancements
@@ -83,21 +101,21 @@
 
 - Adds partial support for using `oneOf` in a Schema Object. One of is
   supported when used in a schema object alone, or with the nullable constraint
-  or any annotation.  It is not supported in the case when one of is used in
+  or any annotation. It is not supported in the case when one of is used in
   conjunction with other constraints in the same schema object.
 
 ### Bug Fixes
 
 - Supports using `$ref` in the root of a component, for example:
 
-    ```yaml
-    components:
-      schemas:
-        UserAlias:
-          $ref: '#/components/schemas/User'
-        User:
-          type: object
-    ```
+  ```yaml
+  components:
+    schemas:
+      UserAlias:
+        $ref: '#/components/schemas/User'
+      User:
+        type: object
+  ```
 
 - Prevents the parser from throwing an error upon encountering an unknown or
   invalid YAML node tag, such as `!!unknown`.

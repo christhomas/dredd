@@ -22,9 +22,7 @@
     "deckardcain": "^1.0.0",
     "drafter.js": "^3.2.0"
   },
-  "optionalDependencies": {
-    "protagonist": "^2.1.0"
-  },
+  "optionalDependencies": {},
   "peerDependencies": {
     "@antimatter-studios/core": "workspace:*"
   },

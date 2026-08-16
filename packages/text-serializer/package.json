@@ -1,6 +1,7 @@
 {
   "name": "@antimatter-studios/text-serializer",
   "version": "0.1.0",
+  "private": true,
   "description": "Text serializer for API Elements",
   "author": "Apiary.io <support@apiary.io>",
   "license": "MIT",

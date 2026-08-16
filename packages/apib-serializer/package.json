@@ -1,6 +1,7 @@
 {
   "name": "@antimatter-studios/apib-serializer",
   "version": "0.16.3",
+  "private": true,
   "description": "API Blueprint serializer for API Elements",
   "author": "Apiary.io <support@apiary.io>",
   "license": "MIT",

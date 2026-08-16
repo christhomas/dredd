@@ -1,6 +1,7 @@
 {
   "name": "@antimatter-studios/swagger-zoo",
   "version": "3.1.4",
+  "private": true,
   "description": "Swagger example files for testing",
   "author": "Apiary.io <support@apiary.io>",
   "license": "MIT",

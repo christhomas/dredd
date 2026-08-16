@@ -10,7 +10,7 @@ const { rimrafSync } = require('rimraf');
 
 const PACKAGE_DIR = path.resolve(__dirname, '..');
 const SYMLINKS_LOG = path.join(PACKAGE_DIR, 'prepack-symlinks.log');
-const APIB_PARSER_PATH = path.join(PACKAGE_DIR, 'node_modules', '@apielements', 'apib-parser');
+const APIB_PARSER_PATH = path.join(PACKAGE_DIR, 'node_modules', '@antimatter-studios', 'apib-parser');
 
 function readPackageJson(packageDir) {
   return JSON.parse(fs.readFileSync(path.join(packageDir, 'package.json')));
@@ -125,7 +125,9 @@ function symlinkDependencyTreeToLocalNodeModules(dependencyName, fromDir = PACKA
 
 // make sure all bundled deps are accessible in the local 'node_modules' dir
 const packageData = readPackageJson(PACKAGE_DIR);
-const { bundledDependencies } = packageData;
+// Nothing is bundled now that the parsers are published packages in their own right; the
+// removal of the C++ parser above is what this script still exists for.
+const { bundledDependencies = [] } = packageData;
 bundledDependencies.forEach((dependency) => symlinkDependencyTreeToLocalNodeModules(dependency));
 
 // alter @antimatter-studios/apib-parser's package.json so it doesn't depend on protagonist

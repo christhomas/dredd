@@ -1,6 +1,6 @@
 {
   "name": "@antimatter-studios/dredd-transactions",
-  "version": "12.1.0",
+  "version": "12.2.0",
   "description": "Compiles HTTP Transactions (Request-Response pairs) from an API description document",
   "main": "index.js",
   "publishConfig": {
@@ -38,9 +38,6 @@
     "@antimatter-studios/openapi3-parser": "workspace:*",
     "uri-template": "2.0.0"
   },
-  "bundledDependencies": [
-    "@antimatter-studios/apib-parser"
-  ],
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "26.2.0",
@@ -73,9 +70,6 @@
   "license": "MIT",
   "homepage": "https://github.com/antimatter-studios/dredd/tree/master/packages/dredd-transactions",
   "fork": "antimatter-studios/dredd",
-  "bundleDependencies": [
-    "@antimatter-studios/apib-parser"
-  ],
   "exports": {
     ".": "./index.js",
     "./parse": "./parse/index.js",

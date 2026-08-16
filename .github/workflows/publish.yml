@@ -42,26 +42,23 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      # A release usually moves only one of the two packages, and publishing a version that
-      # is already on the registry fails the whole job, so each package is checked first.
-      - name: Publish dredd-transactions (dredd depends on it)
-        working-directory: packages/dredd-transactions
+      # Every publishable package, dependencies before the packages that need them, so a
+      # consumer never resolves a release whose parts are not on the registry yet.
+      #
+      # Packed by pnpm and published by npm on purpose: pnpm resolves the workspace protocol
+      # to real versions when it packs, which npm would otherwise publish verbatim and leave
+      # every consumer with an uninstallable dependency; and npm is what carries provenance.
+      - name: Publish
         run: |
-          NAME="$(node -p "require('./package.json').name")"
-          VERSION="$(node -p "require('./package.json').version")"
-          if npm view "$NAME@$VERSION" version > /dev/null 2>&1; then
-            echo "$NAME@$VERSION is already published, nothing to do."
-          else
-            npm publish --access public --provenance --loglevel verbose
-          fi
-
-      - name: Publish dredd
-        working-directory: packages/dredd
-        run: |
-          NAME="$(node -p "require('./package.json').name")"
-          VERSION="$(node -p "require('./package.json').version")"
-          if npm view "$NAME@$VERSION" version > /dev/null 2>&1; then
-            echo "$NAME@$VERSION is already published, nothing to do."
-          else
-            npm publish --access public --provenance
-          fi
+          for package in core api-elements apib-parser openapi2-parser openapi3-parser gavel dredd-transactions dredd; do
+            cd "$GITHUB_WORKSPACE/packages/$package"
+            NAME="$(node -p "require('./package.json').name")"
+            VERSION="$(node -p "require('./package.json').version")"
+            if npm view "$NAME@$VERSION" version > /dev/null 2>&1; then
+              echo "$NAME@$VERSION is already published, nothing to do."
+              continue
+            fi
+            echo "Publishing $NAME@$VERSION"
+            TARBALL="$(pnpm pack --pack-destination "$RUNNER_TEMP" | tail -n1)"
+            npm publish "$TARBALL" --access public --provenance
+          done

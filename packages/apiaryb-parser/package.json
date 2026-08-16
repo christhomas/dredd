@@ -1,6 +1,7 @@
 {
   "name": "@antimatter-studios/apiaryb-parser",
   "version": "0.2.1",
+  "private": true,
   "description": "API Elements parser for deprecated Apiary Blueprint language",
   "author": "Apiary.io <support@apiary.io>",
   "license": "MIT",

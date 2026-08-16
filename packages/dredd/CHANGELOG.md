@@ -1,5 +1,28 @@
 # @antimatter-studios/dredd
 
+## 16.2.0
+
+### Minor Changes
+
+- Declare the dialect an OpenAPI 3.1 schema is written in.
+
+  A converted schema always announced draft-04, which is right for OpenAPI 3.0 and wrong for
+  3.1, whose Schema Object is JSON Schema 2020-12. A 3.1 document writing `exclusiveMinimum` as
+  the bound itself - which that version permits - produced a schema the validator refused
+  outright, so the check never ran. The version the document declares now decides the dialect,
+  and a 3.0 document is unchanged.
+
+  Validation moves to ajv 8, which is what makes the above safe: ajv 6 could not compile the
+  2020-12 dialect at all. `prefixItems`, `dependentRequired` and `unevaluatedProperties` are
+  enforced rather than passed over in silence, and a schema using OpenAPI's own formats -
+  `int64`, `int32`, `byte` - no longer stops the check, which it did for any Swagger 2 document
+  that used them.
+
+### Patch Changes
+
+- Updated dependencies
+  - @antimatter-studios/dredd-transactions@12.2.0
+
 ## 16.1.0
 
 ### Minor Changes
