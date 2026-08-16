@@ -1,0 +1,45 @@
+{
+  "name": "@antimatter-studios/openapi3-parser",
+  "version": "0.17.2",
+  "description": "Open API Specification 3 API Elements Parser",
+  "author": "Apiary.io <support@apiary.io>",
+  "license": "MIT",
+  "main": "./lib/adapter.js",
+  "files": [
+    "lib/**/*.js"
+  ],
+  "homepage": "https://github.com/antimatter-studios/api-elements.js/tree/master/packages/openapi3-parser",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/antimatter-studios/api-elements.js.git",
+    "directory": "packages/openapi3-parser"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "mocha test/unit test/integration",
+    "test:unit": "mocha test/unit",
+    "test:integration": "mocha test/integration",
+    "test:integration:fix": "env GENERATE=1 mocha test/integration"
+  },
+  "dependencies": {
+    "content-type": "^1.0.4",
+    "lodash": "^4.17.0",
+    "media-typer": "^1.0.1",
+    "ramda": "^0.29.0",
+    "yaml-js": "^0.2.3"
+  },
+  "peerDependencies": {
+    "@antimatter-studios/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@antimatter-studios/core": "workspace:*",
+    "chai": "^4.2.0",
+    "eslint": "^5.16.0",
+    "mocha": "^7.1.1"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "bugs": "https://github.com/antimatter-studios/api-elements.js/issues"
+}

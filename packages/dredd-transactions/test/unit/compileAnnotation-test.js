@@ -1,4 +1,4 @@
-import fury from '@apielements/core';
+import fury from '@antimatter-studios/core';
 
 import { assert, fixtures } from '../support.js';
 import compileAnnotation from '../../compile/compileAnnotation.js';

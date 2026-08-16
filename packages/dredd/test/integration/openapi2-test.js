@@ -112,7 +112,10 @@ describe('OpenAPI 2', () => {
 
     it('recognizes all 3 transactions', () => assert.equal(actual.length, 3));
     [
-      { action: 'error', statusCode: '200' },
+      // The 200 fails rather than errors: its schema uses OpenAPI's own "int64" format,
+      // which the validator once refused outright, so a response that simply omitted a
+      // declared header could not be checked at all.
+      { action: 'fail', statusCode: '200' },
       { action: 'skip', statusCode: '400' },
       { action: 'skip', statusCode: '500' },
     ].forEach((expected, i) =>
@@ -169,7 +172,10 @@ describe('OpenAPI 2', () => {
 
     it('recognizes all 3 transactions', () => assert.equal(actual.length, 3));
     [
-      { action: 'error', statusCode: '200' },
+      // The 200 fails rather than errors: its schema uses OpenAPI's own "int64" format,
+      // which the validator once refused outright, so a response that simply omitted a
+      // declared header could not be checked at all.
+      { action: 'fail', statusCode: '200' },
       { action: 'skip', statusCode: '400' },
       { action: 'fail', statusCode: '500' }, // Unskipped in hooks
     ].forEach((expected, i) =>

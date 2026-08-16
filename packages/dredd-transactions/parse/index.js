@@ -1,6 +1,6 @@
-import fury from '@apielements/core';
-import adapter0 from '@apielements/apib-parser';
-import adapter1 from '@apielements/openapi2-parser';
+import fury from '@antimatter-studios/core';
+import adapter0 from '@antimatter-studios/apib-parser';
+import adapter1 from '@antimatter-studios/openapi2-parser';
 import adapter2 from '@antimatter-studios/openapi3-parser';
 
 fury.use(adapter0);

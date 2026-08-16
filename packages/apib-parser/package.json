@@ -1,0 +1,41 @@
+{
+  "name": "@antimatter-studios/apib-parser",
+  "version": "0.20.1",
+  "description": "API Blueprint parser for API Elements",
+  "author": "Apiary.io <support@apiary.io>",
+  "license": "MIT",
+  "main": "./lib/adapter.js",
+  "files": [
+    "lib/adapter.js"
+  ],
+  "homepage": "https://github.com/apiaryio/api-elements.js/tree/master/packages/apib-parser",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apiaryio/api-elements.js.git",
+    "directory": "packages/apib-parser"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "mocha"
+  },
+  "dependencies": {
+    "deckardcain": "^1.0.0",
+    "drafter.js": "^3.2.0"
+  },
+  "optionalDependencies": {
+    "protagonist": "^2.1.0"
+  },
+  "peerDependencies": {
+    "@antimatter-studios/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@antimatter-studios/core": "workspace:*",
+    "chai": "^4.2.0",
+    "eslint": "^5.16.0",
+    "mocha": "^7.1.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import fury from '@apielements/core';
+import fury from '@antimatter-studios/core';
 
 import compileParams from '../../../compile/compileURI/compileParams.js';
 

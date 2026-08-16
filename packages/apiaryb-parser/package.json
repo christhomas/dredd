@@ -1,0 +1,42 @@
+{
+  "name": "@antimatter-studios/apiaryb-parser",
+  "version": "0.2.1",
+  "description": "API Elements parser for deprecated Apiary Blueprint language",
+  "author": "Apiary.io <support@apiary.io>",
+  "license": "MIT",
+  "main": "./lib/adapter.js",
+  "files": [
+    "lib/*.js"
+  ],
+  "homepage": "https://github.com/apiaryio/api-elements.js/tree/master/packages/apiaryb-parser",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apiaryio/api-elements.js.git",
+    "directory": "packages/apiaryb-parser"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "pegjs": "pegjs lib/apiary-blueprint-parser.pegjs lib/apiary-blueprint-parser.js",
+    "prepack": "npm run pegjs",
+    "pretest": "npm run pegjs",
+    "test": "mocha"
+  },
+  "dependencies": {
+    "deckardcain": "^1.0.0"
+  },
+  "peerDependencies": {
+    "@antimatter-studios/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@antimatter-studios/core": "workspace:*",
+    "chai": "^4.2.0",
+    "eslint": "^5.16.0",
+    "glob": "^7.1.2",
+    "mocha": "^7.1.1",
+    "pegjs": "https://github.com/dmajda/pegjs.git#02af83f9b416778878e52e2cbbc22d96e312164e"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

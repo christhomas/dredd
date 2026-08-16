@@ -1,0 +1,39 @@
+{
+  "name": "@antimatter-studios/apib-serializer",
+  "version": "0.16.3",
+  "description": "API Blueprint serializer for API Elements",
+  "author": "Apiary.io <support@apiary.io>",
+  "license": "MIT",
+  "main": "./lib/adapter.js",
+  "files": [
+    "lib/*.js",
+    "template.nunjucks"
+  ],
+  "homepage": "https://github.com/apiaryio/api-elements.js/tree/master/packages/apib-serializer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apiaryio/api-elements.js.git",
+    "directory": "packages/apib-serializer"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "mocha"
+  },
+  "dependencies": {
+    "nunjucks": "^3.2.0"
+  },
+  "peerDependencies": {
+    "@antimatter-studios/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@antimatter-studios/core": "workspace:*",
+    "chai": "^4.2.0",
+    "eslint": "^5.16.0",
+    "glob": "^7.1.2",
+    "mocha": "^7.1.1"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

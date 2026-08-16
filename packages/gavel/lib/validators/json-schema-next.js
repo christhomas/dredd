@@ -1,6 +1,7 @@
 const Ajv = require('ajv');
 const Ajv2020 = require('ajv/dist/2020');
 const AjvDraft04 = require('ajv-draft-04');
+const addFormats = require('ajv-formats');
 
 const metaSchemaV4 = require('ajv-draft-04/dist/refs/json-schema-draft-04.json');
 const metaSchemaV6 = require('ajv/dist/refs/json-schema-draft-06.json');
@@ -27,25 +28,32 @@ const META_SCHEMA = {
 // One dialect per compiler. ajv dropped draft-04 from its core at version 7 and keeps
 // 2020-12 behind a separate entry point, so the version stated by the schema decides which
 // compiler reads it rather than one instance being asked to speak every dialect.
+// ajv 6 carried the standard formats and threw on any it did not know, so a document using
+// OpenAPI's own - int64, int32, byte - could not be validated at all: dredd reported an error
+// where the server may well have been correct. ajv 8 unbundles formats, so they are added
+// back to keep date-time and friends checked, while an unrecognised one is now ignored
+// rather than fatal.
+const withFormats = (ajv) => addFormats(ajv);
+
 const compilerFor = (schemaVersion, options) => {
   switch (schemaVersion) {
     case 'draftV4':
-      return new AjvDraft04(options);
+      return withFormats(new AjvDraft04(options));
     case 'draft2020':
-      return new Ajv2020(options);
+      return withFormats(new Ajv2020(options));
     case 'draftV6': {
       // ajv 8 knows draft-07 out of the box and draft-06 only once told about it - but only
       // where a meta schema is wanted. Registering it while validating data collides with
       // the data's own schema when that schema is the draft-06 meta schema itself, which is
       // exactly what a test of draft-06 support validates against.
-      const ajv = new Ajv(options);
+      const ajv = withFormats(new Ajv(options));
       if (options.meta !== false) {
         ajv.addMetaSchema(metaSchemaV6);
       }
       return ajv;
     }
     default:
-      return new Ajv(options);
+      return withFormats(new Ajv(options));
   }
 };
 

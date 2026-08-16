@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import fury from '@apielements/core';
+import fury from '@antimatter-studios/core';
 
 // import.meta.url is the ESM equivalent of __dirname.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

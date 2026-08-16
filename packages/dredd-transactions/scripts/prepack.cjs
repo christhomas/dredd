@@ -128,7 +128,7 @@ const packageData = readPackageJson(PACKAGE_DIR);
 const { bundledDependencies } = packageData;
 bundledDependencies.forEach((dependency) => symlinkDependencyTreeToLocalNodeModules(dependency));
 
-// alter @apielements/apib-parser's package.json so it doesn't depend on protagonist
+// alter @antimatter-studios/apib-parser's package.json so it doesn't depend on protagonist
 const apibParserPackageData = readPackageJson(APIB_PARSER_PATH);
 delete apibParserPackageData.dependencies.protagonist;
 delete apibParserPackageData.optionalDependencies.protagonist;

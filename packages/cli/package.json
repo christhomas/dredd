@@ -1,0 +1,42 @@
+{
+  "name": "@antimatter-studios/cli",
+  "version": "0.10.4",
+  "description": "Command line tool interface for Fury.js",
+  "author": "Apiary.io <support@apiary.io>",
+  "license": "MIT",
+  "bin": {
+    "fury": "lib/fury.js"
+  },
+  "files": [
+    "lib/fury.js"
+  ],
+  "homepage": "https://github.com/apiaryio/api-elements.js/tree/master/packages/cli",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apiaryio/api-elements.js.git",
+    "directory": "packages/cli"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "exit 0"
+  },
+  "dependencies": {
+    "@antimatter-studios/apiaryb-parser": "workspace:*",
+    "@antimatter-studios/apib-parser": "workspace:*",
+    "@antimatter-studios/apib-serializer": "workspace:*",
+    "@antimatter-studios/core": "workspace:*",
+    "@antimatter-studios/openapi2-parser": "workspace:*",
+    "@antimatter-studios/openapi3-parser": "workspace:*",
+    "cardinal": "^2.1.1",
+    "commander": "^5.1.0",
+    "js-yaml": "^3.12.0",
+    "minim": "^0.23.8"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

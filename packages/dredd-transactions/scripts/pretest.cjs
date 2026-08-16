@@ -3,7 +3,7 @@
 const path = require('path');
 const fs = require('fs');
 
-const fury = require('@apielements/core');
+const fury = require('@antimatter-studios/core');
 
 // parse is an ES module now, so require() hands back the namespace.
 const { default: parse } = require('../parse/index.js');

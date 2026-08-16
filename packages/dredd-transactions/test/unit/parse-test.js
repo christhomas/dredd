@@ -1,4 +1,4 @@
-import fury from '@apielements/core';
+import fury from '@antimatter-studios/core';
 
 import parse from '../../parse/index.js';
 

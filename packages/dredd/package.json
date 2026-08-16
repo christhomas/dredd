@@ -39,7 +39,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@antimatter-studios/dredd-transactions": "^12.1.0",
+    "@antimatter-studios/dredd-transactions": "workspace:*",
     "@antimatter-studios/gavel": "workspace:*",
     "caseless": "0.12.0",
     "chai": "6.2.2",

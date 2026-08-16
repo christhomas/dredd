@@ -1,0 +1,193 @@
+FORMAT: 1A
+{% for item in api.attributes.get('metadata') %}{% if item.key.toValue() != 'FORMAT' %}{{ item.key.toValue() }}: {{ item.value.toValue() }}
+{% endif %}{% endfor %}
+
+
+
+
+
+{% macro renderExample(example) %}
+{% for copy in example|getCopy %}
+    {{ copy.toValue() }}
+
+{% endfor %}
+
+{% if example|bodyOnly %}
+        {{ example.messageBody.content|indent(8) }}
+{% else %}
+  {% if example.headers and example.headers.exclude('Content-Type').length %}
+    + Headers
+
+      {% for header in example.headers.exclude('Content-Type').elements %}
+            {{ header.key.toValue() }}:{% if header.value %} {{ header.value.toValue() }}{% endif %}{% endfor %}
+
+  {% endif %}
+  {% if example.dataStructure %}
+    {{ example.dataStructure.content|mson|indent(4) }}
+  {% endif %}
+  {% if example.messageBody %}
+    + Body
+
+            {{ example.messageBody.content|default('', true)|pretty|indent(12) }}
+
+  {% endif %}
+  {% if example.messageBodySchema %}
+    + Schema
+
+            {{ example.messageBodySchema.content|pretty|indent(12) }}
+
+  {% endif %}
+{% endif %}
+{% endmacro %}
+
+
+
+
+
+
+{% macro renderParameters(hrefVariables) %}
++ Parameters
+
+  {% for item in hrefVariables.content %}
+    {% set typeAttributes = item.attributes.get('typeAttributes') %}
+    + {{ item.key.toValue() }}{% if item.value and item.value.toValue() %}: {{ item.value.toValue() }}{% endif %}{% if typeAttributes %} ({{ typeAttributes.toValue() }}){% endif %}{% if item.description and item.description.toValue() %} - {{ item.description.toValue() }}{% endif %}{% endfor %}
+
+{% endmacro %}
+
+
+
+
+
+
+{% macro renderTransaction(transaction) %}
+{% set request = transaction.request %}
+{% set response = transaction.response %}
+{% if request and ((request.title and request.title.toValue()) or request.contentType or request.headers or request.dataStructure or request.messageBody or request.messageBodySchema) %}
++ Request{% if request.title and request.title.toValue() %} {{request.title.toValue()}}{% endif %}{% if request.contentType and request.contentType.toValue() %} ({{ request.contentType.toValue() }}){% endif %}
+{{ renderExample(request) }}
+{% endif %}
+{% if response and response.statusCode and response.statusCode.toValue() %}
++ Response {{ response.statusCode.toValue() }}{% if response.contentType and response.contentType.toValue() %} ({{ response.contentType.toValue() }}){% endif %}
+{{ renderExample(response) }}
+{% endif %}
+{% endmacro %}
+
+
+
+
+
+{% macro renderTransition(transition, href) %}
+{% if transition.title and transition.title.toValue() %}
+#### {{ transition.title.toValue() }} [{% if transition.method %}{{ transition.method.toValue() }}{% endif %}{% if href %} {{ href }}{% elif transition.computedHref and transition.computedHref.toValue() %} {{ transition.computedHref.toValue() }}{% endif %}]
+{% else %}
+#### {% if transition.method %}{{ transition.method.toValue() }}{% endif %}{% if href %} {{ href }}{% elif transition.computedHref and transition.computedHref.toValue() %} {{ transition.computedHref.toValue() }}{% endif %}
+{% endif %}
+
+{% for copy in transition|getCopy %}
+{{ copy.toValue() }}
+{% endfor %}
+
+{% if transition.hrefVariables.length %}
+  {{ renderParameters(transition.hrefVariables) }}
+{% endif %}
+
+{% if transition.relation and transition.relation.toValue() %}
++ Relation: {{ transition.relation.toValue() }}
+{% endif %}
+
+{% for transaction in transition.transactions.elements %}
+  {{ renderTransaction(transaction) }}
+{% endfor %}
+{% endmacro %}
+
+
+
+
+
+{% macro renderResource(resource) %}
+{% if not resource|resourceShorthand %}
+{% set href = null %}
+{% if resource.title and resource.title.toValue() %}
+### {{ resource.title.toValue() }} [{{ resource.href.toValue() }}]
+{% else %}
+### {{ resource.href.toValue() }}
+{% endif %}
+
+{% for copy in resource|getCopy %}
+{{ copy.toValue() }}
+{% endfor %}
+{% else %}
+  {#
+    We are using the shorthand, make sure to pass any href down to the
+    transition layer.
+  #}
+  {% set href = resource.href.toValue() %}
+{% endif %}
+{% if resource.hrefVariables.length %}
+{{ renderParameters(resource.hrefVariables) }}
+{% endif %}
+{% if resource.dataStructure %}
+{{ resource.dataStructure|mson }}
+{% endif %}
+{% for transition in resource.transitions.elements %}
+  {{ renderTransition(transition, href) }}
+{% endfor %}
+{% endmacro %}
+
+
+
+
+
+{% macro renderGroup(group) %}
+{% if group.title.toValue() %}
+## Group {{ group.title.toValue() }}
+{% endif %}
+
+{{ renderCategory(group) }}
+{% endmacro %}
+
+
+
+
+
+{% macro renderDataStructures(dataStructures) %}
+## Data Structures
+
+{% for dataStructure in dataStructures.content %}
+{{ dataStructure|dataStructure }}
+{% endfor %}
+{% endmacro %}
+
+
+
+
+
+
+{% macro renderCategory(category) %}
+  {# Categories can contain copy (text) elements, other categories, and resources #}
+  {% for item in category.content %}
+    {% if item.element == 'copy' %}
+{{ item.toValue() }}
+    {% endif %}
+    {% if item.element == 'category' and item.classes.includes('resourceGroup') %}
+      {{ renderGroup(item) }}
+    {% endif %}
+    {% if item.element == 'category' and item.classes.includes('dataStructures') %}
+      {{ renderDataStructures(item) }}
+    {% endif %}
+    {% if item.element == 'resource' %}
+      {{ renderResource(item) }}
+    {% endif %}
+  {% endfor %}
+{% endmacro %}
+
+
+
+
+
+
+# {{ api.title.toValue()|default('API Documentation', true) }}
+
+{{ api.description.toValue() }}
+
+{{ renderCategory(api) }}
