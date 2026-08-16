@@ -2,6 +2,16 @@ name: run-test
 
 on: push
 
+# Run every step under bash, on Windows too.
+#
+# The default shell there is cmd, and when a script exits non-zero cmd asks
+# "Terminate batch job (Y/N)?" and waits. Nothing answers it on a runner, so a failing test
+# run stopped being a failure and became a job that sat at a prompt until it timed out - the
+# suite itself had already finished in three minutes.
+defaults:
+  run:
+    shell: bash
+
 jobs:
   test:
     runs-on: ${{ matrix.os }}
@@ -17,13 +27,7 @@ jobs:
       # job report as six, and hid which one had actually failed.
       fail-fast: false
       matrix:
-        # Windows is not here, and that is a gap rather than a decision: AppVeyor used to
-        # cover it and no longer exists. Adding the column surfaced three real portability
-        # bugs, all fixed - a filename Windows cannot check out, fixtures rewritten by
-        # autocrlf, a working directory left in a $ref error - and then hung somewhere in
-        # the suite, over an hour against ubuntu's two and a half minutes. Restoring the
-        # column means finding that hang first.
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest]
         # 18 is gone: end of life since April 2025, and require(esm) - which lets this
         # CommonJS package use the ESM-only releases of its dependencies - arrived in 20.19.
         node-version: [20.x, 22.x, 24.x]
