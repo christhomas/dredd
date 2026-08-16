@@ -161,7 +161,29 @@ class Parser {
         let location = null;
 
         // Workaround for https://github.com/APIDevTools/json-schema-ref-parser/pull/80#issuecomment-436041573
-        const message = err.message.replace(`${process.cwd()}${sep}`, '');
+        //
+        // The resolver puts the working directory in front of the pointer it could not
+        // resolve, and it is stripped back off so the annotation names the pointer the
+        // document actually contains. It spells that directory its own way though - forward
+        // slashes and a lower case drive letter - where process.cwd() gives backslashes and
+        // an upper case one, so on Windows the prefix stayed in the message. That also cost
+        // the source map: the location is found by looking the pointer up in the document,
+        // and "d:/a/dredd/...#/definitions/Whoops" is not in it.
+        //
+        // The line endings go the same way. The resolver joins its message with the
+        // platform's newline, and what the parser reports should not depend on where it ran.
+        let message = err.message.replace(/\r\n/g, '\n');
+        const cwdSpellings = [
+          `${process.cwd()}${sep}`,
+          `${process.cwd().replace(/\\/g, '/')}/`,
+        ];
+        for (const prefix of cwdSpellings) {
+          const at = message.toLowerCase().indexOf(prefix.toLowerCase());
+          if (at !== -1) {
+            message = message.slice(0, at) + message.slice(at + prefix.length);
+            break;
+          }
+        }
         const matches = message.match(/\$ref pointer "(.*?)"/);
 
         if (matches) {
