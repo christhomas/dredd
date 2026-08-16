@@ -1,103 +1,192 @@
 # Dredd — HTTP API Testing Framework
 
-[![npm version](https://badge.fury.io/js/dredd.svg)](https://www.npmjs.com/package/dredd)
-[![Build Status](https://circleci.com/gh/apiaryio/dredd/tree/master.svg?style=svg)](https://circleci.com/gh/apiaryio/dredd/tree/master)
-[![Build Status](https://ci.appveyor.com/api/projects/status/n3ixfxh72qushyr4/branch/master?svg=true)](https://ci.appveyor.com/project/Apiary/dredd/branch/master)
-[![Documentation Status](https://readthedocs.org/projects/dredd/badge/?version=latest)](https://readthedocs.org/projects/dredd/builds/)
-[![Known Vulnerabilities](https://snyk.io/test/npm/dredd/badge.svg)](https://snyk.io/test/npm/dredd)
+[![Tests](https://github.com/antimatter-studios/dredd/actions/workflows/run-test.yml/badge.svg)](https://github.com/antimatter-studios/dredd/actions/workflows/run-test.yml)
+[![End-to-end tests](https://github.com/antimatter-studios/dredd/actions/workflows/run-e2e-tests.yml/badge.svg)](https://github.com/antimatter-studios/dredd/actions/workflows/run-e2e-tests.yml)
+[![node](https://img.shields.io/node/v/@antimatter-studios/dredd)](https://www.npmjs.com/package/@antimatter-studios/dredd)
+[![license](https://img.shields.io/npm/l/@antimatter-studios/dredd)](LICENSE)
 
 ![Dredd - HTTP API Testing Framework](docs/_static/images/dredd.png?raw=true)
 
-> **Dredd is a language-agnostic command-line tool for validating
-> API description document against backend implementation of the API.**
+> **A maintained fork of [apiaryio/dredd][upstream], which was archived in
+> November 2024.**
 
-- [Documentation][]
-- [Changelog][]
-- [Contributor's Guidelines][]
+Dredd is a language-agnostic command-line tool for validating an API
+description document against the backend that implements it. It reads your
+description, sends each documented request, and checks that the response is the
+one you promised.
 
-Dredd reads your API description and step by step validates whether your API
-implementation replies with responses as they are described in the
-documentation.
+```
+npm install -g @antimatter-studios/dredd
+dredd openapi.yml http://localhost:3000
+```
 
-### Supported API Description Formats
+- [Documentation][docs]
+- [Changelog][changelog]
+- [Contributor's Guidelines][contributing]
+
+## Why this fork exists
+
+The original was archived on 8 November 2024 and is read-only, with 260 open
+issues frozen. So were the packages beneath it: `gavel.js`, which does the
+validating, and `api-elements.js`, which does the parsing. The last release of
+`dredd` on npm was 14.1.0.
+
+Archived would not matter much on its own. What made a fork necessary is what
+the archive locked in place.
+
+**Dredd could not validate an OpenAPI 3.1 document at all.** Gavel pinned
+`ajv@6`, whose newest supported dialect is draft-07. OpenAPI 3.1 is JSON Schema
+2020-12. The two do not merely differ in features — they disagree about what
+existing keywords *mean*:
+
+| Keyword | draft-04 | 2020-12 |
+| --- | --- | --- |
+| `exclusiveMinimum` | a boolean modifying `minimum` | the bound itself |
+
+So a perfectly valid 3.1 document carrying `exclusiveMinimum: 5` was rejected
+outright — not weakly checked, but refused, with `Provided JSON Schema is not a
+valid JSON Schema draftV4`. The document could not be tested.
+
+Three more 2020-12 keywords were accepted and silently ignored, which is worse
+than refusing them, because the run comes back green:
+
+| Keyword | Before | Now |
+| --- | --- | --- |
+| `exclusiveMinimum` (numeric) | threw, taking the document with it | enforced |
+| `prefixItems` | ignored — a body violating it passed | enforced |
+| `dependentRequired` | ignored | enforced |
+| `unevaluatedProperties` | ignored | enforced |
+
+A description using `unevaluatedProperties` to say *no other fields* got a
+passing run whatever the server actually sent back.
+
+Fixing this was not a matter of a version bump. It meant migrating Gavel from
+`ajv@6` to `ajv@8` — a major upgrade of a package that had not been released
+since 2022 — and that is not something you can do to a repository you cannot
+push to.
+
+## What is different
+
+**Validation runs on `ajv@8`.** The 2020-12 keywords above are enforced, and a
+document written in OpenAPI 3.1 is validated as 3.1 rather than being read under
+draft-04's rules.
+
+**The dialect follows the document.** `openapi: 3.1.x` produces
+`$schema: https://json-schema.org/draft/2020-12/schema`; a 3.0 document is
+unchanged at draft-04. Getting this wrong in either direction changes what your
+constraints mean.
+
+**OpenAPI's own formats no longer break a run.** `int64`, `int32`, `byte` and
+`binary` are OpenAPI formats rather than JSON Schema ones, and `ajv@6` threw on
+any format it did not recognise. A Swagger 2 document using them reported
+**error** — meaning the check never ran — where the correct outcome is a result,
+pass or fail.
+
+**One repository.** Dredd, its transaction compiler, Gavel and the API Elements
+parsers are developed and released together — see [Packages](#packages).
+
+**Error message wording is deliberately unchanged.** `ajv@7` reworded its
+messages from "should …" to "must …". That text reaches you through Dredd's
+report, so the original phrasing is preserved — upgrading should not rewrite
+your test output.
+
+## Everything else works as it did
+
+This is a fork, not a rewrite. The [documentation][docs] still applies, hooks
+still work, and your existing `dredd.yml` needs no changes.
+
+### Supported API description formats
 
 - [API Blueprint][]
-- [OpenAPI 2][] (formerly known as Swagger)
-- [OpenAPI 3][] ([experimental](https://github.com/apiaryio/api-elements.js/blob/master/packages/openapi3-parser/STATUS.md), contributions welcome!)
+- [OpenAPI 2][] (formerly Swagger)
+- [OpenAPI 3][], including 3.1
 
-### Supported Hooks Languages
+### Supported hook languages
 
-Dredd supports writing [hooks](https://dredd.org/en/latest/hooks/)
-— a glue code for each test setup and teardown. Following languages are supported:
+Hooks are the glue code for setup and teardown around each transaction:
+[Go][], [Node.js][], [Perl][], [PHP][], [Python][], [Ruby][], [Rust][].
 
-- [Go](https://dredd.org/en/latest/hooks-go/)
-- [Node.js (JavaScript)](https://dredd.org/en/latest/hooks-nodejs/)
-- [Perl](https://dredd.org/en/latest/hooks-perl/)
-- [PHP](https://dredd.org/en/latest/hooks-php/)
-- [Python](https://dredd.org/en/latest/hooks-python/)
-- [Ruby](https://dredd.org/en/latest/hooks-ruby/)
-- [Rust](https://dredd.org/en/latest/hooks-rust/)
-- Didn't find your favorite language? _[Add a new one!](https://dredd.org/en/latest/hooks-new-language/)_
+## Quick start
 
-### Supported Systems
-
-- Linux, macOS, Windows, ...
-- [Travis CI][], [CircleCI][], [Jenkins][], [AppVeyor][], ...
-
-## Installation
-
-```
-$ npm install -g dredd
-```
-
-## Quick Start
-
-1.  Create an [API Blueprint][] file called `api-description.apib`.
-    Follow [tutorial at API Blueprint website][api blueprint tutorial]
-    or just take one of the [ready-made examples][api blueprint examples].
-2.  Run interactive configuration:
+1.  Describe your API. If you are starting from nothing, the
+    [API Blueprint tutorial][api blueprint tutorial] and the
+    [ready-made examples][api blueprint examples] are the shortest way in;
+    an OpenAPI document you already have works just as well.
+2.  Answer a few questions to get a `dredd.yml`:
 
     ```shell
-    $ dredd init
+    dredd init
     ```
 
-3.  Run Dredd:
+3.  Run it:
 
     ```shell
-    $ dredd
+    dredd
     ```
 
-4.  To see how to use all Dredd's features, browse the
-    [full documentation][documentation].
+The [full documentation][docs] covers hooks, reporters and CI.
 
-## Howtos, Tutorials, Blogposts (3rd party)
+## What this fork does not add
 
-- [Maintenir à jour sa documentation d'API avec Dredd!](https://blog.itnetwork.fr/blog-post/2019/05/06/dredd-partie-1-ecriture-documentation.html) _05/06/2019_
-- [Dredd - Language-agnostic HTTP API Testing Tool - Interview with Honza Javorek](https://survivejs.com/blog/dredd-interview/) _03/22/2019_
-- [Laravel OpenAPI 3 Documentation Verification Using Dredd](https://commandz.io/snippets/laravel/laravel-dredd-openapi-v3/) _02/24/2019_
-- [Testing your API with Dredd](https://medium.com/mop-developers/testing-your-api-with-dredd-c02e6ca151f2) _09/27/2018_
-- [Writing Testable API Documentation Using APIB and Dredd (Rails)](https://blog.rebased.pl/2018/06/29/testable-api-docs.html) _06/29/2018_
-- [Design-first API Specification Workflow Matures](https://philsturgeon.uk/api/2018/03/01/api-specification-workflow-matures/) _03/01/2018_
-- [Writing and testing API specifications with API Blueprint, Dredd and Apiary](https://hackernoon.com/writing-and-testing-api-specifications-with-api-blueprint-dreed-and-apiary-df138accce5a) _12/04/2017_
-- [Testing an API Against its Documentation](https://dev.to/albertofdzm/testing-an-api-against-documentation-6cl) _11/23/2017_
-- [Keeping Documentation Honest](https://blog.apisyouwonthate.com/keeping-documentation-honest-d9ab5351ddd4) _11/21/2017_
-- [Apiary designed APIs tested using Dredd](https://redthunder.blog/2017/09/20/apiary-designed-apis-tested-using-dredd/) _09/20/2017_
-- [Dredd + Swagger for REST API testing](https://codeburst.io/dredd-swagger-for-rest-api-testing-715d1af5e8c5) _01/24/2017_
-- [Testing Your API Documentation With Dredd](https://matthewdaly.co.uk/blog/2016/08/08/testing-your-api-documentation-with-dredd/) _08/08/2016_
-- [DREDD API Tester works with API Blueprints](http://www.finklabs.org/articles/api-blueprint-dredd.html) _07/05/2016_
-- [Documentation driven API Development using Laravel, Dredd and Apiary](https://medium.com/frianbiz/api-php-pilot%C3%A9e-par-la-doc-3c9eb4daa2aa) _06/21/2016_
-- [Dredd v1.1.0: A Bit Different](https://philsturgeon.uk/api/2016/06/20/dredd-v1-1-0-a-bit-different/) _06/20/2016_
-- [Dredd: Do Your HTTP API Justice](https://philsturgeon.uk/api/2015/01/28/dredd-api-testing-documentation/) _01/28/2015_
+Worth being plain about, since a fork invites the question:
 
-[api blueprint]: https://apiblueprint.org/
+- **No stateful sequencing.** Dredd tests each transaction in isolation and does
+  not act on OpenAPI 3 `links`. Chaining requests still means hooks and a shared
+  variable, as [the documentation describes][workflows].
+- **No generated inputs.** Dredd sends the example your description gives and
+  nothing else. The 2020-12 keywords above are enforced against a *response*;
+  they do not shape the request body Dredd sends.
+- **No new hook languages.**
+
+The goal here is a Dredd that works on the descriptions people write today, not
+a different tool.
+
+## Packages
+
+Everything below is published from this repository and released together.
+Upstream these were four separate repositories with interlocking version
+constraints, which is a large part of why the `ajv` upgrade never happened
+there: no single repository could make it.
+
+| Package | Version | What it does | Replaces |
+| --- | --- | --- | --- |
+| [`@antimatter-studios/dredd`](packages/dredd) | [![npm](https://img.shields.io/npm/v/@antimatter-studios/dredd)](https://www.npmjs.com/package/@antimatter-studios/dredd) | the command itself | `dredd` |
+| [`@antimatter-studios/dredd-transactions`](packages/dredd-transactions) | [![npm](https://img.shields.io/npm/v/@antimatter-studios/dredd-transactions)](https://www.npmjs.com/package/@antimatter-studios/dredd-transactions) | description → the transactions to test | `dredd-transactions` |
+| [`@antimatter-studios/gavel`](packages/gavel) | [![npm](https://img.shields.io/npm/v/@antimatter-studios/gavel)](https://www.npmjs.com/package/@antimatter-studios/gavel) | whether a response matches what was promised | `gavel` |
+| [`@antimatter-studios/api-elements`](packages/api-elements) | [![npm](https://img.shields.io/npm/v/@antimatter-studios/api-elements)](https://www.npmjs.com/package/@antimatter-studios/api-elements) | the element classes a description becomes | `api-elements` |
+| [`@antimatter-studios/core`](packages/core) | [![npm](https://img.shields.io/npm/v/@antimatter-studios/core)](https://www.npmjs.com/package/@antimatter-studios/core) | registers the parsers and serialisers, and dispatches to them | `@apielements/core` |
+| [`@antimatter-studios/apib-parser`](packages/apib-parser) | [![npm](https://img.shields.io/npm/v/@antimatter-studios/apib-parser)](https://www.npmjs.com/package/@antimatter-studios/apib-parser) | API Blueprint | `@apielements/apib-parser` |
+| [`@antimatter-studios/openapi2-parser`](packages/openapi2-parser) | [![npm](https://img.shields.io/npm/v/@antimatter-studios/openapi2-parser)](https://www.npmjs.com/package/@antimatter-studios/openapi2-parser) | OpenAPI 2 / Swagger | `@apielements/openapi2-parser` |
+| [`@antimatter-studios/openapi3-parser`](packages/openapi3-parser) | [![npm](https://img.shields.io/npm/v/@antimatter-studios/openapi3-parser)](https://www.npmjs.com/package/@antimatter-studios/openapi3-parser) | OpenAPI 3, including 3.1 | `@apielements/openapi3-parser` |
+
+The repository also holds the serialisers and the remaining parsers the above
+depend on. They are not published separately.
+
+## Credit
+
+Dredd was built by [Apiary][] and its contributors over many years, and this
+fork is their work with the rust knocked off. The [documentation][docs] is
+theirs too, and remains the best explanation of how Dredd thinks.
+
+## License
+
+MIT, as upstream.
+
+[upstream]: https://github.com/apiaryio/dredd
+[docs]: https://dredd.org/en/latest/
+[changelog]: https://github.com/antimatter-studios/dredd/releases
+[contributing]: https://dredd.org/en/latest/contributing/
+[workflows]: https://dredd.org/en/latest/how-to-guides.html#testing-api-workflows
+[Apiary]: https://apiary.io/
+[API Blueprint]: https://apiblueprint.org/
 [api blueprint tutorial]: https://apiblueprint.org/documentation/tutorial.html
 [api blueprint examples]: https://github.com/apiaryio/api-blueprint/tree/master/examples
-[openapi 2]: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
-[openapi 3]: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md
-[documentation]: https://dredd.org/en/latest/
-[changelog]: https://github.com/apiaryio/dredd/releases
-[contributor's guidelines]: https://dredd.org/en/latest/contributing/
-[travis ci]: https://travis-ci.org/
-[circleci]: https://circleci.com/
-[jenkins]: https://jenkins.io/
-[appveyor]: https://www.appveyor.com/
+[OpenAPI 2]: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md
+[OpenAPI 3]: https://spec.openapis.org/oas/latest.html
+[Go]: https://dredd.org/en/latest/hooks/go.html
+[Node.js]: https://dredd.org/en/latest/hooks/js.html
+[Perl]: https://dredd.org/en/latest/hooks/perl.html
+[PHP]: https://dredd.org/en/latest/hooks/php.html
+[Python]: https://dredd.org/en/latest/hooks/python.html
+[Ruby]: https://dredd.org/en/latest/hooks/ruby.html
+[Rust]: https://dredd.org/en/latest/hooks/rust.html

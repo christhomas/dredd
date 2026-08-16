@@ -135,7 +135,7 @@ That still proved problematic for Dredd though. The current solution is to provi
 Supported Node.js versions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Given the `table with LTS schedule <https://github.com/nodejs/Release>`__, only versions marked as **Current**, **Maintenance**, or **Active** are supported, until their **Maintenance End**. The testing matrix of Dredd’s CI builds must contain all currently supported versions and must not contain any unsupported versions. The same applies for the underlying libraries, such as `Dredd Transactions`_ or `Gavel`_. In ``appveyor.yml`` the latest supported Node.js version should be used. When dropping support for Node.js versions, remember to update the :ref:`installation guide <install-npm>`.
+Given the `table with LTS schedule <https://github.com/nodejs/Release>`__, only versions marked as **Current**, **Maintenance**, or **Active** are supported, until their **Maintenance End**. The testing matrix of Dredd’s CI builds must contain all currently supported versions and must not contain any unsupported versions. The same applies for the underlying libraries, which live in this repository alongside Dredd. When dropping support for Node.js versions, remember to update the :ref:`installation guide <install-npm>`.
 
 When dropping support for a certain Node.js version, it should be removed from the testing matrix, and it **must** be delivered as a breaking change, which increments Dredd's major version number.
 
@@ -326,7 +326,7 @@ You can use the `rtd-redirects <https://github.com/honzajavorek/rtd-redirects>`_
 Windows support
 ---------------
 
-Dredd is tested on the `AppVeyor <https://www.appveyor.com/>`__, a Windows-based CI. There are still `several known issues <https://github.com/antimatter-studios/dredd/labels/Context%3A%20Windows>`__ when using Dredd on Windows, but the long-term intention is to support it without any compromises.
+Dredd is tested on Windows as a column of the GitHub Actions test matrix. There are still `several known issues <https://github.com/antimatter-studios/dredd/labels/Context%3A%20Windows>`__ when using Dredd on Windows, but the long-term intention is to support it without any compromises.
 
 
 API description parsing

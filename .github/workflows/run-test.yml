@@ -8,7 +8,10 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        # Windows was covered by AppVeyor, which no longer exists. Dredd is installed
+        # globally and run from a terminal, and path handling and line endings are where a
+        # node CLI breaks there, so the platform is worth a column rather than a promise.
+        os: [ubuntu-latest, windows-latest]
         # 18 is gone: end of life since April 2025, and require(esm) - which lets this
         # CommonJS package use the ESM-only releases of its dependencies - arrived in 20.19.
         node-version: [20.x, 22.x, 24.x]
