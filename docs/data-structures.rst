@@ -14,8 +14,8 @@ Transaction (object)
 Transaction object is passed as a first argument to :ref:`hook functions <hooks>` and is one of the main public interfaces in Dredd.
 
 -  id: ``GET (200) /greetings`` - identifier for this transaction
--  name: ``./api-description.apib > My API > Greetings > Hello, world! > Retrieve Message > Example 2`` (string) - reference to the transaction definition in the original API description document (see also `Dredd Transactions <https://github.com/apiaryio/dredd-transactions#user-content-data-structures>`__)
--  origin (object) - reference to the transaction definition in the original API description document (see also `Dredd Transactions <https://github.com/apiaryio/dredd-transactions#user-content-data-structures>`__)
+-  name: ``./api-description.apib > My API > Greetings > Hello, world! > Retrieve Message > Example 2`` (string) - reference to the transaction definition in the original API description document (see also `Dredd Transactions <https://github.com/antimatter-studios/dredd/tree/master/packages/dredd-transactions#data-structures>`__)
+-  origin (object) - reference to the transaction definition in the original API description document (see also `Dredd Transactions <https://github.com/antimatter-studios/dredd/tree/master/packages/dredd-transactions#data-structures>`__)
 
    -  filename: ``./api-description.apib`` (string)
    -  apiName: ``My Api`` (string)
@@ -100,7 +100,7 @@ Transaction Test (object)
 Transaction Results (object)
 ----------------------------
 
-Transaction result equals to the result of the `Gavel <https://github.com/apiaryio/gavel.js>`__ validation library.
+Transaction result equals to the result of the `Gavel <https://github.com/antimatter-studios/dredd/tree/master/packages/gavel>`__ validation library.
 
 -  valid (boolean) - Indicates whether the transaction is valid.
 -  fields (object)

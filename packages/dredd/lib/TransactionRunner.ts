@@ -424,6 +424,11 @@ class TransactionRunner {
       expected,
       origin,
       fullPath,
+      // What request.uri and fullPath were when the transaction was configured. A hook that
+      // redirects a request by assigning request.uri changes only the former, and the request
+      // still goes to the latter - so the two parting company is worth saying out loud.
+      configuredUri: request.uri,
+      configuredFullPath: fullPath,
       protocol: this.parsedUrl.protocol,
       skip,
     };
@@ -726,6 +731,22 @@ Not performing HTTP request for '${transaction.name}'.\
     transaction: any,
     hooks: any,
   ): Promise<void> {
+    // fullPath is what the request is built from, and it is resolved before hooks run. A hook
+    // that redirects a request by assigning request.uri alone changes nothing about where the
+    // request goes, and used to do so in silence - the request quietly kept going to the
+    // original path while the hook file read as though it had moved.
+    if (
+      transaction.configuredUri !== undefined &&
+      transaction.request.uri !== transaction.configuredUri &&
+      transaction.fullPath === transaction.configuredFullPath
+    ) {
+      logger.warn(
+        `A hook changed 'request.uri' to '${transaction.request.uri}' for '${transaction.name}',`,
+        "but the request is sent to 'fullPath', which still points at",
+        `'${transaction.fullPath}'. Set 'transaction.fullPath' to redirect a request.`,
+      );
+    }
+
     const uri =
       url.format({
         protocol: transaction.protocol,

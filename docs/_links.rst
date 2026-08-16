@@ -1,7 +1,7 @@
 .. _Apiary: https://apiary.io
 .. _Dredd: https://dredd.org
-.. _Gavel: https://github.com/apiaryio/gavel.js
-.. _Dredd Transactions: https://github.com/apiaryio/dredd-transactions
+.. _Gavel: https://github.com/antimatter-studios/dredd/tree/master/packages/gavel
+.. _Dredd Transactions: https://github.com/antimatter-studios/dredd/tree/master/packages/dredd-transactions
 
 
 .. API Blueprint
