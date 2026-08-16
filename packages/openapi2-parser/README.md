@@ -3,7 +3,7 @@
 [![NPM version](https://img.shields.io/npm/v/@apielements/openapi2.svg)](https://www.npmjs.org/package/@apielements/openapi2)
 [![License](https://img.shields.io/npm/l/@apielements/openapi2.svg)](https://www.npmjs.org/package/@apielements/openapi2)
 
-This adapter provides support for parsing [Swagger 2.0](http://swagger.io/) in [Fury](https://github.com/apiaryio/api-elements.js/tree/master/packages/fury). It does not yet provide a serializer.
+This adapter provides support for parsing [Swagger 2.0](http://swagger.io/) in [Fury](https://github.com/antimatter-studios/dredd/tree/master/packages/fury). It does not yet provide a serializer.
 
 ## Install
 

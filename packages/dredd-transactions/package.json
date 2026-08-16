@@ -22,7 +22,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/antimatter-studios/dredd.git"
+    "url": "git+https://github.com/antimatter-studios/dredd.git",
+    "directory": "packages/dredd-transactions"
   },
   "files": [
     "index.js",
@@ -80,5 +81,6 @@
     "./parse": "./parse/index.js",
     "./compile": "./compile/index.js",
     "./package.json": "./package.json"
-  }
+  },
+  "bugs": "https://github.com/antimatter-studios/dredd/issues"
 }

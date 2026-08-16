@@ -9,7 +9,7 @@
     "docs:serve": "sphinx-autobuild ./docs ./docs/_build",
     "lint": "eslint .",
     "test:smoke": "pnpm -r --if-present run test:smoke",
-    "test": "pnpm -r --if-present run test",
+    "test": "pnpm -r --if-present --workspace-concurrency=1 --stream run test",
     "commit:lint": "commitlint --from HEAD~1 --to HEAD",
     "prepare": "husky"
   },

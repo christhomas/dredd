@@ -28,7 +28,7 @@ The package has been renamed to `@antimatter-studios/apib-serializer`.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 14](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.14).
+- Compatibility with [Fury 3.0.0 Beta 14](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.14).
 
 ## 0.13.0 (2019-12-06)
 
@@ -36,7 +36,7 @@ The package has been renamed to `@antimatter-studios/apib-serializer`.
 
 - Prevents an exception from being thrown when serializing href variables which
   do not include a value.
-  [#357](https://github.com/apiaryio/api-elements.js/issues/357)
+  [#357](https://github.com/antimatter-studios/dredd/issues/357)
 
 ## 0.12.1 (2019-07-12)
 
@@ -49,7 +49,7 @@ The package has been renamed to `@antimatter-studios/apib-serializer`.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 12](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.12).
+- Compatibility with [Fury 3.0.0 Beta 12](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.12).
 
 ## 0.11.0 (2019-06-11)
 
@@ -62,7 +62,7 @@ The package has been renamed to `@antimatter-studios/apib-serializer`.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 10](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.10).
+- Compatibility with [Fury 3.0.0 Beta 10](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.10).
 
 ## 0.9.1 (2019-03-05)
 
@@ -75,14 +75,14 @@ The package has been renamed to `@antimatter-studios/apib-serializer`.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 9](https://github.com/apiaryio/api-elements.js/releases/tag/fury-3.0.0-beta.9).
+- Compatibility with [Fury 3.0.0 Beta 9](https://github.com/antimatter-studios/dredd/releases/tag/fury-3.0.0-beta.9).
 
 ## 0.8.0 (2018-12-21)
 
 ### Breaking
 
 - Node 4 is not supported anymore.
-- API Blueprint Serializer now requires [Fury 3.0.0 Beta 8](https://github.com/apiaryio/api-elements.js/releases/tag/fury-3.0.0-beta.8).
+- API Blueprint Serializer now requires [Fury 3.0.0 Beta 8](https://github.com/antimatter-studios/dredd/releases/tag/fury-3.0.0-beta.8).
 
 ## 0.7.0
 

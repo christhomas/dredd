@@ -29,7 +29,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/antimatter-studios/dredd.git"
+    "url": "git+https://github.com/antimatter-studios/dredd.git",
+    "directory": "packages/dredd"
   },
   "files": [
     "bin",
@@ -102,5 +103,6 @@
     ".": "./build/index.js",
     "./hooks": "./build/hooks.js",
     "./package.json": "./package.json"
-  }
+  },
+  "bugs": "https://github.com/antimatter-studios/dredd/issues"
 }

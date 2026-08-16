@@ -168,7 +168,7 @@ The package has been renamed to `@antimatter-studios/openapi3-parser`.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 14](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.14).
+- Compatibility with [Fury 3.0.0 Beta 14](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.14).
 
 - Support for "default" response status codes.
 
@@ -293,7 +293,7 @@ error with 0.7.5 which caused the package to be unpublished.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 10](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.10).
+- Compatibility with [Fury 3.0.0 Beta 10](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.10).
 
 - Added primitive support for 'examples' in 'Media Type Object'. The first
   example value is used for JSON media types.
@@ -319,7 +319,7 @@ error with 0.7.5 which caused the package to be unpublished.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 9](https://github.com/apiaryio/api-elements.js/releases/tag/fury-3.0.0-beta.9).
+- Compatibility with [Fury 3.0.0 Beta 9](https://github.com/antimatter-studios/dredd/releases/tag/fury-3.0.0-beta.9).
 
 ### Bug Fixes
 

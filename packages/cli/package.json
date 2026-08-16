@@ -10,10 +10,10 @@
   "files": [
     "lib/fury.js"
   ],
-  "homepage": "https://github.com/apiaryio/api-elements.js/tree/master/packages/cli",
+  "homepage": "https://github.com/antimatter-studios/dredd/tree/master/packages/cli",
   "repository": {
     "type": "git",
-    "url": "https://github.com/apiaryio/api-elements.js.git",
+    "url": "git+https://github.com/antimatter-studios/dredd.git",
     "directory": "packages/cli"
   },
   "scripts": {
@@ -35,5 +35,6 @@
   "devDependencies": {},
   "engines": {
     "node": ">=20"
-  }
+  },
+  "bugs": "https://github.com/antimatter-studios/dredd/issues"
 }

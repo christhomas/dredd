@@ -45,7 +45,7 @@ We have tagged some issues with "[good first issue][]" to indicate that they
 are some simpler tasks great for first time contributors. You can find
 information about how the parser works and related resources in our
 [contributing
-document](https://github.com/apiaryio/api-elements.js/blob/master/packages/openapi3-parser/CONTRIBUTING.md).
+document](https://github.com/antimatter-studios/dredd/blob/master/packages/openapi3-parser/CONTRIBUTING.md).
 
 Be sure to check an
 issue is not assigned by someone else to prevent wasted efforts.
@@ -53,6 +53,6 @@ issue is not assigned by someone else to prevent wasted efforts.
 
 [API Elements]: https://apielements.org/
 [OpenAPI]: https://github.com/OAI/OpenAPI-Specification
-[status document]: https://github.com/apiaryio/api-elements.js/tree/master/packages/openapi3-parser/STATUS.md
-[1.0.0 Milestone]: https://github.com/apiaryio/api-elements.js/milestone/1
-[good first issue]: https://github.com/apiaryio/api-elements.js/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Aopenapi3+label%3A%22good+first+issue%22
+[status document]: https://github.com/antimatter-studios/dredd/tree/master/packages/openapi3-parser/STATUS.md
+[1.0.0 Milestone]: https://github.com/antimatter-studios/dredd/milestone/1
+[good first issue]: https://github.com/antimatter-studios/dredd/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3Aopenapi3+label%3A%22good+first+issue%22

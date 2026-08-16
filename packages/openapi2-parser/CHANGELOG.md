@@ -34,7 +34,7 @@ Adds compatibility for @antimatter-studios/core 0.2.0.
 
 - Improvements to generation of JSON message bodies to add more cases where
   `example` property of a Schema Object will be respected.  
-  [#515](https://github.com/apiaryio/api-elements.js/pull/515)
+  [#515](https://github.com/antimatter-studios/dredd/pull/515)
 
 ## 0.32.1 (2020-06-22)
 
@@ -98,7 +98,7 @@ The package has been renamed to `@antimatter-studios/openapi2-parser`.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 14](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.14).
+- Compatibility with [Fury 3.0.0 Beta 14](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.14).
 
 - The parser can now be configured to disable generation of example message
   bodies and message body schemas by providing an adapter option
@@ -151,7 +151,7 @@ The package has been renamed to `@antimatter-studios/openapi2-parser`.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 13](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.13).
+- Compatibility with [Fury 3.0.0 Beta 13](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.13).
 
 ## 0.27.2 (2019-08-08)
 
@@ -206,7 +206,7 @@ The package has been renamed to `@antimatter-studios/openapi2-parser`.
   Will now emit a JSON value of `[{ "name": "doe" }]`, whereas before it would
   emit an empty array `[]`.
 
-  [#236](https://github.com/apiaryio/api-elements.js/issues/236)
+  [#236](https://github.com/antimatter-studios/dredd/issues/236)
 
 - While parsing an 'Example Object' (found in a 'Schema Object') which contains
   an object with a property `length` anywhere in the example tree. The example
@@ -236,7 +236,7 @@ The package has been renamed to `@antimatter-studios/openapi2-parser`.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 10](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.10).
+- Compatibility with [Fury 3.0.0 Beta 10](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.10).
 
 ## 0.24.2 (2019-03-15)
 
@@ -261,7 +261,7 @@ The package has been renamed to `@antimatter-studios/openapi2-parser`.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 9](https://github.com/apiaryio/api-elements.js/releases/tag/fury-3.0.0-beta.9).
+- Compatibility with [Fury 3.0.0 Beta 9](https://github.com/antimatter-studios/dredd/releases/tag/fury-3.0.0-beta.9).
 
 ### Bug Fixes
 
@@ -289,7 +289,7 @@ The package has been renamed to `@antimatter-studios/openapi2-parser`.
 
 ### Breaking
 
-- Swagger Parser now requires [Fury 3.0.0 Beta 8](https://github.com/apiaryio/api-elements.js/releases/tag/fury-3.0.0-beta.8).
+- Swagger Parser now requires [Fury 3.0.0 Beta 8](https://github.com/antimatter-studios/dredd/releases/tag/fury-3.0.0-beta.8).
 
 ## 0.22.7 (2018-12-11)
 

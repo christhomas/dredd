@@ -3,7 +3,7 @@
 [![NPM version](https://img.shields.io/npm/v/@antimatter-studios/apib-parser.svg)](https://www.npmjs.org/package/@antimatter-studios/apib-parser)
 [![License](https://img.shields.io/npm/l/@antimatter-studios/apib-parser.svg)](https://www.npmjs.org/package/@antimatter-studios/apib-parser)
 
-This adapter provides support for parsing [API Blueprint](https://apiblueprint.org/) in [Fury.js](https://github.com/apiaryio/api-elements.js/tree/master/packages/fury) using the Node API Blueprint parser [Drafter NPM](https://github.com/apiaryio/drafter-npm).
+This adapter provides support for parsing [API Blueprint](https://apiblueprint.org/) in [Fury.js](https://github.com/antimatter-studios/dredd/tree/master/packages/fury) using the Node API Blueprint parser [Drafter NPM](https://github.com/apiaryio/drafter-npm).
 
 ## Install
 

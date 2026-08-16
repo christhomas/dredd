@@ -27,19 +27,19 @@ Internal changes to the dependency tree to simplify package maintenance.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 14](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.14).
+- Compatibility with [Fury 3.0.0 Beta 14](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.14).
 
 ## 0.17.0 (2019-12-06)
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 13](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.13).
+- Compatibility with [Fury 3.0.0 Beta 13](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.13).
 
 ## 0.16.0 (2019-07-02)
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 12](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.12).
+- Compatibility with [Fury 3.0.0 Beta 12](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.12).
 
 ## 0.15.0 (2019-06-11)
 
@@ -52,13 +52,13 @@ Internal changes to the dependency tree to simplify package maintenance.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 10](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.10).
+- Compatibility with [Fury 3.0.0 Beta 10](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.10).
 
 ## 0.13.0 (2019-02-26)
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 9](https://github.com/apiaryio/api-elements.js/releases/tag/fury-3.0.0-beta.9).
+- Compatibility with [Fury 3.0.0 Beta 9](https://github.com/antimatter-studios/dredd/releases/tag/fury-3.0.0-beta.9).
 
 ## 0.13.0-beta (2019-01-10)
 
@@ -71,7 +71,7 @@ the list of changes.
 ### Breaking
 
 - Node 4 is not supported anymore.
-- API Blueprint Parser now requires [Fury 3.0.0 Beta 8](https://github.com/apiaryio/api-elements.js/releases/tag/fury-3.0.0-beta.8).
+- API Blueprint Parser now requires [Fury 3.0.0 Beta 8](https://github.com/antimatter-studios/dredd/releases/tag/fury-3.0.0-beta.8).
 
 ### Enhancements
 

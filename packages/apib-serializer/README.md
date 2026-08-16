@@ -3,7 +3,7 @@
 [![NPM version](https://img.shields.io/npm/v/@antimatter-studios/apib-serializer.svg)](https://www.npmjs.org/package/@antimatter-studios/apib-serializer)
 [![License](https://img.shields.io/npm/l/@antimatter-studios/apib-serializer.svg)](https://www.npmjs.org/package/@antimatter-studios/apib-serializer)
 
-This adapter provides support for serializing [API Blueprint](https://apiblueprint.org/) in [Fury.js](https://github.com/apiaryio/api-elements.js/tree/master/packages/fury) from refract elements.
+This adapter provides support for serializing [API Blueprint](https://apiblueprint.org/) in [Fury.js](https://github.com/antimatter-studios/dredd/tree/master/packages/fury) from refract elements.
 
 ## Install
 

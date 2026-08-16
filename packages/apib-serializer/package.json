@@ -9,10 +9,10 @@
     "lib/*.js",
     "template.nunjucks"
   ],
-  "homepage": "https://github.com/apiaryio/api-elements.js/tree/master/packages/apib-serializer",
+  "homepage": "https://github.com/antimatter-studios/dredd/tree/master/packages/apib-serializer",
   "repository": {
     "type": "git",
-    "url": "https://github.com/apiaryio/api-elements.js.git",
+    "url": "git+https://github.com/antimatter-studios/dredd.git",
     "directory": "packages/apib-serializer"
   },
   "scripts": {
@@ -33,5 +33,6 @@
   },
   "engines": {
     "node": ">=20"
-  }
+  },
+  "bugs": "https://github.com/antimatter-studios/dredd/issues"
 }

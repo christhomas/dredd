@@ -21,8 +21,8 @@ Key:
 | paths | [~](#paths-object) |
 | components | ~ |
 | security | ✓ |
-| tags | [✕](https://github.com/apiaryio/api-elements.js/issues/75) |
-| externalDocs | [✕](https://github.com/apiaryio/api-elements.js/issues/82) |
+| tags | [✕](https://github.com/antimatter-studios/dredd/issues/75) |
+| externalDocs | [✕](https://github.com/antimatter-studios/dredd/issues/82) |
 
 ## Info Object
 
@@ -93,15 +93,15 @@ Key:
 
 | Field Name | Support |
 |:--|:--|
-| tags | [✕](https://github.com/apiaryio/api-elements.js/issues/75) |
+| tags | [✕](https://github.com/antimatter-studios/dredd/issues/75) |
 | summary | ✓ |
 | description | ✓ |
-| externalDocs | [✕](https://github.com/apiaryio/api-elements.js/issues/83) |
+| externalDocs | [✕](https://github.com/antimatter-studios/dredd/issues/83) |
 | operationId | ✓ |
-| parameters | [~](https://github.com/apiaryio/api-elements.js/issues/65) |
+| parameters | [~](https://github.com/antimatter-studios/dredd/issues/65) |
 | requestBody | ✓ |
 | responses | [~](#responses-object) |
-| callbacks | [✕](https://github.com/apiaryio/api-elements.js/issues/74) |
+| callbacks | [✕](https://github.com/antimatter-studios/dredd/issues/74) |
 | deprecated | ✕ |
 | security | ✓ |
 | servers | ✓ |
@@ -174,7 +174,7 @@ HTTP Status Code ranges are not currently supported.
 
 ## Components Object
 
-See https://github.com/apiaryio/api-elements.js/issues/81 to track referencing
+See https://github.com/antimatter-studios/dredd/issues/81 to track referencing
 support.
 
 | Field Name | Support |
@@ -241,7 +241,7 @@ support.
 
 ## Security Scheme Object
 
-See https://github.com/apiaryio/api-elements.js/issues/329 to track things left to do.
+See https://github.com/antimatter-studios/dredd/issues/329 to track things left to do.
 
 | Field Name | Support |
 |:--|:--|

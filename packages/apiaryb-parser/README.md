@@ -5,7 +5,7 @@
 
 This adapter provides support for parsing the deprecated [Apiary
 Blueprint](https://github.com/apiaryio/blueprint-parser) format in
-[Fury.js](https://github.com/apiaryio/api-elements.js/tree/master/packages/fury). *We do not recommend using this
+[Fury.js](https://github.com/antimatter-studios/dredd/tree/master/packages/fury). *We do not recommend using this
 adapter in any new development, it's only used for backwards compatibility with
 the legacy format.
 

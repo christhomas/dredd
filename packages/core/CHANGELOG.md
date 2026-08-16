@@ -9,7 +9,7 @@ Added `serializeSync` method to Fury.
 ## 0.2.0 (2020-08-05)
 
 This package updates the version of `api-elements` being used. See
-[api-elements@0.2.0](https://github.com/apiaryio/api-elements.js/releases/tag/%40apielements%2Fcore%400.2.0)
+[api-elements@0.2.0](https://github.com/antimatter-studios/dredd/releases/tag/%40apielements%2Fcore%400.2.0)
 for more details on the contents of the change.
 
 ## 0.1.0 (2020-06-12)
@@ -19,7 +19,7 @@ The package has been renamed to `@antimatter-studios/core`.
 ## 3.0.0-beta.14 (2020-04-20)
 
 This release contains an updated api-elements models. See [api-elements
-0.2.4](https://github.com/apiaryio/api-elements.js/releases/tag/api-elements%400.2.4)
+0.2.4](https://github.com/antimatter-studios/dredd/releases/tag/api-elements%400.2.4)
 for further details.
 
 ## 3.0.0-beta.13 (2019-12-06)
@@ -57,7 +57,7 @@ parsing OpenAPI 3.0 documents.
 
 - Fury will no longer catch exceptions thrown by an adapter during a
   `parse`, or `serialize`.  
-  [#158](https://github.com/apiaryio/api-elements.js/issues/158)
+  [#158](https://github.com/antimatter-studios/dredd/issues/158)
 
 ### Enhancement
 

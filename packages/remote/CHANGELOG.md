@@ -23,7 +23,7 @@ The package has been renamed to `@antimatter-studios/remote`.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 14](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.14).
+- Compatibility with [Fury 3.0.0 Beta 14](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.14).
 
 ## 0.4.1 (2020-01-30)
 
@@ -35,13 +35,13 @@ The package has been renamed to `@antimatter-studios/remote`.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 13](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.13).
+- Compatibility with [Fury 3.0.0 Beta 13](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.13).
 
 ## 0.3.0 (2019-07-02)
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 12](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.12).
+- Compatibility with [Fury 3.0.0 Beta 12](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.12).
 
 ## 0.2.0 (2019-06-11)
 

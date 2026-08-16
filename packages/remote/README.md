@@ -3,7 +3,7 @@
 [![NPM version](https://img.shields.io/npm/v/@antimatter-studios/remote.svg)](https://www.npmjs.org/package/@antimatter-studios/remote)
 [![License](https://img.shields.io/npm/l/@antimatter-studios/remote.svg)](https://www.npmjs.org/package/@antimatter-studios/remote)
 
-This adapter provides support for parsing, validation and serialization via the [API Elements Web Service](https://api.apielements.org/) in [Fury](https://github.com/apiaryio/api-elements.js/tree/master/packages/fury).
+This adapter provides support for parsing, validation and serialization via the [API Elements Web Service](https://api.apielements.org/) in [Fury](https://github.com/antimatter-studios/dredd/tree/master/packages/fury).
 
 The remote adapter can be configured to work with any API service compatible with [API Blueprint API](https://apiblueprintapi.docs.apiary.io).
 By default the [API Elements Web Service](http://api.apielements.org/) is used.

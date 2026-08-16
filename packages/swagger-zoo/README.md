@@ -56,7 +56,7 @@ for (const sample of zoo.samples()) {
 If you are not using Javascript or a related language, then you can still get the test files using `git`:
 
 ```sh
-$ git submodule add https://github.com/apiaryio/api-elements.js
+$ git submodule add https://github.com/antimatter-studios/dredd
 ```
 
 The files are in `api-elements.js/packages/swagger-zoo/fixtures/features` and `api-elements.js/packages/swagger-zoo/fixtures/examples`, which correspond to the Javascript functions explained above.

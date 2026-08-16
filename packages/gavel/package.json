@@ -50,5 +50,7 @@
   "devDependencies": {
     "chai": "^4.5.0",
     "mocha": "^11.8.0"
-  }
+  },
+  "bugs": "https://github.com/antimatter-studios/dredd/issues",
+  "homepage": "https://github.com/antimatter-studios/dredd/tree/master/packages/gavel"
 }

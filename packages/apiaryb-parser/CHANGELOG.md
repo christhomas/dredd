@@ -16,7 +16,7 @@ The package has been renamed to `@antimatter-studios/apiaryb-parser`.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 14](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.14).
+- Compatibility with [Fury 3.0.0 Beta 14](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.14).
 
 ## 3.0.0-beta.10 (2019-12-06)
 
@@ -29,7 +29,7 @@ The package has been renamed to `@antimatter-studios/apiaryb-parser`.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 12](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.12).
+- Compatibility with [Fury 3.0.0 Beta 12](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.12).
 
 ## 3.0.0-beta.8 (2019-06-11)
 
@@ -42,20 +42,20 @@ The package has been renamed to `@antimatter-studios/apiaryb-parser`.
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 10](https://github.com/apiaryio/api-elements.js/releases/tag/fury@3.0.0-beta.10).
+- Compatibility with [Fury 3.0.0 Beta 10](https://github.com/antimatter-studios/dredd/releases/tag/fury@3.0.0-beta.10).
 
 ## 3.0.0-beta.6 (2019-02-26)
 
 ### Enhancements
 
-- Compatibility with [Fury 3.0.0 Beta 9](https://github.com/apiaryio/api-elements.js/releases/tag/fury-3.0.0-beta.9).
+- Compatibility with [Fury 3.0.0 Beta 9](https://github.com/antimatter-studios/dredd/releases/tag/fury-3.0.0-beta.9).
 
 ## 3.0.0-beta.5 (2018-12-21)
 
 ### Breaking
 
 - Node 4 is not supported anymore.
-- Apiary Blueprint Parser now requires [Fury 3.0.0 Beta 8](https://github.com/apiaryio/api-elements.js/releases/tag/fury-3.0.0-beta.8).
+- Apiary Blueprint Parser now requires [Fury 3.0.0 Beta 8](https://github.com/antimatter-studios/dredd/releases/tag/fury-3.0.0-beta.8).
 
 ## 3.0.0-beta.4
 
