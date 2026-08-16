@@ -1,0 +1,14 @@
+# Check every text file out with LF, on every platform.
+#
+# Without this, git's autocrlf rewrites line endings on a Windows checkout, which reaches the
+# golden fixtures the serializers are compared against: the expected .apib arrives with CRLF
+# between its blocks while the serializer emits LF, and thirty tests fail on a difference git
+# introduced rather than anything the code did.
+#
+# Nothing here needs CRLF - there is not a .bat or .cmd in the tree.
+* text=auto eol=lf
+
+# Fixtures are compared byte for byte, so they are never rewritten, whatever a file looks like
+# to git's text detection.
+packages/*/test/fixtures/** -text
+packages/swagger-zoo/fixtures/** -text
