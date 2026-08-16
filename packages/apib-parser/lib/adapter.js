@@ -5,10 +5,9 @@ const deckardcain = require('deckardcain');
 let drafter;
 
 try {
-  // eslint-disable-next-line import/no-unresolved, global-require
-  drafter = require('protagonist');
+drafter = require('protagonist');
 } catch (error) {
-  // eslint-disable-next-line global-require
+   
   drafter = require('drafter.js');
 }
 

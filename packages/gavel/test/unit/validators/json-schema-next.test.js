@@ -20,7 +20,7 @@ describe('JSON Schema (next)', () => {
     let init;
 
     before(() => {
-      /* eslint-disable-next-line global-require */
+       
       const validSchema = require('../../fixtures/invalid-schema-v3-v4.json');
       delete validSchema.$schema;
 

@@ -17,7 +17,6 @@
     "directory": "packages/swagger-zoo"
   },
   "scripts": {
-    "lint": "exit 0",
     "lint:fix": "exit 0",
     "test": "exit 0"
   },

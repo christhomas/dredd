@@ -1,5 +1,4 @@
-/* eslint-disable global-require */
-/* eslint-disable import/no-dynamic-require */
+ 
 /*
  * Tests for Swagger adapter.
  */
@@ -41,10 +40,10 @@ function testFixture(description, fixture, adapterOptions) {
         expected = fury.minim.toRefract(output);
 
         if (adapterOptions && adapterOptions.generateSourceMap) {
-          // eslint-disable-next-line no-param-reassign
+           
           fixture.apiElementsSourceMap = expected;
         } else {
-          // eslint-disable-next-line no-param-reassign
+           
           fixture.apiElements = expected;
         }
       }
@@ -66,7 +65,6 @@ function testFixtureOptions(swaggerPath, apiElementsPath) {
 
     set(value) {
       fs.writeFileSync(apiElementsPath, JSON.stringify(value, null, 2));
-      return value;
     },
   });
 
@@ -256,7 +254,6 @@ describe('Swagger 2.0 adapter', () => {
 
         set(value) {
           fs.writeFileSync(apiElementsPath, JSON.stringify(value, null, 2));
-          return value;
         },
       });
 
@@ -267,7 +264,6 @@ describe('Swagger 2.0 adapter', () => {
 
         set(value) {
           fs.writeFileSync(apiElementsSourceMapPath, JSON.stringify(value, null, 2));
-          return value;
         },
       });
 

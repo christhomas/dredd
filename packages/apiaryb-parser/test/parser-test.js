@@ -1,5 +1,4 @@
-/* eslint-disable global-require */
-/* eslint-disable import/no-dynamic-require */
+ 
 const { expect } = require('chai');
 const glob = require('glob');
 const path = require('path');

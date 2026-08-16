@@ -15,7 +15,6 @@
     "directory": "packages/apiaryb-parser"
   },
   "scripts": {
-    "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "pegjs": "pegjs lib/apiary-blueprint-parser.pegjs lib/apiary-blueprint-parser.js",
     "prepack": "npm run pegjs",

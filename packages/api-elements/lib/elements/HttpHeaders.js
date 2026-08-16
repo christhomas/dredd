@@ -16,7 +16,7 @@ class HttpHeaders extends ArrayElement {
   }
 
   toValue() {
-    // eslint-disable-next-line arrow-body-style
+     
     return this.map((item) => {
       return { key: item.key.toValue(), value: item.value.toValue() };
     });

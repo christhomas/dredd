@@ -16,7 +16,6 @@
   "scripts": {
     "start": "npm run build -- --watch",
     "build": "tsc --build tsconfig.json",
-    "lint": "eslint . bin/dredd",
     "prettify": "prettier --write \"lib/**/*.ts\" \"test/**/*.js\" \"*.js\"",
     "prettify:check": "prettier --check \"lib/**/*.ts\" \"test/**/*.js\" \"*.js\"",
     "test": "mocha \"./test/**/*-test.js\"",

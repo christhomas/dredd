@@ -107,7 +107,7 @@ Make sure it's in the "Header-Name: value" format.
     const headersLines = [];
     let bodyEntered = false;
 
-    /* eslint-disable no-restricted-syntax */
+     
     for (const line of Array.from(lines)) {
       if (line === '') {
         bodyEntered = true;
@@ -117,7 +117,7 @@ Make sure it's in the "Header-Name: value" format.
         headersLines.push(line);
       }
     }
-    /* eslint-enable no-restricted-syntax */
+     
 
     parsed.headers = this.parseHeaders(headersLines.join(HTTP_LINE_DELIMITER));
     parsed.body = bodyLines.join(HTTP_LINE_DELIMITER);

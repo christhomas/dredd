@@ -15,7 +15,6 @@
     "directory": "packages/core"
   },
   "scripts": {
-    "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "mocha"
   },

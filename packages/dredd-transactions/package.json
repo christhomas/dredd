@@ -15,7 +15,6 @@
     "postpack": "node ./scripts/postpack.cjs",
     "build": "exit 0",
     "clean": "rimraf ./coverage",
-    "lint": "eslint .",
     "pretest": "node ./scripts/pretest.cjs",
     "test": "npm run clean && mocha ./test",
     "test:coverage": "npm run clean && nyc mocha ./test",

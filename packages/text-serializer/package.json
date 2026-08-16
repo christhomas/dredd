@@ -16,7 +16,6 @@
     "directory": "packages/text-serializer"
   },
   "scripts": {
-    "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "mocha test"
   },

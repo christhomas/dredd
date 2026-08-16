@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 const spawn = require('cross-spawn');
 
 const isWindows = process.platform.match(/^win/);

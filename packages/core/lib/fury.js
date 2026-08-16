@@ -272,7 +272,7 @@ class Fury {
     }
 
     if (!api) {
-      // eslint-disable-next-line no-param-reassign
+       
       api = new this.minim.elements.Category();
     }
 
@@ -309,7 +309,7 @@ class Fury {
     }
 
     if (!api) {
-      // eslint-disable-next-line no-param-reassign
+       
       api = new this.minim.elements.Category();
     }
 

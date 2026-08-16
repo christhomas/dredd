@@ -1,4 +1,4 @@
-/* eslint-disable class-methods-use-this, arrow-body-style */
+ 
 
 const _ = require('lodash');
 const { parseReference, lookupReference, dereference } = require('./json-schema');
@@ -54,7 +54,7 @@ class DataStructureGenerator {
 
     element.enumerations = schema.enum;
 
-    // eslint-disable-next-line no-restricted-syntax
+     
     for (const enumeration of element.enumerations) {
       enumeration.attributes.set('typeAttributes', ['fixed']);
     }

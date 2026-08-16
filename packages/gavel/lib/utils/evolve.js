@@ -29,14 +29,14 @@ const evolve = (schema, { strict = false } = {}) => (data) => {
     const transform = schema[key];
     const transformType = typeof transform;
 
-    /* eslint-disable no-nested-ternary */
+     
     const nextValue =
       transformType === 'function'
         ? transform(value)
         : transform && transformType === 'object'
         ? evolve(transform)(value)
         : value;
-    /* eslint-enable no-nested-ternary */
+     
 
     return isArray
       ? acc.concat(nextValue)

@@ -15,7 +15,6 @@
     "directory": "packages/openapi2-parser"
   },
   "scripts": {
-    "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "mocha"
   },

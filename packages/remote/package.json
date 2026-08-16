@@ -14,7 +14,6 @@
     "url": "https://github.com/apiaryio/api-elements.js.git"
   },
   "scripts": {
-    "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "mocha test"
   },

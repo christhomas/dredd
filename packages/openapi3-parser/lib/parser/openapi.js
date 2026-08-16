@@ -21,7 +21,7 @@ function parseOpenAPI(context, openapi) {
     return new namespace.elements.ParseResult([createError(namespace, `OpenAPI version does not contain valid semantic version string '${openapi.value.toValue()}'`, openapi.value)]);
   }
 
-  /* eslint-disable no-param-reassign */
+   
   context.openapiVersion.major = Number(versionInfo[1]);
   context.openapiVersion.minor = Number(versionInfo[2]);
   context.openapiVersion.patch = Number(versionInfo[3]);

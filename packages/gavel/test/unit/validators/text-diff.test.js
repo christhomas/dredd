@@ -1,4 +1,4 @@
-/* eslint-disable no-new */
+ 
 const { expect } = require('chai');
 const { TextDiff } = require('../../../lib/validators/text-diff');
 

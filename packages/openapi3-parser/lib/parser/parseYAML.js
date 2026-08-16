@@ -1,4 +1,4 @@
-/* eslint-disable no-use-before-define */
+ 
 
 const yaml = require('yaml-js');
 const { createWarning } = require('./annotations');

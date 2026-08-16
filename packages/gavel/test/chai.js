@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle */
+ 
 const chai = require('chai');
 const deepEqual = require('deep-equal');
 

@@ -15,7 +15,6 @@
     "directory": "packages/apib-parser"
   },
   "scripts": {
-    "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "mocha"
   },

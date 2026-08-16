@@ -46,14 +46,14 @@ function handleContent(element, spaces, marker) {
     if (item.element === 'member') {
       // This is an object type or something similar.
       objectLike = true;
-      /* eslint-disable no-use-before-define */
+       
       renderedContent += handle(item.key.toValue(), item.value, {
         parent: element,
         spaces,
         marker,
         attributesElement: item,
       });
-      /* eslint-enable no-use-before-define */
+       
     } else if (item.element === 'ref') {
       renderedContent += `${marker} Include ${item.content}\n`;
     } else if (item.element === 'select') {
@@ -63,13 +63,13 @@ function handleContent(element, spaces, marker) {
     } else {
       // This is an array type or something similar.
       objectLike = false;
-      /* eslint-disable no-use-before-define */
+       
       renderedContent += handle(item.title.toValue(), item, {
         parent: element,
         spaces,
         marker,
       });
-      /* eslint-enable no-use-before-define */
+       
     }
   });
 

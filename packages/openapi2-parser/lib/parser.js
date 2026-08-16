@@ -1263,7 +1263,7 @@ class Parser {
   updateHeaders(payload, httpHeaders) {
     _.forEach(_.keys(httpHeaders), (headerName) => {
       if (Object.prototype.hasOwnProperty.call(httpHeaders, headerName)) {
-        // eslint-disable-next-line no-loop-func
+         
         this.withPath('headers', headerName, () => {
           pushHeaderObject(headerName, httpHeaders[headerName], payload, this);
         });
@@ -1283,7 +1283,7 @@ class Parser {
         if (path) {
           const operations = _.omitBy(path, isExtension);
 
-          // eslint-disable-next-line consistent-return
+           
           _.forEach(operations, (operation) => {
             if (operation.tags && operation.tags.length) {
               if (operation.tags.length > 1) {
@@ -1302,7 +1302,7 @@ class Parser {
         }
 
         if (tag) {
-          // eslint-disable-next-line no-param-reassign
+           
           path['x-group-name'] = tag;
           tags.push(tag);
         }
@@ -1342,7 +1342,7 @@ class Parser {
     }
   }
 
-  /* eslint-disable class-methods-use-this */
+   
   schemaForParameterValue(parameter) {
     const schema = {
       type: parameter.type,

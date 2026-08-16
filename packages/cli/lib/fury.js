@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-/* eslint-disable no-console */
+ 
 
 const fs = require('fs');
 const repl = require('repl');
@@ -122,7 +122,7 @@ class FuryCLI {
     }
   }
 
-  // eslint-disable-next-line class-methods-use-this
+   
   validateResult(result, source) {
     if (result.annotations.length > 0) {
       process.stderr.write('\n');
@@ -188,8 +188,7 @@ class FuryCLI {
 }
 
 function getPackage(name) {
-  // eslint-disable-next-line import/no-dynamic-require, global-require
-  return require(`${name}/package.json`);
+return require(`${name}/package.json`);
 }
 
 function getVersion() {
@@ -227,11 +226,10 @@ if (require.main === module) {
   }
 
   if (commander.adapter) {
-    // eslint-disable-next-line import/no-dynamic-require, global-require
-    let adapter = require(commander.adapter);
+let adapter = require(commander.adapter);
 
     if (adapter.constructor) {
-      // eslint-disable-next-line new-cap
+       
       adapter = new adapter();
     }
 

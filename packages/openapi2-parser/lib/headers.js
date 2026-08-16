@@ -6,7 +6,7 @@ const createHeaders = (payload, parser) => {
 
   const headers = new HttpHeaders();
 
-  // eslint-disable-next-line no-param-reassign
+   
   payload.headers = payload.headers || headers;
 };
 
@@ -28,7 +28,7 @@ const pushHeader = (key, value, payload, parser, fragment) => {
   if (fragment) {
     inferred(fragment, header, parser);
   } else {
-    // eslint-disable-next-line no-underscore-dangle
+     
     header._meta = parser.namespace.toElement({});
   }
 

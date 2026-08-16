@@ -1,4 +1,4 @@
-/* eslint-disable no-underscore-dangle */
+ 
 
 const R = require('ramda');
 const parseYAML = require('./parser/parseYAML');
@@ -110,7 +110,7 @@ const deduplicateUnsupportedAnnotations = R.curry((namespace, parseResult) => {
   R.forEach(
     (annotations) => {
       const warning = annotations[0];
-      // eslint-disable-next-line no-param-reassign
+       
       warning.content = `${warning.content} (${annotations.length} occurances)`;
     },
     R.filter(annotations => annotations.length > 1, R.values(warnings))

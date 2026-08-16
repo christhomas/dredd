@@ -1,7 +1,7 @@
 const R = require('ramda');
 
 const hasClass = R.curry((cls, element) => {
-  // eslint-disable-next-line no-underscore-dangle
+   
   if (element._meta === undefined) {
     // accessing meta will create and attach empty ObjectElement
     // which we can avoid by checking `_meta`.

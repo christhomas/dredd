@@ -1,4 +1,4 @@
-/* eslint-disable key-spacing, no-multi-spaces */
+ 
 const assert = require('assert');
 const {
   Blueprint, Section, Resource, Request, Response, JsonSchemaValidation,

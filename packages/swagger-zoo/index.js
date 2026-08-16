@@ -29,7 +29,6 @@ function getFixtures(subpath) {
       },
       set: function (value) {
         fs.writeFileSync(path.join(apiElementsDir, name + '.json'), JSON.stringify(value, null, 2), 'utf8');
-        return value;
       }
     });
 
@@ -40,7 +39,6 @@ function getFixtures(subpath) {
       },
       set: function (value) {
         fs.writeFileSync(path.join(apiElementsDir, name + '.sourcemap.json'), JSON.stringify(value, null, 2), 'utf8');
-        return value;
       }
     })
 

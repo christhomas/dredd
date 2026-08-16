@@ -82,7 +82,7 @@ function registerComponentStateInContext(context, components) {
   // dereferencing logic simple, these are used during parsing the components
   // and later on the components in our context is replaced by the final parsed
   // result.
-  // eslint-disable-next-line no-param-reassign
+   
   context.state.components = new namespace.elements.Object();
 
   if (isObject(components)) {
@@ -167,7 +167,7 @@ function parseComponentsObject(context, element) {
 
   const setDataStructureId = (dataStructure, key) => {
     if (dataStructure) {
-      // eslint-disable-next-line no-param-reassign
+       
       dataStructure.content.id = key.clone();
     }
   };
@@ -193,7 +193,7 @@ function parseComponentsObject(context, element) {
               parseResult.push(createWarning(namespace,
                 `'${keyValue}' security scheme is already defined`, key));
             } else {
-              // eslint-disable-next-line no-param-reassign
+               
               value.id = key.clone();
               array.push(value);
             }
@@ -209,7 +209,7 @@ function parseComponentsObject(context, element) {
               parseResult.push(createWarning(namespace,
                 `'${flowSchemeName}' security scheme can't be created from '${keyValue}' security scheme because it is already defined`, key));
             } else {
-              // eslint-disable-next-line no-param-reassign
+               
               flow.id = flowSchemeName;
               array.push(flow);
             }

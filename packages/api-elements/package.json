@@ -16,7 +16,6 @@
     "directory": "packages/api-elements"
   },
   "scripts": {
-    "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "mocha"
   },

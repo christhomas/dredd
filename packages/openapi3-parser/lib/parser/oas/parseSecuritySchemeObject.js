@@ -165,7 +165,7 @@ function parseSecuritySchemeObject(context, object) {
 
         if (description) {
           flows.forEach((flow) => {
-            // eslint-disable-next-line no-param-reassign
+             
             flow.description = description.clone();
           });
         }

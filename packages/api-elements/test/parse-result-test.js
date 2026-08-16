@@ -17,7 +17,7 @@ chai.use((_chai, utils) => {
    * Asserts that an element has a certain class.
    */
   utils.addMethod(Assertion.prototype, 'class', function hasClass(name) {
-    // eslint-disable-next-line no-underscore-dangle
+     
     const obj = this._obj;
 
     this.assert(

@@ -107,11 +107,14 @@ function getBodySchemaType(bodySchema) {
   } catch (error) {
     // Gavel must throw when given malformed JSON Schema.
     // See https://github.com/apiaryio/gavel.js/issues/203
-    throw new Error(`\
+    throw new Error(
+      `\
 Failed to validate HTTP message "body": given JSON Schema is not a valid JSON.
 
 ${error.message}\
-`);
+`,
+      { cause: error }
+    );
   }
 }
 
@@ -141,7 +144,7 @@ function getBodyValidator(expectedType, actualType) {
     [JsonExample, both(isJson), 'json']
   ];
 
-  const validator = validators.find(([_name, predicate]) => {
+  const validator = validators.find(([, predicate]) => {
     return predicate(expectedType, actualType);
   });
 
