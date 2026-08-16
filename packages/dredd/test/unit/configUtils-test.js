@@ -146,7 +146,7 @@ describe('configUtils', () => {
 
     describe('when path is given', () =>
       it('should save to that path', () => {
-        const path = 'some-other-location.yml ';
+        const path = 'some-other-location.yml';
         configUtils.save(argv, path);
         const call = fsStub.writeFileSync.getCall(0);
         const { args } = call;
@@ -199,7 +199,7 @@ endpoint: endpoint\
 
     describe('when path is given', () =>
       it('should load from that path', () => {
-        const path = 'some-other-location.yml ';
+        const path = 'some-other-location.yml';
         configUtils.load(path);
         const call = fsStub.readFileSync.getCall(0);
         const { args } = call;
