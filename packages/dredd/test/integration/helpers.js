@@ -5,7 +5,6 @@ import express from 'express';
 import fs from 'fs';
 import https from 'https';
 import path from 'path';
-import ps from 'ps-node';
 import spawn from 'cross-spawn';
 
 import net from 'net';
@@ -300,12 +299,89 @@ export const runCLIWithServer = (args, app, serverPort, callback) => {
   });
 };
 
-// Checks whether there's a process with name matching given pattern.
-export const isProcessRunning = (pattern, callback) => {
-  return ps.lookup({ arguments: pattern }, (err, processList) =>
-    callback(err, !!(processList ? processList.length : undefined)),
+// Lists running processes as { pid, command }, where command is the full command line.
+//
+// This used to be ps-node, which shells out to `wmic` on Windows. Microsoft removed wmic
+// from current Windows images, so the lookup failed with "'wmic' is not recognized", the
+// helpers below could find nothing, and servers spawned by the tests were never reaped -
+// later tests then blocked on the ports those servers still held until the job timed out.
+// Asking each platform directly costs one dependency less and works on both.
+const parsePosix = (stdout) =>
+  stdout
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const separator = line.indexOf(' ');
+      return {
+        pid: Number(line.slice(0, separator)),
+        command: line.slice(separator + 1),
+      };
+    });
+
+// ConvertTo-Json gives a bare object rather than an array when exactly one process matches,
+// and CommandLine is null for processes the query cannot read.
+const parseWindows = (stdout) => {
+  const parsed = JSON.parse(stdout || '[]');
+  return (Array.isArray(parsed) ? parsed : [parsed]).map((entry) => ({
+    pid: Number(entry.ProcessId),
+    command: entry.CommandLine || '',
+  }));
+};
+
+const listProcesses = (callback) => {
+  const windows = process.platform === 'win32';
+  const command = windows ? 'powershell' : 'ps';
+  const args = windows
+    ? [
+        '-NoProfile',
+        '-NonInteractive',
+        '-Command',
+        'Get-CimInstance Win32_Process | Select-Object ProcessId,CommandLine | ConvertTo-Json -Compress',
+      ]
+    : ['-A', '-o', 'pid=,args='];
+
+  const child = spawn(command, args);
+  let stdout = '';
+  child.stdout.on('data', (chunk) => {
+    stdout += chunk;
+  });
+  child.on('error', (err) => callback(err));
+  child.on('close', () => {
+    try {
+      callback(null, windows ? parseWindows(stdout) : parsePosix(stdout));
+    } catch (err) {
+      callback(err);
+    }
+  });
+};
+
+// Processes whose command line matches the pattern, never counting this process itself.
+//
+// The pattern is a regular expression, which is what ps-node took and what the callers
+// pass - one of them builds `endless-ignore-term.+[^=]test/fixtures/hooks.js` to tell two
+// otherwise identical processes apart. Matching literally instead looks right against the
+// callers that pass a plain path and silently never fires for that one.
+const lookup = (pattern, callback) => {
+  let expression;
+  try {
+    expression = new RegExp(pattern);
+  } catch (err) {
+    return callback(err);
+  }
+  return listProcesses((err, processes) =>
+    callback(
+      err,
+      (processes || []).filter(
+        (entry) => entry.pid !== process.pid && expression.test(entry.command),
+      ),
+    ),
   );
 };
+
+// Checks whether there's a process with name matching given pattern.
+export const isProcessRunning = (pattern, callback) =>
+  lookup(pattern, (err, processes) => callback(err, !!(processes && processes.length)));
 
 // Kills process with given PID if the process exists. Otherwise
 // does nothing.
@@ -327,14 +403,14 @@ export const kill = (pid, callback) => {
 // Kills processes which have names matching given pattern. Does
 // nothing if there are no matching processes.
 export const killAll = (pattern, callback) => {
-  return ps.lookup({ arguments: pattern }, (err, processList) => {
-    if (err || !processList.length) {
+  return lookup(pattern, (err, processes) => {
+    if (err || !processes.length) {
       return callback(err);
     }
 
-    let remaining = processList.length;
-    processList.forEach((processListItem) =>
-      kill(processListItem.pid, () => {
+    let remaining = processes.length;
+    processes.forEach((entry) =>
+      kill(entry.pid, () => {
         remaining--;
         if (remaining === 0) callback();
       }),

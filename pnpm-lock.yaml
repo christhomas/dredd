@@ -278,9 +278,6 @@ importers:
       prettier:
         specifier: 3.9.6
         version: 3.9.6
-      ps-node:
-        specifier: 0.1.6
-        version: 0.1.6
       ramda:
         specifier: 0.32.0
         version: 0.32.0
@@ -1668,9 +1665,6 @@ packages:
   concat-stream@1.6.2:
     resolution: {integrity: sha512-27HBghJxjiZtIk3Ycvn/4kbJk/1uZuJFfuPEns6LaEvpvG1f0hTea8lilrouyo9mVc2GWdcEZ8OLoGmSADlrCw==}
     engines: {'0': node >= 0.8}
-
-  connected-domain@1.0.0:
-    resolution: {integrity: sha512-lHlohUiJxlpunvDag2Y0pO20bnvarMjnrdciZeuJUqRwrf/5JHNhdpiPIr5GQ8IkqrFj5TDMQwcCjblGo1oeuA==}
 
   content-disposition@1.1.0:
     resolution: {integrity: sha512-5jRCH9Z/+DRP7rkvY83B+yGIGX96OYdJmzngqnw2SBSxqCFPd0w2km3s5iawpGX8krnwSGmF0FW5Nhr0Hfai3g==}
@@ -3108,9 +3102,6 @@ packages:
   proxyquire@2.1.3:
     resolution: {integrity: sha512-BQWfCqYM+QINd+yawJz23tbBM40VIGXOdDw3X344KcclI/gtBbdWF6SlQ4nK/bYhF9d27KYug9WzljHC6B9Ysg==}
 
-  ps-node@0.1.6:
-    resolution: {integrity: sha512-w7QJhUTbu70hpDso0YXDRNKCPNuchV8UTUZsAv0m7Qj5g85oHOJfr9drA1EjvK4nQK/bG8P97W4L6PJ3IQLoOA==}
-
   punycode.js@2.3.1:
     resolution: {integrity: sha512-uxFIHU0YlHYhDQtV4R9J6a52SLx28BCjT+4ieh7IGbgwVJWO+km431c4yRlREUAsAmt/uMjQUyQHNEPf0M39CA==}
     engines: {node: '>=6'}
@@ -3495,9 +3486,6 @@ packages:
 
   swagger-parser@8.0.4:
     resolution: {integrity: sha512-KGRdAaMJogSEB7sPKI31ptKIWX8lydEDAwWgB4pBMU7zys5cd54XNhoPSVlTxG/A3LphjX47EBn9j0dOGyzWbA==}
-
-  table-parser@0.1.3:
-    resolution: {integrity: sha512-LCYeuvqqoPII3lzzYaXKbC3Forb+d2u4bNwhk/9FlivuGRxPE28YEWAYcujeSlLLDlMfvy29+WPybFJZFiKMYg==}
 
   tagged-tag@1.0.0:
     resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
@@ -5046,8 +5034,6 @@ snapshots:
       readable-stream: 2.3.8
       typedarray: 0.0.6
 
-  connected-domain@1.0.0: {}
-
   content-disposition@1.1.0: {}
 
   content-type@1.0.4: {}
@@ -6579,10 +6565,6 @@ snapshots:
       module-not-found-error: 1.0.1
       resolve: 1.22.12
 
-  ps-node@0.1.6:
-    dependencies:
-      table-parser: 0.1.3
-
   punycode.js@2.3.1: {}
 
   punycode@2.3.1: {}
@@ -7030,10 +7012,6 @@ snapshots:
       openapi-types: 1.3.5
       swagger-methods: 2.0.2
       z-schema: 4.2.4
-
-  table-parser@0.1.3:
-    dependencies:
-      connected-domain: 1.0.0
 
   tagged-tag@1.0.0: {}
 
