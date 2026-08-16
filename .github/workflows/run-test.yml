@@ -6,7 +6,16 @@ jobs:
   test:
     runs-on: ${{ matrix.os }}
 
+    # A run takes about two and a half minutes. Without a bound, a test waiting on something
+    # that never arrives holds the job for the six hours Actions allows - and GitHub serves no
+    # logs for a job still in progress, so the one run that could explain the hang is the one
+    # nobody can read. Failing at twenty minutes makes it readable.
+    timeout-minutes: 20
+
     strategy:
+      # A failure in one job should not cancel the others. Cancelling made a single failing
+      # job report as six, and hid which one had actually failed.
+      fail-fast: false
       matrix:
         # Windows is not here, and that is a gap rather than a decision: AppVeyor used to
         # cover it and no longer exists. Adding the column surfaced three real portability
