@@ -1352,7 +1352,9 @@ describe('Schema Object', () => {
       );
     });
 
-    it('provides warning for unsupported OpenAPI 3.1 property', () => {
+    // A keyword 2020-12 defines is carried into the message body schema and enforced there,
+    // so reporting it unsupported told a reader the opposite of what happens.
+    it('accepts a JSON Schema 2020-12 keyword in OpenAPI 3.1 without complaint', () => {
       context.openapiVersion = { major: 3, minor: 1 };
       const schema = new namespace.elements.Object({
         if: true,
@@ -1360,8 +1362,19 @@ describe('Schema Object', () => {
 
       const parseResult = parse(context, schema);
 
+      expect(parseResult).to.not.contain.annotations;
+    });
+
+    it('still reports that keyword as invalid in OpenAPI 3.0, which does not define it', () => {
+      context.openapiVersion = { major: 3, minor: 0 };
+      const schema = new namespace.elements.Object({
+        if: true,
+      });
+
+      const parseResult = parse(context, schema);
+
       expect(parseResult).to.contain.warning(
-        "'Schema Object' contains unsupported key 'if'"
+        "'Schema Object' contains invalid key 'if'"
       );
     });
   });
