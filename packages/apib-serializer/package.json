@@ -28,7 +28,6 @@
   "devDependencies": {
     "@antimatter-studios/core": "workspace:*",
     "chai": "^4.2.0",
-    "eslint": "^5.16.0",
     "glob": "^7.1.2",
     "mocha": "^7.1.1"
   },

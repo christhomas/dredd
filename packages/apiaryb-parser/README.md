@@ -33,3 +33,16 @@ fury.parse({source: '--- Your Legacy Apiary Blueprint'}, (err, result) => {
   console.log(result.api.title);
 });
 ```
+
+## Regenerating the parser
+
+`lib/apiary-blueprint-parser.js` is generated from `lib/apiary-blueprint-parser.pegjs` and
+committed, so neither installing nor testing this package needs the generator. After changing
+the grammar, regenerate it deliberately:
+
+```
+npx pegjs@git+https://github.com/dmajda/pegjs.git#02af83f9b416778878e52e2cbbc22d96e312164e \
+  lib/apiary-blueprint-parser.pegjs lib/apiary-blueprint-parser.js
+```
+
+That commit is the version the parser in this repository was built with.
