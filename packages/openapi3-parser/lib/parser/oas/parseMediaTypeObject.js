@@ -2,7 +2,7 @@ const R = require('ramda');
 const contentTyper = require('content-type');
 const mediaTyper = require('media-typer');
 const pipeParseResult = require('../../pipeParseResult');
-const { convertSchema } = require('../../json-schema');
+const { convertSchema, DRAFT_04, DRAFT_2020_12 } = require('../../json-schema');
 const {
   isString, isExtension, hasKey, getKey, getValue,
 } = require('../../predicates');
@@ -59,9 +59,13 @@ function generateMessageBodySchema(context, element) {
 
   const document = context.document || {};
 
+  // A 3.1 Schema Object is JSON Schema 2020-12; a 3.0 one is a draft-04 variant. The version
+  // the document declares decides which dialect the converted schema announces.
+  const dialect = context.openapiVersion.minor >= 1 ? DRAFT_2020_12 : DRAFT_04;
+
   let jsonSchema;
   try {
-    jsonSchema = convertSchema(schema.toValue(), document, document);
+    jsonSchema = convertSchema(schema.toValue(), document, document, true, dialect);
   } catch (error) {
     return undefined;
   }

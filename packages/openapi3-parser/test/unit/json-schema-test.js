@@ -119,3 +119,36 @@ describe('JSON Schema converter', () => {
       .to.throw(/does not exist/);
   });
 });
+
+// OpenAPI 3.1 schemas are JSON Schema 2020-12, where 3.0's are a draft-04 variant. Declaring
+// the wrong dialect is not cosmetic: a validator reading draft-04 treats a numeric
+// `exclusiveMinimum` as invalid and refuses the schema outright, so a document that says what
+// it means cannot be validated at all.
+describe('JSON Schema dialect', () => {
+  const documentWith = schemas => ({ components: { schemas } });
+
+  it('declares draft-04 by default, as an OpenAPI 3.0 schema is', () => {
+    const schema = convertSchema({ type: 'object' }, documentWith({}), documentWith({}));
+
+    expect(schema.$schema).to.equal('http://json-schema.org/draft-04/schema#');
+  });
+
+  it('declares 2020-12 when the document is OpenAPI 3.1', () => {
+    const schema = convertSchema(
+      { type: 'object' }, documentWith({}), documentWith({}), true,
+      'https://json-schema.org/draft/2020-12/schema'
+    );
+
+    expect(schema.$schema).to.equal('https://json-schema.org/draft/2020-12/schema');
+  });
+
+  it('leaves a 3.1 keyword alone rather than rewriting it for draft-04', () => {
+    const schema = convertSchema(
+      { type: 'object', properties: { n: { type: 'integer', exclusiveMinimum: 5 } } },
+      documentWith({}), documentWith({}), true,
+      'https://json-schema.org/draft/2020-12/schema'
+    );
+
+    expect(schema.properties.n.exclusiveMinimum).to.equal(5);
+  });
+});

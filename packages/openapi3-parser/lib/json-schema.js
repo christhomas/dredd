@@ -309,6 +309,13 @@ const checkSchemaHasReferences = (schema) => {
  * @private
  */
 
+// The dialect a converted schema declares. An OpenAPI 3.0 Schema Object is a draft-04
+// variant; a 3.1 one is JSON Schema 2020-12 outright. Declaring the wrong one is not
+// cosmetic - a validator reading draft-04 rejects a numeric `exclusiveMinimum` as invalid and
+// refuses the schema, so a document that says exactly what it means cannot be validated.
+const DRAFT_04 = 'http://json-schema.org/draft-04/schema#';
+const DRAFT_2020_12 = 'https://json-schema.org/draft/2020-12/schema';
+
 /**
  * Convert Swagger schema to JSON Schema
  * @param schema - The Swagger schema to convert
@@ -317,12 +324,12 @@ const checkSchemaHasReferences = (schema) => {
  * @param copyDefinitins - Whether to copy the referenced definitions to the resulted schema
  * @private
  */
-const convertSchema = (schema, root, swagger, copyDefinitions = true) => {
+const convertSchema = (schema, root, swagger, copyDefinitions = true, dialect = DRAFT_04) => {
   const references = [];
   const result = convertSubSchema(schema, references, swagger);
 
   if (copyDefinitions) {
-    result.$schema = 'http://json-schema.org/draft-04/schema#';
+    result.$schema = dialect;
 
     if (references.length !== 0) {
       result.definitions = {};
@@ -383,5 +390,7 @@ module.exports = {
   dereference,
   convertSchema,
   convertSchemaDefinitions,
+  DRAFT_04,
+  DRAFT_2020_12,
   pathHasCircularReference,
 };
