@@ -1,2 +1,10 @@
 timeout: 120000
 recursive: true
+
+# Exit once the tests are done rather than waiting for the event loop to drain.
+#
+# Mocha stopped forcing this in v4, so a handle nobody closed keeps the process alive after
+# the summary has been printed. This suite spawns servers and child processes by design, and
+# on Windows something among them is not released: the run reached "1314 passing (3m)" and
+# then sat there until the job timed out, with the results already on screen.
+exit: true
