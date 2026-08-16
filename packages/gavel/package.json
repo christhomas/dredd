@@ -1,0 +1,54 @@
+{
+  "name": "@antimatter-studios/gavel",
+  "version": "10.0.0",
+  "description": "Validates HTTP messages against expectations, the validation engine dredd reports with",
+  "main": "lib/index.js",
+  "typings": "typings.d.ts",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "bin": {
+    "gavel": "bin/gavel"
+  },
+  "scripts": {
+    "lint": "eslint lib test",
+    "test": "mocha \"test/**/*.test.js\"",
+    "test:features": "node scripts/cucumber.js"
+  },
+  "files": [
+    "LICENSE",
+    "bin",
+    "lib",
+    "typings.d.ts"
+  ],
+  "dependencies": {
+    "ajv": "6.12.6",
+    "commander": "8.1.0",
+    "content-type": "1.0.4",
+    "curl-trace-parser": "0.0.10",
+    "deep-equal": "2.0.5",
+    "http-string-parser": "0.0.6",
+    "media-typer": "1.1.0",
+    "tv4": "1.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antimatter-studios/dredd.git",
+    "directory": "packages/gavel"
+  },
+  "keywords": [
+    "http",
+    "validation",
+    "diff",
+    "request",
+    "response",
+    "gavel"
+  ],
+  "author": "Apiary Czech Republic, s.r.o. <support@apiary.io>",
+  "license": "MIT",
+  "types": "typings.d.ts",
+  "devDependencies": {
+    "chai": "^4.5.0",
+    "mocha": "^11.8.0"
+  }
+}
