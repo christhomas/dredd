@@ -1,5 +1,12 @@
 # @antimatter-studios/dredd-transactions
 
+## 12.2.1
+
+### Patch Changes
+
+- Updated dependencies [136aa60]
+  - @antimatter-studios/openapi3-parser@0.19.0
+
 ## 12.2.0
 
 ### Minor Changes
