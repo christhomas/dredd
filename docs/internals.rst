@@ -326,7 +326,7 @@ You can use the `rtd-redirects <https://github.com/honzajavorek/rtd-redirects>`_
 Windows support
 ---------------
 
-Dredd is tested on Windows as a column of the GitHub Actions test matrix. There are still `several known issues <https://github.com/antimatter-studios/dredd/labels/Context%3A%20Windows>`__ when using Dredd on Windows, but the long-term intention is to support it without any compromises.
+Dredd is not currently tested on Windows: AppVeyor, which used to cover it, no longer exists, and the test suite hangs when the matrix is pointed at a Windows runner. There are still `several known issues <https://github.com/antimatter-studios/dredd/labels/Context%3A%20Windows>`__ when using Dredd on Windows, but the long-term intention is to support it without any compromises.
 
 
 API description parsing

@@ -8,10 +8,13 @@ jobs:
 
     strategy:
       matrix:
-        # Windows was covered by AppVeyor, which no longer exists. Dredd is installed
-        # globally and run from a terminal, and path handling and line endings are where a
-        # node CLI breaks there, so the platform is worth a column rather than a promise.
-        os: [ubuntu-latest, windows-latest]
+        # Windows is not here, and that is a gap rather than a decision: AppVeyor used to
+        # cover it and no longer exists. Adding the column surfaced three real portability
+        # bugs, all fixed - a filename Windows cannot check out, fixtures rewritten by
+        # autocrlf, a working directory left in a $ref error - and then hung somewhere in
+        # the suite, over an hour against ubuntu's two and a half minutes. Restoring the
+        # column means finding that hang first.
+        os: [ubuntu-latest]
         # 18 is gone: end of life since April 2025, and require(esm) - which lets this
         # CommonJS package use the ESM-only releases of its dependencies - arrived in 20.19.
         node-version: [20.x, 22.x, 24.x]
