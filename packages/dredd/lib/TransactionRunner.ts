@@ -1,9 +1,5 @@
 import { AssertionError } from 'chai';
-// Held at gavel 9 deliberately. gavel 10.0.4 is published with "main" pointing at a
-// build/ directory its "files" list never ships, so requiring it throws; only its source
-// under lib/ is in the tarball. Its validation results are identical to 9's, so there is
-// nothing to gain by reaching around the broken entry point. Upstream is archived.
-import gavel from 'gavel';
+import gavel from '@antimatter-studios/gavel';
 import os from 'os';
 import url from 'url';
 
