@@ -2,6 +2,16 @@ name: run-test
 
 on: push
 
+# Run every step under bash, on Windows too.
+#
+# The default shell there is cmd, and when a script exits non-zero cmd asks
+# "Terminate batch job (Y/N)?" and waits. Nothing answers it on a runner, so a failing test
+# run stopped being a failure and became a job that sat at a prompt until it timed out - the
+# suite itself had already finished in three minutes.
+defaults:
+  run:
+    shell: bash
+
 jobs:
   test:
     runs-on: ${{ matrix.os }}
