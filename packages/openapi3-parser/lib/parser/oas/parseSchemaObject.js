@@ -35,7 +35,13 @@ const unsupportedKeys = [
   // OAS 3 specific
   'discriminator', 'readOnly', 'writeOnly', 'xml', 'externalDocs', 'deprecated',
 ];
-const unsupportedJSONSchemaDraft202012 = [
+// Keywords JSON Schema 2020-12 defines and OpenAPI 3.1 therefore permits. They are carried
+// into the message body schema untouched and the validator enforces every one of them, so
+// they are accepted rather than reported: warning that a key is unsupported and then holding
+// a response to it tells a reader the opposite of what happens. They still do not shape the
+// example body dredd generates, which is a limitation of the generator rather than of what
+// the document is allowed to say.
+const jsonSchemaDraft202012Keys = [
   // General applicators
   'if', 'then', 'else', 'dependentSchemas',
 
@@ -46,8 +52,8 @@ const unsupportedJSONSchemaDraft202012 = [
   'propertyNames', 'unevaluatedProperties', 'dependentRequired',
 ];
 const isUnsupportedKey = R.anyPass(R.map(hasKey, unsupportedKeys));
-const isUnsupportedKeyJSONSchemaDraft202012 = R.anyPass(
-  R.map(hasKey, unsupportedJSONSchemaDraft202012)
+const isJSONSchemaDraft202012Key = R.anyPass(
+  R.map(hasKey, jsonSchemaDraft202012Keys)
 );
 
 
@@ -359,14 +365,15 @@ function parseSchema(context) {
       R.compose(parseConst, getValue),
     ],
 
-    [isUnsupportedKey, createUnsupportedMemberWarning(namespace, name)],
     [
       R.both(
-        isUnsupportedKeyJSONSchemaDraft202012,
+        isJSONSchemaDraft202012Key,
         R.always(context.isOpenAPIVersionMoreThanOrEqual(3, 1))
       ),
-      createUnsupportedMemberWarning(namespace, name),
+      (member) => member.clone(),
     ],
+
+    [isUnsupportedKey, createUnsupportedMemberWarning(namespace, name)],
 
     // Return a warning for additional properties
     [R.T, createInvalidMemberWarning(namespace, name)],

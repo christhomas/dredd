@@ -92,10 +92,6 @@ importers:
       mocha:
         specifier: ^7.1.1
         version: 7.2.0
-    optionalDependencies:
-      protagonist:
-        specifier: ^2.1.0
-        version: 2.3.0
 
   packages/apib-serializer:
     dependencies:
@@ -2866,9 +2862,6 @@ packages:
     resolution: {integrity: sha512-dkEJPVvun4FryqBmZ5KhDo0K9iDXAwn08tMLDinNdRBNPcYEDiWYysLcc6k3mjTMlbP9KyylvRpd4wFtwrT9rw==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  nan@2.28.0:
-    resolution: {integrity: sha512-fTsDz99OTq2sVePhGdp4qQhggZFtKr64ZNVyVajRKtMOkJxYekplBh577PiJB12v/D3s2E5cGtOI45LWp6rnLQ==}
-
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
@@ -3107,10 +3100,6 @@ packages:
 
   property-expr@2.0.6:
     resolution: {integrity: sha512-SVtmxhRE/CGkn3eZY1T6pC8Nln6Fr/lu1mKSgRud0eC73whjGfoAogbn78LkD8aFL0zz3bAFerKSnOl7NlErBA==}
-
-  protagonist@2.3.0:
-    resolution: {integrity: sha512-rDSm2NbxrJmrr9KZ1eMZwjNOakOGhMy2LTrtMgmrflbdfFNi35Gh71iiVYQf8O6loacTwsODVti+PIX7l2zXyw==}
-    engines: {node: '>=12'}
 
   proxy-addr@2.0.7:
     resolution: {integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==}
@@ -6323,9 +6312,6 @@ snapshots:
 
   mute-stream@3.0.0: {}
 
-  nan@2.28.0:
-    optional: true
-
   natural-compare@1.4.0: {}
 
   negotiator@1.0.0: {}
@@ -6581,11 +6567,6 @@ snapshots:
   propagate@2.0.1: {}
 
   property-expr@2.0.6: {}
-
-  protagonist@2.3.0:
-    dependencies:
-      nan: 2.28.0
-    optional: true
 
   proxy-addr@2.0.7:
     dependencies:

@@ -17,7 +17,7 @@
   },
   "scripts": {
     "lint:fix": "eslint . --fix",
-    "test": "mocha"
+    "test": "mocha --recursive"
   },
   "dependencies": {
     "minim": "^0.23.8",

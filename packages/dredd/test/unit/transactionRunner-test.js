@@ -492,6 +492,66 @@ describe('TransactionRunner', () => {
       };
     });
 
+    // A hook that redirects a request by assigning request.uri changes nothing: the request
+    // is built from fullPath, resolved before hooks run. It used to do so in silence, so a
+    // hook file could read as though it had moved a request that never moved.
+    describe('when a hook redirects a request by the wrong field', () => {
+      beforeEach(() => {
+        // A configuration of its own: earlier tests reassign the shared one, and what is
+        // left behind does not always carry the fields a transaction needs to execute.
+        configuration = {
+          endpoint: 'http://127.0.0.1:3000',
+          emitter: new EventEmitter(),
+          custom: { cwd: process.cwd() },
+          'dry-run': false,
+          method: [],
+          only: [],
+          header: [],
+          reporter: [],
+        };
+        sinon.spy(loggerStub, 'warn');
+        runner = new Runner(configuration);
+      });
+
+      afterEach(() => {
+        loggerStub.warn.restore();
+        nock.cleanAll();
+      });
+
+      it('says the request still goes to the original path', (done) => {
+        nock('http://127.0.0.1:3000').post('/machines').reply(202, '{}');
+
+        transaction.configuredUri = '/machines';
+        transaction.configuredFullPath = '/machines';
+        transaction.request.uri = '/machines/1';
+
+        runner.executeTransaction(transaction, () => {
+          const said = loggerStub.warn.getCalls().some((call) =>
+            call.args.join(' ').includes('/machines/1'),
+          );
+          assert.isOk(said, 'expected a warning naming the ignored uri');
+          done();
+        });
+      });
+
+      it('stays quiet when the hook sets fullPath as well', (done) => {
+        nock('http://127.0.0.1:3000').post('/machines/1').reply(202, '{}');
+
+        transaction.configuredUri = '/machines';
+        transaction.configuredFullPath = '/machines';
+        transaction.request.uri = '/machines/1';
+        transaction.fullPath = '/machines/1';
+
+        runner.executeTransaction(transaction, () => {
+          const said = loggerStub.warn.getCalls().some((call) =>
+            call.args.join(' ').includes('fullPath'),
+          );
+          assert.isNotOk(said, 'a correct redirect should not warn');
+          done();
+        });
+      });
+    });
+
     describe('when printing the names', () => {
       beforeEach(() => {
         sinon.spy(loggerStub, 'debug');
